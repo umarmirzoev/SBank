@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "4tX25jIic4I=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\HP\\Desktop\\SBSF\\SBank\\Domain\\Domain.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\HP\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}
