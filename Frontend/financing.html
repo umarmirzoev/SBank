@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="integration.css">
+  <title>Финансирование — Сомонибонк</title>
+  <style>
+    :root{--text:#203654;--muted:#667b98;--line:#dfeaf7;--blue:#2f8ef2;--deep:#175fd4;--cyan:#2fd0ef;--bg:#f5f9ff;--dark:#0c1f43;--shadow:0 24px 64px rgba(42,79,136,.12)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at top left,rgba(84,168,255,.15),transparent 22%),linear-gradient(180deg,#fbfdff 0%,var(--bg) 100%);color:var(--text);font-family:"Segoe UI",Arial,Helvetica,sans-serif}
+    a{text-decoration:none;color:inherit}button,input{font:inherit}
+    .page{width:min(1280px,calc(100% - 48px));margin:0 auto;padding:18px 0 52px}.shell{padding:16px;border-radius:34px;background:rgba(255,255,255,.96);border:1px solid rgba(224,235,247,.98);box-shadow:0 30px 90px rgba(26,71,137,.14);overflow:hidden}
+    .header-top,.logo,.main-nav,.header-right,.location,.sub-nav,.hero-layout,.hero-actions,.resource-layout,.mini-grid,.tariff-row,.calc-layout,.calc-header,.steps-row,.step,.footer-top,.footer-bottom,.store-row,.social-row,.form-row{display:flex;align-items:center}
+    .header-top{gap:24px;justify-content:space-between;padding:4px 18px 18px;border-bottom:1px solid var(--line)}.logo{gap:10px;flex:0 0 auto}.logo svg{width:34px;height:34px}.logo span{font-size:24px;font-weight:700;letter-spacing:-.03em}
+    .main-nav{gap:38px;margin-left:24px;margin-right:auto;font-size:15px;font-weight:500}.main-nav a,.sub-nav a,.location,.lang{transition:color .2s ease,transform .2s ease}.main-nav a:hover,.sub-nav a:hover,.location:hover,.lang:hover{color:#145eb4}.main-nav a{position:relative;padding:12px 0 15px}.main-nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-18px;height:4px;border-radius:999px;background:#1fca80}
+    .header-right{gap:24px;font-size:15px;color:var(--muted)}.location{gap:10px;white-space:nowrap}.location svg{width:18px;height:18px;stroke:#7b8ca4;stroke-width:1.8;fill:none}.lang{white-space:nowrap}
+    .sub-nav{gap:22px;padding:24px 18px 28px;font-size:14px;white-space:nowrap;overflow-x:auto}.sub-nav a{position:relative;padding-bottom:8px;color:#47617f}.sub-nav a.active-sub{color:#145eb4;font-weight:600}.sub-nav a.active-sub::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:999px;background:linear-gradient(90deg,#2fc9ee 0%,#2f8ef2 100%)}
+    .section{margin-top:22px}.section-head{margin:0 0 18px;padding:0 8px}.section-head h2{margin:0 0 10px;color:#27467b;font-family:Georgia,"Times New Roman",serif;font-size:clamp(34px,4vw,46px);line-height:1.08;font-weight:400;letter-spacing:-.04em}.section-head p,.mini-card p,.resource-copy p,.tariff-table td,.footer p,.footer a,.faq-answer,.form-copy p{margin:0;color:var(--muted);font-size:15px;line-height:1.65}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+    @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    .hero{padding:24px;border-radius:30px;background:linear-gradient(135deg,#fefefe 0%,#f4f8ff 48%,#e9f3ff 100%);border:1px solid rgba(219,230,244,.98);box-shadow:var(--shadow);overflow:hidden}
+    .hero-layout{gap:26px;min-height:360px}.hero-copy{width:48%;padding:24px 18px;opacity:0;animation:fadeUp .7s ease forwards}.hero-copy h1{margin:0 0 18px;max-width:480px;color:#254577;font-family:Georgia,"Times New Roman",serif;font-size:clamp(42px,4.6vw,60px);line-height:1.04;font-weight:400;letter-spacing:-.04em}.hero-copy p{max-width:420px;color:var(--muted);font-size:18px;line-height:1.6}
+    .hero-actions{gap:14px;margin-top:28px;flex-wrap:wrap}.btn,.ghost-btn{min-height:54px;padding:0 26px;border-radius:15px;border:0;cursor:pointer;font-weight:700;transition:transform .22s ease,box-shadow .22s ease,filter .22s ease}.btn{background:linear-gradient(180deg,var(--cyan),var(--deep));color:#fff;box-shadow:0 18px 32px rgba(47,117,242,.24)}.ghost-btn{background:#fff;color:#23518c;border:1px solid rgba(154,192,235,.75)}.btn:hover,.ghost-btn:hover,.mini-card:hover,.resource-card:hover,.summary-card:hover,.step:hover,.faq-item:hover,.consult-card:hover{transform:translateY(-4px);filter:brightness(1.03)}
+    .hero-visual{width:52%;position:relative;min-height:300px;opacity:0;animation:fadeUp .85s ease .12s forwards}.platform{position:absolute;right:24px;bottom:0;width:340px;height:110px;border-radius:26px 26px 0 0;background:linear-gradient(180deg,#fff,#dfe9f7);box-shadow:inset 0 1px 0 rgba(255,255,255,.94),0 18px 34px rgba(63,97,146,.14)}
+    .device-tall,.device-main,.device-mini{position:absolute;border-radius:24px;background:linear-gradient(160deg,#414957 0%,#1d2430 68%,#444d59 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 20px 36px rgba(29,48,86,.22);border:2px solid rgba(107,127,155,.34);animation:floatY 4.6s ease-in-out infinite}.device-tall{left:90px;top:62px;width:84px;height:162px;border-radius:22px}.device-main{right:88px;top:18px;width:206px;height:236px;animation-delay:.25s}.device-mini{right:42px;top:192px;width:68px;height:54px;border-radius:18px;animation-delay:.5s}
+    .device-tall::before,.device-main::before,.device-main::after,.device-mini::before,.device-mini::after{content:"";position:absolute}.device-tall::before{left:16px;right:16px;top:18px;bottom:18px;border-radius:18px;background:linear-gradient(180deg,#65def0,#2f8ef2)}.device-main::before{left:26px;right:26px;top:24px;height:8px;border-radius:999px;background:linear-gradient(90deg,#8ea0bb 0 20%,#6fc6ff 20% 80%,#8ea0bb 80% 100%)}.device-main::after{left:72px;top:78px;width:62px;height:90px;border-radius:16px;background:linear-gradient(180deg,#306fe8,#1749b0);box-shadow:0 0 0 3px rgba(68,130,255,.12)}.device-mini::before,.device-mini::after{top:14px;width:18px;height:18px;border-radius:8px;background:linear-gradient(180deg,#65def0,#2f8ef2)}.device-mini::before{left:12px}.device-mini::after{right:12px}
+    .resource-card,.mini-card,.calc-card,.summary-card,.consult-card,.faq-wrap{border-radius:28px;background:linear-gradient(180deg,#fff,#f3f8ff);border:1px solid rgba(213,226,242,.96);box-shadow:0 18px 34px rgba(112,168,226,.14)}
+    .resource-card{padding:28px;overflow:hidden}.resource-layout{gap:28px;align-items:center}.resource-art{width:180px;min-height:156px;position:relative}.bar-art{position:absolute;left:16px;bottom:14px;display:flex;gap:8px;align-items:flex-end}.bar-art span{display:block;width:34px;border-radius:12px 12px 8px 8px;background:linear-gradient(180deg,#6ee1ef,#356fe7);box-shadow:0 12px 18px rgba(55,109,189,.22)}.bar-art span:nth-child(1){height:66px}.bar-art span:nth-child(2){height:86px}.bar-art span:nth-child(3){height:108px}.bar-art::after{content:"";position:absolute;left:-8px;right:-18px;bottom:-14px;height:18px;border-radius:999px;background:linear-gradient(180deg,#6ee1ef,#356fe7);opacity:.6}
+    .resource-copy{flex:1}.resource-copy h3{margin:0 0 12px;color:#254577;font-size:36px;line-height:1.15}
+    .mini-grid{gap:16px;align-items:stretch}.mini-card{flex:1;min-height:242px;padding:24px;cursor:pointer;position:relative;overflow:hidden;transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease,background .24s ease;opacity:0;animation:fadeUp .7s ease forwards}.mini-card:nth-child(2){animation-delay:.08s}.mini-card:nth-child(3){animation-delay:.16s}.mini-card.active{border-color:rgba(83,155,236,.98);box-shadow:0 24px 42px rgba(80,139,214,.18)}.mini-card h3{margin:0 0 12px;max-width:230px;color:#214a83;font-size:18px;line-height:1.3}.mini-art{position:absolute;left:24px;right:24px;bottom:16px;height:98px}.mini-art::before{content:"";position:absolute;left:0;right:0;bottom:0;height:36px;border-radius:15px;background:linear-gradient(180deg,#fff,#e7eef7)}.mini-art::after{content:"";position:absolute;left:36px;bottom:10px;width:76px;height:76px;border-radius:24px;background:linear-gradient(180deg,#7db5ff,#3d77e8);box-shadow:0 16px 24px rgba(63,113,187,.22)}
+    .mini-card:nth-child(1) .mini-art::after{border-radius:50%;background:radial-gradient(circle at 35% 30%,#67def0,#396fe6);box-shadow:inset 0 0 0 4px rgba(255,255,255,.28),0 16px 24px rgba(63,113,187,.22)}
+    .mini-card:nth-child(2) .mini-art::after{width:92px;height:70px;border-radius:18px;background:linear-gradient(180deg,#58d4ec,#2a78ea);clip-path:polygon(50% 0,100% 34%,78% 100%,22% 100%,0 34%)}
+    .mini-card:nth-child(3) .mini-art::after{width:64px;height:110px;border-radius:18px;background:linear-gradient(180deg,#1f8fff,#2f4fe2);transform:rotate(12deg)}
+    .tariff-card{padding:26px;border-radius:28px;background:#fff;border:1px solid rgba(216,229,244,.96);box-shadow:0 18px 34px rgba(112,168,226,.12)}.tariff-card h3{margin:0 0 18px;color:#24497f;font-size:34px;font-family:Georgia,"Times New Roman",serif;font-weight:400}.tariff-table{width:100%;border-collapse:collapse}.tariff-table td{padding:18px 0;border-top:1px solid #dde7f4}.tariff-table tr:first-child td{border-top:0}.tariff-table td:first-child{width:40%;color:#24497f;font-weight:600}
+    .calc-card{padding:28px;background:linear-gradient(180deg,#fafdff,#eef6ff)}.calc-card h3{margin:0 0 20px;color:#24497f;font-size:34px;font-family:Georgia,"Times New Roman",serif;font-weight:400}.calc-layout{align-items:flex-start;gap:32px}.calc-main{flex:1}.calc-group{margin-bottom:28px}.calc-group label{display:block;margin-bottom:10px;color:#4d678b;font-size:14px}.radio-row{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}.radio-row label{display:inline-flex;align-items:center;gap:8px}.range-value{display:block;margin-bottom:10px;color:#20497f;font-size:34px;font-weight:700}.range-input{width:100%;appearance:none;height:4px;border-radius:999px;background:linear-gradient(90deg,var(--blue) 0%,#d6e4f7 0%);outline:none}.range-input::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue);box-shadow:0 6px 14px rgba(47,125,246,.32);cursor:pointer;border:0}.range-input::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--blue);box-shadow:0 6px 14px rgba(47,125,246,.32);cursor:pointer;border:0}
+    .range-scale{display:flex;justify-content:space-between;margin-top:8px;color:#8ca0ba;font-size:12px}.calc-note{color:#7b8da8;font-size:12px;max-width:420px}
+    .summary-card{width:320px;padding:22px;background:#fff}.summary-card strong{display:block;color:#214a83;font-size:36px;line-height:1.15}.summary-row{padding:12px 0;border-top:1px solid #e2ebf6}.summary-row:first-child{padding-top:0;border-top:0}.summary-row span{display:block;color:#7b8ea8;font-size:13px}.summary-row strong{font-size:22px;margin-top:4px}.summary-card .btn{width:100%;margin-top:16px}
+    .steps-card{padding:30px 26px;border-radius:28px;background:#fff;border:1px solid rgba(216,229,244,.96);box-shadow:0 18px 34px rgba(112,168,226,.12)}.steps-card h3{margin:0 0 22px;text-align:center;color:#24497f;font-size:34px;font-family:Georgia,"Times New Roman",serif;font-weight:400}.steps-row{justify-content:space-between;gap:14px;align-items:flex-start}.step{flex-direction:column;flex:1;text-align:center;gap:12px}.step-num{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,#e7f2ff,#cfe5ff);color:#2b70de;font-weight:700}.step-line{width:100%;height:3px;border-radius:999px;background:linear-gradient(90deg,#8fbaf8,#2f8ef2);margin-top:20px}.step p{color:#637999;font-size:14px;line-height:1.5}
+    .consult-card{padding:34px;transition:transform .24s ease,box-shadow .24s ease}.consult-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:28px}.form-copy h3{margin:0 0 14px;color:#2a4e83;font-family:Georgia,"Times New Roman",serif;font-size:36px;font-weight:400;line-height:1.1}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:flex;flex-direction:column;gap:8px}.field label{color:#4d678b;font-size:14px}.field input{min-height:52px;padding:14px 16px;border-radius:12px;border:1px solid #cfe0f4;background:#fff;color:var(--text);outline:none;transition:border-color .2s ease,box-shadow .2s ease}.field input:focus{border-color:#5da5ff;box-shadow:0 0 0 4px rgba(47,142,242,.12)}.field-full{grid-column:1 / -1}.status-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px}.status-row label{display:inline-flex;align-items:center;gap:8px}.form-row{justify-content:space-between;gap:18px;align-items:flex-end;margin-top:18px}.consent{max-width:320px;color:#6d82a0;font-size:12px;line-height:1.5}
+    .faq-wrap{padding:28px;background:#fff}.faq-item{border-top:1px solid #dfe8f4;padding:18px 0;transition:transform .2s ease,background .2s ease}.faq-item:first-child{border-top:0}.faq-button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:18px;border:0;background:transparent;padding:0;color:#24497f;font-size:18px;font-weight:600;text-align:left;cursor:pointer}.faq-button span:last-child{font-size:28px;color:#78a7e2;transition:transform .2s ease,color .2s ease}.faq-answer{display:none;padding-top:14px;max-width:940px}.faq-item.open .faq-answer{display:block}.faq-item.open .faq-button span:last-child{transform:rotate(45deg);color:#2f8ef2}
+    .footer{margin-top:22px;padding:30px 30px 24px;border-radius:26px;background:linear-gradient(180deg,#081d3b 0%,#0a2346 100%);color:rgba(255,255,255,.9);box-shadow:0 18px 34px rgba(6,28,60,.22)}.footer-top{align-items:flex-start;justify-content:space-between;gap:28px;flex-wrap:wrap}.footer-col{min-width:210px;flex:1}.footer strong{color:#2fd2ef;font-size:28px;line-height:1.1}.store-row,.social-row{gap:10px;flex-wrap:wrap;margin-top:12px}.store-badge,.social-pill{min-width:90px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600}.social-pill{min-width:40px;padding:0;border-radius:50%}.footer-bottom{justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.09);font-size:13px;color:rgba(226,236,255,.64)}
+    .toast{position:fixed;right:20px;bottom:20px;background:rgba(21,39,69,.94);color:#fff;padding:12px 16px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s ease,transform .2s ease;z-index:1000}.toast.show{opacity:1;transform:translateY(0)}
+    @media (max-width:1024px){.hero-layout,.resource-layout,.mini-grid,.calc-layout,.steps-row{display:block}.hero-copy,.hero-visual{width:100%}.hero-visual{margin-top:18px}.mini-card+.mini-card{margin-top:16px}.summary-card{width:100%;margin-top:18px}.consult-layout,.form-grid{grid-template-columns:1fr}.step+.step{margin-top:18px}.step-line{display:none}}
+    @media (max-width:760px){.page{width:calc(100% - 20px);padding:10px 0 30px}.shell,.hero,.resource-card,.mini-card,.tariff-card,.calc-card,.summary-card,.steps-card,.consult-card,.faq-wrap,.footer{border-radius:22px}.header-top,.sub-nav,.hero,.resource-card,.calc-card,.consult-card,.faq-wrap,.footer{padding-left:16px;padding-right:16px}.header-top{flex-wrap:wrap}.main-nav{order:3;margin:0;width:100%;gap:22px;overflow-x:auto}.hero-copy h1{font-size:38px}.hero-copy p,.resource-copy h3,.section-head p{font-size:16px}.hero-actions .btn,.hero-actions .ghost-btn,.summary-card .btn,.form-row .btn{width:100%}.form-row{display:block}.consent{margin-top:12px;max-width:none}.hero-visual{min-height:260px}.platform{right:10px;width:220px}.device-main{right:50px;width:156px;height:196px}.device-tall{left:40px}.device-mini{right:18px}}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <header>
+        <div class="header-top">
+          <a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#356dff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#356dff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#356dff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a>
+          <nav class="main-nav" aria-label="Главное меню"><a href="index.html">Частным лицам</a><a class="active" href="business.html">Бизнесу</a><a href="#" data-toast="Корпоративный раздел будет расширен позже.">Сомонибонк</a></nav>
+          <div class="header-right"><a class="location" href="#" data-toast="Интернет-банк для бизнеса будет расширен позже."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.7 6-11a6 6 0 1 0-12 0c0 5.3 6 11 6 11Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg><span>Интернет-банк</span></a><a class="lang" href="#" data-toast="Смена языка будет добавлена позже.">Рус ˅</a></div>
+        </div>
+        <nav class="sub-nav" aria-label="Разделы для бизнеса"><a href="business.html">Сомонибонк Business</a><a href="salary-project.html">Зарплатный проект</a><a class="active-sub" href="financing.html">Финансирование</a><a href="business.html#services">Продажи в рассрочку</a><a href="business.html#services">Эквайринг</a><a href="business.html#services">Расчётный счёт</a><a href="transfers.html">Переводы</a></nav>
+      </header>
+      <main>
+        <section class="hero section">
+          <div class="hero-layout">
+            <div class="hero-copy">
+              <h1>Профинансируем ваш бизнес</h1>
+              <p>Выделим ресурсы на расширение, закупки, новые проекты и возможности роста бизнеса.</p>
+              <div class="hero-actions"><button class="btn" type="button" data-scroll-target="calc">Воспользоваться</button><button class="ghost-btn" type="button" data-scroll-target="apply">Оставить заявку</button></div>
+            </div>
+            <div class="hero-visual" aria-hidden="true"><div class="device-tall"></div><div class="device-main"></div><div class="device-mini"></div><div class="platform"></div></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="resource-card">
+            <div class="resource-layout">
+              <div class="resource-art"><div class="bar-art"><span></span><span></span><span></span></div></div>
+              <div class="resource-copy">
+                <h3>Ресурсы под ваши задачи</h3>
+                <p>Получите финансирование на закупку товаров, расширение склада, запуск онлайн-продаж или обновление оборудования.</p>
+                <p style="margin-top:12px;">Поможем увеличить оборотный капитал и поддержим вас на этапе роста: будь то новая точка или выход в другой регион.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="mini-grid">
+            <article class="mini-card active" data-mini="speed"><h3>Узнайте решение быстро</h3><p>Получите ответ по финансированию за короткий срок.</p><div class="mini-art"></div></article>
+            <article class="mini-card" data-mini="terms"><h3>Условия под ваш бизнес</h3><p>Учитываем особенности вашего бизнеса и подбираем подходящее решение.</p><div class="mini-art"></div></article>
+            <article class="mini-card" data-mini="payment"><h3>Погашайте как удобно вам</h3><p>Через платформу Сомонибонк Business, приложение, терминалы или в кассах.</p><div class="mini-art"></div></article>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="tariff-card">
+            <h3>Тарифы и условия</h3>
+            <table class="tariff-table">
+              <tbody>
+                <tr><td>Процентная ставка</td><td>До 13% в долларах США и до 22% в сомони</td></tr>
+                <tr><td>Валюта</td><td>Сомони или доллары США</td></tr>
+                <tr><td>Срок</td><td>До 60 месяцев</td></tr>
+                <tr><td>Способ погашения</td><td>Аннуитетные платежи или индивидуальный график</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section" id="calc">
+          <div class="calc-card">
+            <h3>Рассчитайте платёж</h3>
+            <div class="calc-layout">
+              <div class="calc-main">
+                <div class="calc-group">
+                  <label>Валюта</label>
+                  <div class="radio-row">
+                    <label><input type="radio" name="fin-currency" value="TJS" checked> Сомони</label>
+                    <label><input type="radio" name="fin-currency" value="USD"> Доллар США</label>
+                  </div>
+                </div>
+                <div class="calc-group">
+                  <label for="finance-amount">Сумма финансирования</label>
+                  <span class="range-value" id="finance-amount-value">200 000 с.</span>
+                  <input class="range-input" id="finance-amount" type="range" min="50000" max="1000000" step="10000" value="200000">
+                </div>
+                <div class="calc-group">
+                  <label for="finance-term">Срок финансирования в месяцах</label>
+                  <span class="range-value" id="finance-term-value">12</span>
+                  <input class="range-input" id="finance-term" type="range" min="12" max="60" step="6" value="12">
+                  <div class="range-scale"><span>12</span><span>24</span><span>36</span><span>48</span><span>60</span></div>
+                </div>
+                <div class="calc-note">* Пример расчёта носит информационный характер и не является публичной офертой.</div>
+              </div>
+              <aside class="summary-card">
+                <div class="summary-row"><span>Фактическая переплата</span><strong id="finance-overpay">24 704.56 с.</strong></div>
+                <div class="summary-row"><span>Ежемесячный платёж</span><strong id="finance-monthly">18 725.38 с.</strong></div>
+                <div class="summary-row"><span>Финальная ставка</span><strong id="finance-rate">22%</strong></div>
+                <button class="btn" type="button" data-scroll-target="apply">Оставить заявку в Сомонибонк</button>
+              </aside>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="steps-card">
+            <h3>Как получить финансирование</h3>
+            <div class="steps-row">
+              <div class="step"><div class="step-num">1</div><div class="step-line"></div><strong>Введите данные</strong><p>Укажите название компании, ИНН, номер телефона и выберите статус.</p></div>
+              <div class="step"><div class="step-num">2</div><div class="step-line"></div><strong>Получите консультацию</strong><p>Свяжемся с вами, чтобы уточнить детали и ответить на вопросы.</p></div>
+              <div class="step"><div class="step-num">3</div><div class="step-line"></div><strong>Подготовьте документы</strong><p>Список необходимых документов подберём в файле и сообщении.</p></div>
+              <div class="step"><div class="step-num">4</div><div class="step-line"></div><strong>Получите средства</strong><p>После одобрения деньги будут зачислены на ваш расчётный счёт.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="apply">
+          <div class="consult-card">
+            <div class="consult-layout">
+              <div class="form-copy"><h3>Оставьте заявку</h3><p>Подробно расскажем об условиях и поможем подобрать подходящее финансирование.</p></div>
+              <div>
+                <div class="form-grid">
+                  <div class="field field-full"><label for="fin-company">Название вашей компании</label><input id="fin-company" type="text" placeholder="Например, ООО «Alif Business»"></div>
+                  <div class="field field-full"><label for="fin-inn">ИНН</label><input id="fin-inn" type="text" placeholder="Введите номер"></div>
+                  <div class="field field-full"><label for="fin-phone">Ваш номер телефона</label><input id="fin-phone" type="tel" placeholder="+992"></div>
+                  <div class="field field-full">
+                    <label>Ваш статус</label>
+                    <div class="status-row">
+                      <label><input type="radio" name="fin-status" value="ip" checked> Частный предприниматель</label>
+                      <label><input type="radio" name="fin-status" value="company"> Юр. лицо</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row"><button class="btn" type="button" data-submit-financing>Отправить</button><div class="consent">Нажимая кнопку «Отправить», вы соглашаетесь с условиями обработки персональных данных.</div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="faq-wrap">
+            <div class="section-head"><h2>Часто задаваемые вопросы</h2></div>
+            <article class="faq-item"><button class="faq-button" type="button"><span>Какова минимальная сумма финансирования?</span><span>+</span></button><div class="faq-answer">Минимальная сумма зависит от типа проекта, но в базовом сценарии мы рассматриваем заявки от 50 000 сомони.</div></article>
+            <article class="faq-item"><button class="faq-button" type="button"><span>Есть ли льготный период?</span><span>+</span></button><div class="faq-answer">Для отдельных продуктов может быть доступен индивидуальный график погашения. Условия уточняются после оценки бизнеса.</div></article>
+            <article class="faq-item"><button class="faq-button" type="button"><span>Что можно предложить в качестве залога?</span><span>+</span></button><div class="faq-answer">В зависимости от суммы и продукта рассматриваются оборудование, товарные запасы, недвижимость и другие формы обеспечения.</div></article>
+            <article class="faq-item"><button class="faq-button" type="button"><span>Можно ли досрочно погасить сумму финансирования?</span><span>+</span></button><div class="faq-answer">Да, досрочное погашение возможно. Конкретные условия по комиссии и графику сообщим при оформлении.</div></article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-top">
+          <div class="footer-col"><a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#35d2ff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#35d2ff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#35d2ff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a><p>ул. Бегунова, 9<br>Ориентир: ресторан «Кувар»</p><a href="#" data-toast="Филиалы и точки обслуживания будут открыты позже.">Филиалы и точки обслуживания</a></div>
+          <div class="footer-col"><p><strong>900</strong><br>Для звонков с мобильных в Таджикистане</p><p><strong>+992 44 888 1111</strong><br>Для звонков из любой точки мира</p><p><strong>+992 44 600 1520</strong><br>Техническая поддержка</p><p><strong>support@somoni.tj</strong><br>Для онлайн-обращений</p></div>
+          <div class="footer-col"><p>Приложение</p><div class="store-row"><span class="store-badge">Google Play</span><span class="store-badge">App Store</span></div><p style="margin-top:18px;">Социальные сети</p><div class="social-row"><span class="social-pill">tg</span><span class="social-pill">f</span><span class="social-pill">in</span><span class="social-pill">ig</span><span class="social-pill">yt</span><span class="social-pill">vk</span></div></div>
+        </div>
+        <div class="footer-bottom"><span>О нас</span><span>Адреса</span><span>Документы и тарифы</span><span>Вакансии</span><span>Связь с нами</span></div>
+      </footer>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script type="module" src="scripts/financing-page.js"></script>
+</body>
+</html>
