@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="integration.css">
   <title>Банковские карты</title>
   <style>
     :root{--text:#2c3b55;--muted:#5b6b84;--line:#e7edf4;--green:#1fca80;--blue:#2f8ef2;--dark:#081d3b;--dark2:#0a2448;--gold:#d4a743}
     *{box-sizing:border-box} body{margin:0;background:#fff;color:var(--text);font-family:"Segoe UI",Arial,Helvetica,sans-serif}
     a{text-decoration:none;color:inherit} button{font:inherit}
-    .page{width:1136px;margin:0 auto;padding:16px 0 48px}
+    .page{width:min(1136px,calc(100% - 40px));margin:0 auto;padding:16px 0 48px}
     .header-top,.sub-nav,.main-nav,.header-right,.filter-tabs,.footer-nav,.store-row,.social-row{display:flex;align-items:center}
     .header-top{justify-content:space-between;gap:24px;padding:4px 0 18px;border-bottom:1px solid var(--line)}
     .logo{display:flex;align-items:center;gap:10px;flex:0 0 auto}.logo svg{width:34px;height:34px}.logo span{font-size:24px;font-weight:700;letter-spacing:-.03em}
@@ -82,10 +83,10 @@
     <header>
       <div class="header-top">
         <a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#356dff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#356dff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#356dff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a>
-        <nav class="main-nav" aria-label="Главное меню"><a class="active" href="index.html">Частным лицам</a><a href="#" data-toast="Раздел для бизнеса будет добавлен позже.">Бизнесу</a><a href="#" data-toast="Корпоративный раздел Сомонибонк будет добавлен позже.">Сомонибонк</a></nav>
+        <nav class="main-nav" aria-label="Главное меню"><a class="active" href="index.html">Частным лицам</a><a href="business.html">Бизнесу</a><a href="#" data-toast="Корпоративный раздел Сомонибонк будет добавлен позже.">Сомонибонк</a></nav>
         <div class="header-right"><a class="location" href="#" data-toast="Адреса и банкоматы будут открыты на карте."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.7 6-11a6 6 0 1 0-12 0c0 5.3 6 11 6 11Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg><span>Адреса и банкоматы</span></a><a class="lang" href="#" data-toast="Смена языка будет добавлена позже.">Рус ˅</a></div>
       </div>
-      <nav class="sub-nav" aria-label="Разделы"><a href="somonibank-app.html">Приложение Somoni</a><a class="active-sub" href="cards.html">Карты</a><a href="#" data-toast="Раздел Салом будет добавлен позже.">Салом</a><a href="#" data-toast="Покупка авто будет добавлена позже.">Покупка авто</a><a href="#" data-toast="Somoni Shop будет добавлен позже.">Somoni Shop</a><a href="#" data-toast="Раздел переводов будет добавлен позже.">Переводы</a><a href="#" data-toast="Раздел депозитов будет добавлен позже.">Депозиты</a><a href="#" data-toast="Авиабилеты будут добавлены позже.">Авиабилеты</a><a href="#" data-toast="Дополнительные разделы будут добавлены позже.">Ещё ˅</a></nav>
+      <nav class="sub-nav" aria-label="Разделы"><a href="somonibank-app.html">Приложение Somoni</a><a class="active-sub" href="cards.html">Карты</a><a href="#" data-toast="Раздел Салом будет добавлен позже.">Салом</a><a href="auto.html">Покупка авто</a><a href="#" data-toast="Somoni Shop будет добавлен позже.">Somoni Shop</a><a href="#" data-toast="Раздел переводов будет добавлен позже.">Переводы</a><a href="#" data-toast="Раздел депозитов будет добавлен позже.">Депозиты</a><a href="#" data-toast="Авиабилеты будут добавлены позже.">Авиабилеты</a><a href="#" data-toast="Дополнительные разделы будут добавлены позже.">Ещё ˅</a></nav>
     </header>
 
     <section class="dark-section">
@@ -136,12 +137,6 @@
   </div>
 
   <div class="toast" id="toast"></div>
-  <script>
-    const toast=document.getElementById("toast");
-    function showToast(message){toast.textContent=message;toast.classList.add("show");clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove("show"),2200)}
-    document.querySelectorAll("[data-toast]").forEach((element)=>{element.addEventListener("click",(event)=>{if(element.getAttribute("href")==="#")event.preventDefault();showToast(element.dataset.toast)})});
-    document.querySelectorAll(".pill").forEach((pill)=>pill.addEventListener("click",()=>{document.querySelectorAll(".pill").forEach((item)=>item.classList.toggle("active",item===pill));showToast(`Фильтр "${pill.textContent}" выбран.`)}));
-    document.querySelectorAll(".faq-item").forEach((item)=>item.addEventListener("click",()=>item.classList.toggle("open")));
-  </script>
+  <script type="module" src="scripts/cards-page.js"></script>
 </body>
 </html>

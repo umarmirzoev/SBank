@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" fill="none">
+  <defs>
+    <radialGradient id="bg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(160 104) rotate(90) scale(84 90)">
+      <stop stop-color="#dcecff"/>
+      <stop offset="1" stop-color="#eef6ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="74" y1="168" x2="248" y2="168" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2fd2ee"/>
+      <stop offset="1" stop-color="#1d66e0"/>
+    </linearGradient>
+    <linearGradient id="plate" x1="80" y1="149" x2="241" y2="149" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fbfdff"/>
+      <stop offset="1" stop-color="#e9eef6"/>
+    </linearGradient>
+    <linearGradient id="body" x1="92" y1="90" x2="232" y2="139" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset=".55" stop-color="#f4f7fb"/>
+      <stop offset="1" stop-color="#dbe4ed"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="160" cy="108" rx="82" ry="66" fill="url(#bg)"/>
+  <ellipse cx="160" cy="187" rx="70" ry="10" fill="#dde7f3"/>
+  <ellipse cx="160" cy="166" rx="84" ry="18" fill="url(#ring)"/>
+  <path d="M80 151c7-16 23-24 48-24h67c23 0 39 7 46 24H80Z" fill="url(#plate)"/>
+  <path d="M78 145h166c8 0 14 4 16 11H65c2-5 7-11 13-11Z" fill="#eff4fa"/>
+  <path d="M93 138c8-27 28-47 63-59 16-6 37-9 65-9h20c14 0 27 8 37 20l16 18 5 18H78l15-14Z" fill="url(#body)"/>
+  <path d="M158 81h65c15 0 27 4 37 13l21 19H124c6-14 15-22 34-32Z" fill="#5e6876"/>
+  <path d="M103 119h40c9 0 17 6 21 16H95c1-7 4-12 8-16Z" fill="#19c0e1"/>
+  <path d="M203 145h47c7 0 13 4 18 10h-56Z" fill="#2c79ea"/>
+  <circle cx="123" cy="141" r="22" fill="#2d3643"/>
+  <circle cx="123" cy="141" r="12" fill="#c5d0dc"/>
+  <circle cx="230" cy="141" r="22" fill="#2d3643"/>
+  <circle cx="230" cy="141" r="12" fill="#c5d0dc"/>
+</svg>

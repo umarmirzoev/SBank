@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="integration.css">
+  <title>Зарплатный проект — Сомонибонк</title>
+  <style>
+    :root{--text:#203654;--muted:#667b98;--line:#dfeaf7;--blue:#2f8ef2;--deep:#175fd4;--cyan:#2fd0ef;--bg:#f5f9ff;--dark:#0c1f43;--shadow:0 24px 64px rgba(42,79,136,.12)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at top left,rgba(84,168,255,.15),transparent 22%),linear-gradient(180deg,#fbfdff 0%,var(--bg) 100%);color:var(--text);font-family:"Segoe UI",Arial,Helvetica,sans-serif}
+    a{text-decoration:none;color:inherit}button,input{font:inherit}
+    .page{width:min(1280px,calc(100% - 48px));margin:0 auto;padding:18px 0 52px}.shell{padding:16px;border-radius:34px;background:rgba(255,255,255,.96);border:1px solid rgba(224,235,247,.98);box-shadow:0 30px 90px rgba(26,71,137,.14);overflow:hidden}
+    .header-top,.logo,.main-nav,.header-right,.location,.sub-nav,.hero-layout,.hero-actions,.mini-grid,.benefit-grid,.quote-footer,.footer-top,.footer-bottom,.store-row,.social-row,.form-row,.contact-meta{display:flex;align-items:center}
+    .header-top{gap:24px;justify-content:space-between;padding:4px 18px 18px;border-bottom:1px solid var(--line)}.logo{gap:10px;flex:0 0 auto}.logo svg{width:34px;height:34px}.logo span{font-size:24px;font-weight:700;letter-spacing:-.03em}
+    .main-nav{gap:38px;margin-left:24px;margin-right:auto;font-size:15px;font-weight:500}.main-nav a,.sub-nav a,.location,.lang{transition:color .2s ease,transform .2s ease}.main-nav a:hover,.sub-nav a:hover,.location:hover,.lang:hover{color:#145eb4}.main-nav a{position:relative;padding:12px 0 15px}.main-nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-18px;height:4px;border-radius:999px;background:#1fca80}
+    .header-right{gap:24px;font-size:15px;color:var(--muted)}.location{gap:10px;white-space:nowrap}.location svg{width:18px;height:18px;stroke:#7b8ca4;stroke-width:1.8;fill:none}.lang{white-space:nowrap}
+    .sub-nav{gap:22px;padding:24px 18px 28px;font-size:14px;white-space:nowrap;overflow-x:auto}.sub-nav a{position:relative;padding-bottom:8px;color:#47617f}.sub-nav a.active-sub{color:#145eb4;font-weight:600}.sub-nav a.active-sub::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:999px;background:linear-gradient(90deg,#2fc9ee 0%,#2f8ef2 100%)}
+    .section{margin-top:22px}.section-head{margin:0 0 18px;padding:0 8px}.section-head h2{margin:0 0 10px;color:#27467b;font-family:Georgia,"Times New Roman",serif;font-size:clamp(34px,4vw,46px);line-height:1.08;font-weight:400;letter-spacing:-.04em}.section-head p,.mini-card p,.feature-list li,.quote-card p,.faq-answer,.footer p,.footer a,.form-copy p,.contact-meta span{margin:0;color:var(--muted);font-size:15px;line-height:1.65}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+    @keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    .hero{padding:24px;border-radius:30px;background:linear-gradient(135deg,#fefefe 0%,#f4f8ff 48%,#e9f3ff 100%);border:1px solid rgba(219,230,244,.98);box-shadow:var(--shadow);overflow:hidden}
+    .hero-layout{gap:26px;min-height:330px}.hero-copy{width:50%;padding:18px 22px 18px 18px;opacity:0;animation:fadeUp .7s ease forwards}.hero-copy h1{margin:0 0 18px;max-width:520px;color:#254577;font-family:Georgia,"Times New Roman",serif;font-size:clamp(40px,4.5vw,58px);line-height:1.04;font-weight:400;letter-spacing:-.04em}.hero-copy p{max-width:420px;color:var(--muted);font-size:18px;line-height:1.6}
+    .hero-actions{gap:14px;margin-top:28px;flex-wrap:wrap}.btn,.ghost-btn{min-height:54px;padding:0 26px;border-radius:15px;border:0;cursor:pointer;font-weight:700;transition:transform .22s ease,box-shadow .22s ease,filter .22s ease}.btn{background:linear-gradient(180deg,var(--cyan),var(--deep));color:#fff;box-shadow:0 18px 32px rgba(47,117,242,.24)}.ghost-btn{background:#fff;color:#23518c;border:1px solid rgba(154,192,235,.75)}.btn:hover,.ghost-btn:hover,.mini-card:hover,.benefit-card:hover,.quote-nav button:hover,.consult-card:hover,.faq-item:hover{transform:translateY(-4px);filter:brightness(1.03)}
+    .hero-visual{width:50%;position:relative;min-height:300px;opacity:0;animation:fadeUp .85s ease .12s forwards}.pedestal{position:absolute;right:28px;bottom:0;width:300px;height:86px;border-radius:22px 22px 0 0;background:linear-gradient(180deg,#fff,#e6eef8);box-shadow:inset 0 1px 0 rgba(255,255,255,.94),0 18px 34px rgba(63,97,146,.14)}
+    .clock,.sheet,.arrow-swoosh{position:absolute;box-shadow:0 20px 36px rgba(33,63,116,.18)}.clock{right:44px;top:18px;width:148px;height:148px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,#edf3fb 58%,#7383a2 100%);border:10px solid #63769b;animation:floatY 4.2s ease-in-out infinite}.clock::before,.clock::after{content:"";position:absolute;left:50%;top:50%;transform-origin:bottom center;background:#477ae1;border-radius:999px}.clock::before{width:6px;height:44px;margin-left:-3px;margin-top:-44px;transform:rotate(46deg)}.clock::after{width:6px;height:58px;margin-left:-3px;margin-top:-58px;transform:rotate(-130deg)}
+    .sheet{left:64px;top:70px;width:116px;height:92px;border-radius:18px;background:linear-gradient(160deg,#45638e 0%,#2b436d 100%);transform:rotate(2deg);animation:floatY 4.6s ease-in-out infinite .3s}.sheet::before{content:"";position:absolute;left:22px;right:22px;top:26px;height:24px;border-radius:12px;background:linear-gradient(180deg,#ffffff,#dce8fa)}.sheet::after{content:"";position:absolute;left:36px;top:32px;width:26px;height:14px;background:linear-gradient(180deg,#48d4ee,#2b78ea);clip-path:polygon(0 100%,22% 45%,42% 66%,58% 18%,100% 100%)}
+    .arrow-swoosh{left:120px;bottom:42px;width:92px;height:44px;background:linear-gradient(180deg,#58d8f2,#2c80eb);clip-path:polygon(0 60%,58% 60%,58% 26%,100% 70%,58% 100%,58% 74%,0 74%);border-radius:999px;transform:rotate(-18deg);animation:floatY 4.8s ease-in-out infinite .6s}
+    .mini-grid{gap:16px;align-items:stretch}.mini-card{flex:1;min-height:236px;padding:24px;border-radius:24px;background:linear-gradient(180deg,#fff,#f2f8ff);border:1px solid rgba(213,226,242,.96);box-shadow:0 18px 34px rgba(112,168,226,.14);cursor:pointer;position:relative;overflow:hidden;transition:transform .24s ease,box-shadow .24s ease,border-color .24s ease,background .24s ease;opacity:0;animation:fadeUp .7s ease forwards}.mini-card:nth-child(2){animation-delay:.08s}.mini-card:nth-child(3){animation-delay:.16s}.mini-card.active{border-color:rgba(83,155,236,.98);box-shadow:0 24px 42px rgba(80,139,214,.18)}.mini-card h3{margin:0 0 10px;max-width:220px;color:#214a83;font-size:18px;line-height:1.3}
+    .mini-art{position:absolute;left:24px;right:24px;bottom:18px;height:98px}.mini-art::before{content:"";position:absolute;left:0;right:0;bottom:0;height:36px;border-radius:15px;background:linear-gradient(180deg,#fff,#e7eef7)}.mini-art::after{content:"";position:absolute;left:30px;bottom:16px;width:72px;height:72px;border-radius:20px;background:linear-gradient(180deg,#7db5ff,#3d77e8);box-shadow:0 16px 24px rgba(63,113,187,.22)}
+    .mini-card:nth-child(1) .mini-art::after{transform:rotate(10deg)}
+    .mini-card:nth-child(2) .mini-art::after{left:34px;width:96px;height:58px;border-radius:14px;background:linear-gradient(180deg,#6f95c7,#3b6094)}
+    .mini-card:nth-child(3) .mini-art::after{left:44px;width:82px;height:82px;border-radius:24px;background:linear-gradient(180deg,#55d3ec,#2e75e5);clip-path:polygon(50% 0,92% 18%,92% 60%,50% 100%,8% 60%,8% 18%)}
+    .benefit-grid{gap:18px;align-items:stretch}.benefit-card{flex:1;min-height:292px;padding:28px 28px 22px;border-radius:24px;box-shadow:0 20px 42px rgba(31,73,135,.18);position:relative;overflow:hidden;transition:transform .24s ease,box-shadow .24s ease;opacity:0;animation:fadeUp .72s ease forwards}.benefit-card:nth-child(2){animation-delay:.12s}.benefit-card.business{background:linear-gradient(180deg,#165ecf,#0f4eb8);color:#fff}.benefit-card.staff{background:linear-gradient(180deg,#12376c,#0d2246);color:#fff}.benefit-card h3{margin:0 0 14px;font-size:20px}.feature-list{margin:0;padding-left:18px}.feature-list li{color:rgba(255,255,255,.9);margin-bottom:10px}
+    .benefit-icon{position:absolute;right:22px;bottom:18px;width:132px;height:132px;border-radius:30px;background:linear-gradient(180deg,#7aaeff,#4f7de7);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 18px 28px rgba(12,25,57,.24);transform:rotate(12deg)}
+    .benefit-card.staff .benefit-icon{background:linear-gradient(180deg,#66b6ff,#4b78e0)}
+    .benefit-card.business .benefit-icon::before,.benefit-card.business .benefit-icon::after,.benefit-card.staff .benefit-icon::before,.benefit-card.staff .benefit-icon::after{content:"";position:absolute}
+    .benefit-card.business .benefit-icon::before{left:28px;right:28px;top:34px;height:34px;border-radius:14px;background:linear-gradient(180deg,#fff,#dce8fa)}
+    .benefit-card.business .benefit-icon::after{left:44px;top:42px;width:36px;height:18px;background:linear-gradient(180deg,#4bd8ef,#2a7bea);clip-path:polygon(0 100%,25% 48%,42% 70%,58% 16%,100% 100%)}
+    .benefit-card.staff .benefit-icon::before{left:38px;top:26px;width:54px;height:54px;border-radius:50%;background:linear-gradient(180deg,#64d1f0,#4e7ce2)}
+    .benefit-card.staff .benefit-icon::after{left:28px;right:28px;bottom:24px;height:42px;border-radius:24px 24px 18px 18px;background:linear-gradient(180deg,#5d8de8,#4168cc)}
+    .quote-card{padding:52px 34px;border-radius:28px;background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(235,246,255,.94));border:1px solid rgba(209,226,243,.98);box-shadow:0 20px 40px rgba(101,162,224,.12);position:relative;overflow:hidden}.quote-card::after{content:"\\201D";position:absolute;right:28px;top:-12px;color:rgba(114,170,236,.15);font-family:Georgia,"Times New Roman",serif;font-size:220px;line-height:1}.quote-card p{position:relative;z-index:1;max-width:760px;color:#35507d;font-size:20px;line-height:1.7}.quote-footer{justify-content:space-between;gap:18px;margin-top:28px;position:relative;z-index:1}.brand-row{display:flex;align-items:center;gap:14px}.brand-badge{width:58px;height:58px;border-radius:50%;background:linear-gradient(180deg,#29d2ef,#216de0);display:grid;place-items:center;color:#fff;font-weight:700;box-shadow:0 16px 28px rgba(33,109,224,.18)}.brand-row strong{display:block;color:#214a83;font-size:24px;line-height:1.2}.brand-row span{color:var(--muted);font-size:13px}.quote-nav{display:flex;gap:10px}.quote-nav button{width:42px;height:42px;border:0;border-radius:50%;background:#fff;color:#77a1d8;box-shadow:0 10px 18px rgba(90,139,200,.12);cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,color .2s ease}.quote-nav button:last-child{color:#2f8ef2}
+    .consult-card{padding:34px;border-radius:28px;background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(233,244,255,.95));border:1px solid rgba(213,226,242,.98);box-shadow:0 20px 40px rgba(101,162,224,.12);transition:transform .24s ease,box-shadow .24s ease}.consult-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:28px}.form-copy h3{margin:0 0 14px;color:#2a4e83;font-family:Georgia,"Times New Roman",serif;font-size:36px;font-weight:400;line-height:1.1}.form-copy p{max-width:320px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:flex;flex-direction:column;gap:8px}.field label{color:#4d678b;font-size:14px}.field input{min-height:52px;padding:14px 16px;border-radius:12px;border:1px solid #cfe0f4;background:#fff;color:var(--text);outline:none;transition:border-color .2s ease,box-shadow .2s ease}.field input:focus{border-color:#5da5ff;box-shadow:0 0 0 4px rgba(47,142,242,.12)}.field-full{grid-column:1 / -1}.form-row{justify-content:space-between;gap:18px;align-items:flex-end}.consent{max-width:300px;color:#6d82a0;font-size:12px;line-height:1.5}.contact-meta{gap:36px;flex-wrap:wrap;margin-top:26px;padding-top:22px;border-top:1px solid rgba(205,220,238,.86)}.contact-meta strong{display:block;color:#234b84;font-size:14px}
+    .faq-wrap{padding:28px;border-radius:28px;background:#fff;border:1px solid rgba(216,229,244,.96);box-shadow:0 18px 34px rgba(112,168,226,.12)}.faq-item{border-top:1px solid #dfe8f4;padding:18px 0;transition:transform .2s ease,background .2s ease}.faq-item:first-child{border-top:0}.faq-button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:18px;border:0;background:transparent;padding:0;color:#24497f;font-size:18px;font-weight:600;text-align:left;cursor:pointer}.faq-button span:last-child{font-size:28px;color:#78a7e2;transition:transform .2s ease,color .2s ease}.faq-answer{display:none;padding-top:14px;max-width:940px}.faq-item.open .faq-answer{display:block}.faq-item.open .faq-button span:last-child{transform:rotate(45deg);color:#2f8ef2}
+    .footer{margin-top:22px;padding:30px 30px 24px;border-radius:26px;background:linear-gradient(180deg,#081d3b 0%,#0a2346 100%);color:rgba(255,255,255,.9);box-shadow:0 18px 34px rgba(6,28,60,.22)}.footer-top{align-items:flex-start;justify-content:space-between;gap:28px;flex-wrap:wrap}.footer-col{min-width:210px;flex:1}.footer strong{color:#2fd2ef;font-size:28px;line-height:1.1}.store-row,.social-row{gap:10px;flex-wrap:wrap;margin-top:12px}.store-badge,.social-pill{min-width:90px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600}.social-pill{min-width:40px;padding:0;border-radius:50%}.footer-bottom{justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.09);font-size:13px;color:rgba(226,236,255,.64)}
+    .toast{position:fixed;right:20px;bottom:20px;background:rgba(21,39,69,.94);color:#fff;padding:12px 16px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s ease,transform .2s ease;z-index:1000}.toast.show{opacity:1;transform:translateY(0)}
+    @media (max-width:1024px){.hero-layout,.mini-grid,.benefit-grid,.quote-footer{display:block}.hero-copy,.hero-visual{width:100%}.hero-visual{margin-top:18px}.mini-card+.mini-card,.benefit-card+.benefit-card{margin-top:16px}.consult-layout{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}}
+    @media (max-width:760px){.page{width:calc(100% - 20px);padding:10px 0 30px}.shell,.hero,.mini-card,.benefit-card,.quote-card,.consult-card,.faq-wrap,.footer{border-radius:22px}.header-top,.sub-nav,.hero,.consult-card,.quote-card,.footer,.faq-wrap{padding-left:16px;padding-right:16px}.header-top{flex-wrap:wrap}.main-nav{order:3;margin:0;width:100%;gap:22px;overflow-x:auto}.hero-copy h1{font-size:38px}.hero-copy p,.quote-card p{font-size:16px}.hero-actions .btn,.hero-actions .ghost-btn,.form-row .btn{width:100%}.form-row{display:block}.consent{margin-top:12px;max-width:none}.quote-nav{margin-top:16px}.hero-visual{min-height:260px}.clock{right:16px;width:122px;height:122px}.sheet{left:18px}.arrow-swoosh{left:72px}.pedestal{right:12px;width:220px}.contact-meta{gap:18px}}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <header>
+        <div class="header-top">
+          <a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#356dff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#356dff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#356dff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a>
+          <nav class="main-nav" aria-label="Главное меню"><a href="index.html">Частным лицам</a><a class="active" href="business.html">Бизнесу</a><a href="#" data-toast="Корпоративный раздел будет расширен позже.">Сомонибонк</a></nav>
+          <div class="header-right"><a class="location" href="#" data-toast="Интернет-банк для бизнеса будет расширен позже."><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.7 6-11a6 6 0 1 0-12 0c0 5.3 6 11 6 11Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg><span>Интернет-банк</span></a><a class="lang" href="#" data-toast="Смена языка будет добавлена позже.">Рус ˅</a></div>
+        </div>
+        <nav class="sub-nav" aria-label="Разделы для бизнеса"><a href="business.html">Сомонибонк Business</a><a class="active-sub" href="salary-project.html">Зарплатный проект</a><a href="business.html#services">Финансирование</a><a href="business.html#services">Продажи в рассрочку</a><a href="business.html#services">Эквайринг</a><a href="business.html#services">Расчётный счёт</a><a href="transfers.html">Переводы</a></nav>
+      </header>
+      <main>
+        <section class="hero section" id="hero">
+          <div class="hero-layout">
+            <div class="hero-copy">
+              <h1>Запуск зарплатного проекта за считанные минуты</h1>
+              <p>Мгновенное зачисление зарплаты и удобное управление выплатами вместе с Сомонибонк.</p>
+              <div class="hero-actions"><button class="btn" type="button" data-scroll-target="consult">Подробнее</button><button class="ghost-btn" type="button" data-scroll-target="faq">Как стать клиентом</button></div>
+            </div>
+            <div class="hero-visual" aria-hidden="true"><div class="sheet"></div><div class="arrow-swoosh"></div><div class="clock"></div><div class="pedestal"></div></div>
+          </div>
+        </section>
+        <section class="section">
+          <div class="mini-grid">
+            <article class="mini-card active" data-mini="online"><h3>Онлайн-управление</h3><p>Начисляйте зарплату в любое время и следите за операциями онлайн.</p><div class="mini-art"></div></article>
+            <article class="mini-card" data-mini="cash"><h3>Снятие наличных — 0%</h3><p>Снимайте средства и выплачивайте без комиссии с картами Сомонибонк.</p><div class="mini-art"></div></article>
+            <article class="mini-card" data-mini="care"><h3>Без лишних хлопот</h3><p>Автоматическое зачисление зарплаты без загрузки бухгалтерии.</p><div class="mini-art"></div></article>
+          </div>
+        </section>
+        <section class="section">
+          <div class="section-head"><h2>Ключевые преимущества</h2></div>
+          <div class="benefit-grid">
+            <article class="benefit-card business"><h3>Для бизнеса</h3><ol class="feature-list"><li>Снижение нагрузки на бухгалтерию и удобное онлайн-начисление.</li><li>Выплата зарплат, авансов и командировочных без лишних файлов.</li><li>Полный онлайн-контроль всех платёжных операций.</li></ol><div class="benefit-icon"></div></article>
+            <article class="benefit-card staff"><h3>Для сотрудников</h3><ol class="feature-list"><li>Бесплатный выпуск карты Visa Gold с логотипом Сомонибонк.</li><li>Зачисление зарплаты в назначенный день.</li><li>Удобное мобильное приложение и бонусные возможности.</li><li>Яркая карта с современным дизайном.</li></ol><div class="benefit-icon"></div></article>
+          </div>
+        </section>
+        <section class="section">
+          <div class="quote-card">
+            <p>Сомонибонк добился больших успехов в области банковских услуг и обслуживания корпоративных клиентов. Современные банковские технологии помогают моментально начислять зарплату сотрудникам и ускорять приём платежей внутри компании.</p>
+            <div class="quote-footer">
+              <div class="brand-row"><div class="brand-badge">SB</div><div><strong>«Сомонибонк»</strong><span>Коммерческий банк</span></div></div>
+              <div class="quote-nav"><button type="button" data-toast="Предыдущий отзыв.">←</button><button type="button" data-toast="Следующий отзыв.">→</button></div>
+            </div>
+          </div>
+        </section>
+        <section class="section" id="consult">
+          <div class="consult-card">
+            <div class="consult-layout">
+              <div class="form-copy"><h3>Консультация по продукту</h3><p>Заполните форму, чтобы мы могли с вами связаться и всё подробнее рассказать.</p></div>
+              <div>
+                <div class="form-grid">
+                  <div class="field"><label for="salary-name">Имя и фамилия</label><input id="salary-name" type="text" placeholder="Ваше имя"></div>
+                  <div class="field"><label for="salary-company">Компания</label><input id="salary-company" type="text" placeholder="Название компании"></div>
+                  <div class="field field-full"><label for="salary-phone">Номер телефона</label><input id="salary-phone" type="tel" placeholder="+992 ..."></div>
+                </div>
+                <div class="form-row" style="margin-top:18px;"><button class="btn" type="button" data-submit-consult>Отправить</button><div class="consent">Нажимая кнопку «Отправить», вы соглашаетесь с условиями обработки персональных данных.</div></div>
+              </div>
+            </div>
+            <div class="contact-meta"><div><strong>Дополнительные каналы связи</strong><span>Позвоните нам</span></div><div><strong>4 8888 5363</strong><span>Линия поддержки бизнеса</span></div><div><strong>@SM_partners</strong><span>Telegram-бот</span></div></div>
+          </div>
+        </section>
+        <section class="section" id="faq">
+          <div class="faq-wrap">
+            <div class="section-head"><h2>Как стать клиентом Сомонибонк</h2><p>Вам необходимо предоставить следующие документы.</p></div>
+            <article class="faq-item open"><button class="faq-button" type="button"><span>Для юридических лиц</span><span>+</span></button><div class="faq-answer">Оригинал свидетельства о регистрации юридического лица, выписка из государственного реестра, справка о присвоении ИНН, копии устава и учредительных документов, а также карточка с образцами подписей.</div></article>
+            <article class="faq-item"><button class="faq-button" type="button"><span>Для индивидуальных предпринимателей</span><span>+</span></button><div class="faq-answer">Паспорт, регистрационные документы ИП, ИНН, контактные данные и базовый пакет документов для открытия расчётного счёта и подключения зарплатного проекта.</div></article>
+            <article class="faq-item"><button class="faq-button" type="button"><span>Дополнительные требования в определённых ситуациях</span><span>+</span></button><div class="faq-answer">В зависимости от вида деятельности и организационной формы банк может запросить дополнительные подтверждающие документы для проверки компании и настройки сервиса.</div></article>
+          </div>
+        </section>
+      </main>
+      <footer class="footer">
+        <div class="footer-top">
+          <div class="footer-col"><a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#35d2ff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#35d2ff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#35d2ff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a><p>ул. Бегунова, 8<br>Душанбе</p><a href="#" data-toast="Филиалы и офисы будут добавлены позже.">Филиалы и офисы</a></div>
+          <div class="footer-col"><p><strong>900</strong><br>Для звонков с мобильных</p><p><strong>+992 44 888 1111</strong><br>Для звонков из любой точки мира</p><p><strong>+992 44 600 1520</strong><br>Техническая поддержка</p><p><strong>support@somoni.tj</strong><br>Для онлайн-обращений</p></div>
+          <div class="footer-col"><p>Приложение</p><div class="store-row"><span class="store-badge">Google Play</span><span class="store-badge">App Store</span></div><p style="margin-top:18px;">Следите за нами</p><div class="social-row"><span class="social-pill">tg</span><span class="social-pill">f</span><span class="social-pill">in</span><span class="social-pill">ig</span><span class="social-pill">yt</span><span class="social-pill">vk</span></div></div>
+        </div>
+        <div class="footer-bottom"><span>О нас</span><span>Адреса</span><span>Документы и тарифы</span><span>Вакансии</span><span>Связь с нами</span></div>
+      </footer>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script type="module" src="scripts/salary-project-page.js"></script>
+</body>
+</html>

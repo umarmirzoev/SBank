@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="integration.css">
   <title>Сомонибонк</title>
   <style>
     :root {
@@ -1551,7 +1552,7 @@
 
         <nav class="main-nav" aria-label="Главное меню">
           <a class="active" href="#">Частным лицам</a>
-          <a href="#">Бизнесу</a>
+          <a href="business.html">Бизнесу</a>
           <a href="#">Сомонибонк</a>
         </nav>
 
@@ -1571,9 +1572,9 @@
         <a href="somonibank-app.html">Приложение Somoni</a>
           <a href="cards.html">Карты</a>
         <a href="#">Салом</a>
-        <a href="#">Покупка авто</a>
+        <a href="auto.html">Покупка авто</a>
         <a href="#">Somoni Shop</a>
-        <a href="#">Переводы</a>
+        <a href="transfers.html">Переводы</a>
         <a href="#">Депозиты</a>
         <a href="#">Авиабилеты</a>
         <a href="#">Ещё ˅</a>
@@ -1636,7 +1637,7 @@
       <section class="rate-tabs">
         <a class="rate-tab active" href="#" data-tab="rates">Курс валют</a>
         <a class="rate-tab" href="#" data-toast="Расчёт дохода будет добавлен позже.">Рассчитать доход</a>
-        <a class="rate-tab" href="#" data-toast="Покупка авто будет доступна в следующем разделе.">Покупка авто</a>
+        <a class="rate-tab" href="auto.html">Покупка авто</a>
       </section>
 
       <section class="rates-panel">
@@ -1893,174 +1894,6 @@
     </main>
   </div>
   <div class="toast" id="toast"></div>
-  <script>
-    const rateData = {
-      transfer: {
-        USD: { buy: 9.55, sell: 9.62 },
-        RUB: { buy: 0.1164, sell: 0.1187 },
-        EUR: { buy: 10.94, sell: 11.15 }
-      },
-      cash: {
-        USD: { buy: 9.51, sell: 9.68 },
-        RUB: { buy: 0.1159, sell: 0.1192 },
-        EUR: { buy: 10.88, sell: 11.23 }
-      },
-      cashless: {
-        USD: { buy: 9.58, sell: 9.64 },
-        RUB: { buy: 0.1168, sell: 0.1182 },
-        EUR: { buy: 10.99, sell: 11.11 }
-      }
-    };
-
-    const toast = document.getElementById("toast");
-    const tableBody = document.getElementById("ratesTableBody");
-    const receiveAmount = document.getElementById("receiveAmount");
-    const payAmount = document.getElementById("payAmount");
-    const receiveCurrency = document.getElementById("receiveCurrency");
-    const payCurrency = document.getElementById("payCurrency");
-    const directionButtons = document.querySelectorAll("#directionSwitch button");
-    const rateButtons = document.querySelectorAll("#rateMode .rate-filter");
-    const miniButtons = document.querySelectorAll("#rateMiniMode .mini-filter");
-
-    const state = {
-      mode: "transfer",
-      direction: "buy"
-    };
-
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add("show");
-      clearTimeout(showToast.timer);
-      showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
-    }
-
-    function renderTable() {
-      const modeRates = rateData[state.mode];
-      tableBody.innerHTML = `
-        <tr data-currency="USD">
-          <td><div class="currency-cell"><span class="flag usd"></span><span>1 USD</span></div></td>
-          <td>${modeRates.USD.buy.toFixed(4)}</td>
-          <td>${modeRates.USD.sell.toFixed(4)}</td>
-        </tr>
-        <tr data-currency="RUB">
-          <td><div class="currency-cell"><span class="flag rub"></span><span>1 RUB</span></div></td>
-          <td>${modeRates.RUB.buy.toFixed(4)}</td>
-          <td>${modeRates.RUB.sell.toFixed(4)}</td>
-        </tr>
-        <tr data-currency="EUR">
-          <td><div class="currency-cell"><span class="flag eur"></span><span>1 EUR</span></div></td>
-          <td>${modeRates.EUR.buy.toFixed(4)}</td>
-          <td>${modeRates.EUR.sell.toFixed(4)}</td>
-        </tr>
-      `;
-    }
-
-    function getRate(fromCurrency, toCurrency) {
-      if (fromCurrency === toCurrency) return 1;
-      const modeRates = rateData[state.mode];
-
-      if (fromCurrency !== "TJS" && toCurrency === "TJS") {
-        return state.direction === "buy" ? modeRates[fromCurrency].sell : modeRates[fromCurrency].buy;
-      }
-
-      if (fromCurrency === "TJS" && toCurrency !== "TJS") {
-        const base = state.direction === "buy" ? modeRates[toCurrency].sell : modeRates[toCurrency].buy;
-        return 1 / base;
-      }
-
-      if (fromCurrency !== "TJS" && toCurrency !== "TJS") {
-        const toTjs = state.direction === "buy" ? modeRates[fromCurrency].sell : modeRates[fromCurrency].buy;
-        const fromTjs = state.direction === "buy" ? modeRates[toCurrency].sell : modeRates[toCurrency].buy;
-        return toTjs / fromTjs;
-      }
-
-      return 1;
-    }
-
-    function formatAmount(value) {
-      return Number(value).toFixed(4).replace(/\.?0+$/, (match) => match === ".0000" ? "" : match);
-    }
-
-    function updateFromReceive() {
-      const rate = getRate(payCurrency.value, receiveCurrency.value);
-      const value = parseFloat(receiveAmount.value || "0");
-      payAmount.value = formatAmount(value / rate);
-    }
-
-    function updateFromPay() {
-      const rate = getRate(payCurrency.value, receiveCurrency.value);
-      const value = parseFloat(payAmount.value || "0");
-      receiveAmount.value = formatAmount(value * rate);
-    }
-
-    rateButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        state.mode = button.dataset.mode;
-        rateButtons.forEach((item) => item.classList.toggle("active", item === button));
-        renderTable();
-        updateFromReceive();
-      });
-    });
-
-    miniButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        miniButtons.forEach((item) => item.classList.toggle("active", item === button));
-        showToast("Дополнительный режим выбран.");
-      });
-    });
-
-    directionButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        state.direction = button.dataset.direction;
-        directionButtons.forEach((item) => item.classList.toggle("active", item === button));
-        updateFromReceive();
-      });
-    });
-
-    receiveAmount.addEventListener("input", updateFromReceive);
-    payAmount.addEventListener("input", updateFromPay);
-    receiveCurrency.addEventListener("change", updateFromReceive);
-    payCurrency.addEventListener("change", updateFromReceive);
-
-    document.getElementById("swapButton").addEventListener("click", () => {
-      const currentReceiveCurrency = receiveCurrency.value;
-      receiveCurrency.value = payCurrency.value;
-      payCurrency.value = currentReceiveCurrency;
-
-      const currentReceiveAmount = receiveAmount.value;
-      receiveAmount.value = payAmount.value;
-      payAmount.value = currentReceiveAmount;
-      updateFromReceive();
-    });
-
-    document.getElementById("sendMoneyButton").addEventListener("click", () => {
-      showToast("Перевод подготовлен. Можно переходить к оформлению.");
-    });
-
-    document.querySelectorAll("[data-toast]").forEach((element) => {
-      element.addEventListener("click", () => showToast(element.dataset.toast));
-    });
-
-    document.querySelectorAll(".hero button").forEach((button) => {
-      button.addEventListener("click", () => {
-        document.querySelector(".rates-panel").scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    });
-
-    document.querySelectorAll(".rate-tab").forEach((tab) => {
-      tab.addEventListener("click", (event) => {
-        event.preventDefault();
-        document.querySelectorAll(".rate-tab").forEach((item) => item.classList.toggle("active", item === tab));
-        if (tab.dataset.tab === "rates") {
-          document.querySelector(".rates-panel").scrollIntoView({ behavior: "smooth", block: "start" });
-        } else if (tab.dataset.toast) {
-          showToast(tab.dataset.toast);
-        }
-      });
-    });
-
-    renderTable();
-    updateFromReceive();
-  </script>
+  <script type="module" src="scripts/index-page.js"></script>
 </body>
 </html>

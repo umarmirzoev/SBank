@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="integration.css">
   <title>Приложение Сомонибонк</title>
   <style>
     :root {
@@ -24,7 +25,7 @@
     a { color: inherit; text-decoration: none; }
 
     .page {
-      width: 1136px;
+      width: min(1136px, calc(100% - 40px));
       margin: 0 auto;
       padding: 16px 0 40px;
     }
@@ -1210,7 +1211,7 @@
 
         <nav class="main-nav" aria-label="Главное меню">
           <a class="active" href="index.html">Частным лицам</a>
-          <a href="#" data-toast="Раздел для бизнеса будет добавлен позже.">Бизнесу</a>
+          <a href="business.html">Бизнесу</a>
           <a href="#" data-toast="Корпоративный раздел Сомонибонк будет добавлен позже.">Сомонибонк</a>
         </nav>
 
@@ -1230,7 +1231,7 @@
         <a class="active-sub" href="somonibank-app.html">Приложение Somoni</a>
         <a href="cards.html">Карты</a>
         <a href="#" data-toast="Раздел Салом будет добавлен позже.">Салом</a>
-        <a href="#" data-toast="Покупка авто будет добавлена позже.">Покупка авто</a>
+        <a href="auto.html">Покупка авто</a>
         <a href="#" data-toast="Somoni Shop будет добавлен позже.">Somoni Shop</a>
         <a href="#" data-toast="Раздел переводов будет добавлен позже.">Переводы</a>
         <a href="#" data-toast="Раздел депозитов будет добавлен позже.">Депозиты</a>
@@ -1506,43 +1507,6 @@
 
   <div class="toast" id="toast"></div>
 
-  <script>
-    const toast = document.getElementById("toast");
-    const guideTabs = document.querySelectorAll(".guide-tab");
-    const guideCards = document.querySelectorAll(".guide-mini-card");
-
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add("show");
-      clearTimeout(showToast.timer);
-      showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
-    }
-
-    document.querySelectorAll("[data-toast]").forEach((element) => {
-      element.addEventListener("click", (event) => {
-        if (element.getAttribute("href") === "#") {
-          event.preventDefault();
-        }
-        showToast(element.dataset.toast);
-      });
-    });
-
-    guideTabs.forEach((tab) => {
-      tab.addEventListener("click", () => {
-        guideTabs.forEach((item) => item.classList.toggle("active", item === tab));
-        if (tab.dataset.guide === "security") {
-          guideCards[0].classList.add("primary");
-          guideCards[1].classList.remove("primary");
-          guideCards[2].classList.remove("primary");
-          showToast("Открыт раздел: Настройки и безопасность.");
-        } else {
-          guideCards[0].classList.remove("primary");
-          guideCards[1].classList.add("primary");
-          guideCards[2].classList.remove("primary");
-          showToast("Открыт раздел: Карты.");
-        }
-      });
-    });
-  </script>
+  <script type="module" src="scripts/app-page.js"></script>
 </body>
 </html>

@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сомонибонк</title>
+  <style>
+    :root {
+      --text: #2c3b55;
+      --muted: #5b6b84;
+      --line: #e7edf4;
+      --green: #1fca80;
+      --blue-a: #2f43e2;
+      --blue-b: #2493ef;
+      --blue-c: #1dd1e7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #ffffff;
+      color: var(--text);
+      font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    }
+
+    .page {
+      width: 1136px;
+      margin: 0 auto;
+      padding: 16px 0 44px;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .main-nav a,
+    .sub-nav a,
+    .location,
+    .lang,
+    .hero-left button {
+      transition: color 0.2s ease, transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    .main-nav a:hover,
+    .sub-nav a:hover,
+    .location:hover,
+    .lang:hover {
+      color: #145eb4;
+    }
+
+    .hero-left button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 30px rgba(40, 76, 208, 0.38);
+      filter: brightness(1.03);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 4px 0 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    .logo svg {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+    }
+
+    .logo span {
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      margin-left: 24px;
+      margin-right: auto;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .main-nav a {
+      position: relative;
+      padding: 12px 0 15px;
+    }
+
+    .main-nav a.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -18px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--green);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    .location {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      white-space: nowrap;
+    }
+
+    .location svg {
+      width: 18px;
+      height: 18px;
+      stroke: #77859a;
+      stroke-width: 1.8;
+      fill: none;
+    }
+
+    .lang {
+      white-space: nowrap;
+      color: var(--text);
+    }
+
+    .sub-nav {
+      display: flex;
+      align-items: center;
+      gap: 27px;
+      padding: 25px 0 30px;
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
+    .hero {
+      position: relative;
+      display: flex;
+      min-height: 546px;
+      border-radius: 30px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 83% 18%, rgba(255, 255, 255, 0.1), transparent 22%),
+        linear-gradient(114deg, #3044e0 0%, #2490ef 54%, #21d0e5 100%);
+    }
+
+    .hero-left {
+      width: 47.5%;
+      padding: 112px 0 0 86px;
+      color: #ffffff;
+    }
+
+    .hero-left h1 {
+      margin: 0 0 26px;
+      max-width: 360px;
+      font-size: 42px;
+      line-height: 1.16;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .hero-left p {
+      margin: 0 0 34px;
+      max-width: 420px;
+      font-size: 17px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .hero-left button {
+      width: 178px;
+      height: 56px;
+      border: 0;
+      border-radius: 13px;
+      background: linear-gradient(180deg, #22ccee 0%, #2d56f2 100%);
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      box-shadow: 0 16px 28px rgba(40, 76, 208, 0.34);
+      cursor: pointer;
+    }
+
+    .hero-right {
+      position: relative;
+      flex: 1;
+    }
+
+    .ball {
+      position: absolute;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.96);
+      user-select: none;
+    }
+
+    .ball-ten {
+      right: 146px;
+      top: 108px;
+      width: 348px;
+      height: 348px;
+      background:
+        radial-gradient(circle at 34% 25%, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.1) 16%, transparent 22%),
+        radial-gradient(circle at 38% 36%, #4f74ff 0%, #183ad1 61%, #1231bf 100%);
+      box-shadow:
+        inset -26px -36px 60px rgba(0, 0, 0, 0.22),
+        0 22px 50px rgba(18, 49, 191, 0.28);
+    }
+
+    .ball-ten span {
+      margin-left: 10px;
+      margin-top: -2px;
+      font-size: 208px;
+      line-height: 1;
+      font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+      font-weight: 600;
+      letter-spacing: -0.1em;
+    }
+
+    .ball-percent {
+      right: 18px;
+      top: 36px;
+      width: 206px;
+      height: 206px;
+      border: 3px solid rgba(255, 255, 255, 0.18);
+      background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.33), rgba(255, 255, 255, 0.13) 40%, rgba(255, 255, 255, 0.08) 100%);
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(4px);
+    }
+
+    .ball-percent span {
+      margin-top: -6px;
+      margin-left: 2px;
+      font-size: 100px;
+      line-height: 1;
+      font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+      font-weight: 600;
+      letter-spacing: -0.05em;
+    }
+
+    .ball-check {
+      left: 92px;
+      bottom: 56px;
+      width: 120px;
+      height: 120px;
+      border: 3px solid rgba(255, 255, 255, 0.16);
+      background: radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.08) 42%, rgba(47, 110, 243, 0.84) 100%);
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.04);
+    }
+
+    .ball-check span {
+      font-size: 64px;
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    .slider-dots {
+      position: absolute;
+      right: 42px;
+      bottom: 42px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slider-dots span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    .slider-dots span.active {
+      width: 34px;
+      border-radius: 999px;
+      background: #2abf63;
+    }
+
+    .feature-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .feature-card {
+      position: relative;
+      min-height: 284px;
+      padding: 22px 20px 20px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #123f86 0%, #0f57ad 100%);
+      color: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 14px 26px rgba(12, 61, 130, 0.18);
+      cursor: pointer;
+      transition: transform 0.24s ease, box-shadow 0.24s ease, filter 0.24s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 36px rgba(12, 61, 130, 0.24);
+      filter: saturate(1.05);
+    }
+
+    .feature-card h3 {
+      margin: 0 0 12px;
+      font-size: 17px;
+      line-height: 1.32;
+      font-weight: 700;
+    }
+
+    .feature-card p {
+      margin: 0;
+      max-width: 250px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.86);
+    }
+
+    .card-art {
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 150px;
+    }
+
+    .pin-shape {
+      position: absolute;
+      left: 50px;
+      bottom: 12px;
+      width: 96px;
+      height: 118px;
+      border-radius: 56px 56px 56px 18px;
+      transform: rotate(45deg);
+      background: linear-gradient(145deg, #fefefe 0%, #a8c5ff 28%, #3267ff 52%, #71d4ff 72%, #d7ebff 100%);
+      box-shadow: inset -10px -12px 20px rgba(38, 72, 159, 0.34), 0 18px 30px rgba(7, 33, 78, 0.18);
+    }
+
+    .pin-shape::before {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 60% 35%, #4fe2ff 0%, #4588ff 55%, #203fa5 100%);
+      transform: rotate(-45deg);
+    }
+
+    .pin-shape::after {
+      content: "";
+      position: absolute;
+      inset: 32px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #88d9ff, #476dff);
+      transform: rotate(-45deg);
+    }
+
+    .cap-top-art {
+      position: absolute;
+      left: 26px;
+      bottom: 52px;
+      width: 150px;
+      height: 54px;
+      border-radius: 8px;
+      transform: perspective(180px) rotateX(55deg) rotate(-8deg);
+      background: linear-gradient(180deg, #666d74 0%, #32363c 100%);
+      box-shadow: 0 14px 30px rgba(5, 21, 50, 0.26);
+    }
+
+    .cap-base-art {
+      position: absolute;
+      left: 72px;
+      bottom: 34px;
+      width: 66px;
+      height: 24px;
+      border-radius: 0 0 28px 28px;
+      background: #24292f;
+    }
+
+    .cap-ribbon-art {
+      position: absolute;
+      left: 118px;
+      bottom: 42px;
+      width: 82px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #1aa7ff, #57cbff);
+      transform: rotate(-8deg);
+    }
+
+    .cap-ribbon-art::after {
+      content: "";
+      position: absolute;
+      right: -10px;
+      top: -4px;
+      width: 4px;
+      height: 54px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #27a9ff, #6bd3ff);
+      transform: rotate(14deg);
+      transform-origin: top center;
+    }
+
+    .cap-loop-art {
+      position: absolute;
+      left: 46px;
+      bottom: 18px;
+      width: 78px;
+      height: 34px;
+      border: 7px solid rgba(89, 181, 255, 0.7);
+      border-radius: 50%;
+      border-top-color: transparent;
+      transform: rotate(14deg);
+    }
+
+    .pay-card-art {
+      position: absolute;
+      right: 22px;
+      bottom: 20px;
+      width: 186px;
+      height: 118px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #0f2559 0%, #173a87 100%);
+      box-shadow: 0 16px 28px rgba(4, 18, 48, 0.28);
+      overflow: hidden;
+    }
+
+    .pay-card-art::before,
+    .pay-card-art::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.95), rgba(138, 205, 255, 0.4) 42%, rgba(77, 144, 255, 0.05) 72%);
+    }
+
+    .pay-card-art::before {
+      width: 48px;
+      height: 48px;
+      right: -8px;
+      top: -8px;
+    }
+
+    .pay-card-art::after {
+      width: 56px;
+      height: 56px;
+      right: -16px;
+      bottom: -18px;
+    }
+
+    .pay-brand {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .pay-bank {
+      position: absolute;
+      left: 16px;
+      top: 48px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .pay-bank-mark {
+      width: 14px;
+      height: 14px;
+      border: 3px solid #3389ff;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .pay-bank-mark::before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      right: -3px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #3389ff;
+    }
+
+    .pay-system {
+      position: absolute;
+      left: 14px;
+      bottom: 16px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .rate-tabs {
+      display: flex;
+      gap: 28px;
+      margin-top: 42px;
+      font-size: 15px;
+      color: #74839a;
+    }
+
+    .rate-tab {
+      position: relative;
+      padding-bottom: 12px;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .rate-tab.active {
+      color: #20344f;
+      font-weight: 500;
+    }
+
+    .rate-tab.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      border-radius: 999px;
+      background: #2f8df0;
+    }
+
+    .rates-panel {
+      display: grid;
+      grid-template-columns: 1fr 272px;
+      gap: 34px;
+      margin-top: 0;
+      padding: 56px 34px 32px;
+      background: linear-gradient(180deg, #eaf4ff 0%, #edf6ff 100%);
+      border-radius: 20px;
+    }
+
+    .rates-wrap {
+      padding-left: 0;
+    }
+
+    .rate-filter-group,
+    .mini-filter-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .rate-filter,
+    .mini-filter {
+      border: 1px solid #6fb2f3;
+      background: transparent;
+      color: #3273b8;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .rate-filter:hover,
+    .mini-filter:hover {
+      transform: translateY(-1px);
+      border-color: #3e8fe0;
+      color: #1f5fa4;
+    }
+
+    .rate-filter.active,
+    .mini-filter.active {
+      border-color: #153d84;
+      background: #153d84;
+      color: #ffffff;
+    }
+
+    .mini-filter-group {
+      margin-top: 12px;
+    }
+
+    .rates-table {
+      width: 100%;
+      margin-top: 44px;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+      font-size: 14px;
+    }
+
+    .rates-table thead th {
+      text-align: left;
+      padding: 0 0 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #50647f;
+      border-bottom: 1px solid #b8cde6;
+    }
+
+    .rates-table thead th:nth-child(2),
+    .rates-table thead th:nth-child(3),
+    .rates-table tbody td:nth-child(2),
+    .rates-table tbody td:nth-child(3) {
+      text-align: right;
+    }
+
+    .rates-table tbody td {
+      padding: 10px 10px;
+      background: #ffffff;
+      font-weight: 600;
+      color: #24405f;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .rates-table tbody tr:hover td {
+      background: #f8fbff;
+    }
+
+    .rates-table tbody td:first-child {
+      border-radius: 6px 0 0 6px;
+      font-weight: 500;
+    }
+
+    .rates-table tbody td:last-child {
+      border-radius: 0 6px 6px 0;
+    }
+
+    .currency-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .flag {
+      width: 16px;
+      height: 12px;
+      border-radius: 2px;
+      box-shadow: 0 0 0 1px rgba(25, 60, 108, 0.08);
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    .flag.usd {
+      background:
+        linear-gradient(180deg, #b22234 0 14%, #fff 14% 28%, #b22234 28% 42%, #fff 42% 56%, #b22234 56% 70%, #fff 70% 84%, #b22234 84% 100%);
+      position: relative;
+    }
+
+    .flag.usd::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 7px;
+      height: 7px;
+      background: #3c3b6e;
+    }
+
+    .flag.rub {
+      background: linear-gradient(180deg, #ffffff 0 33%, #2352c8 33% 66%, #d44141 66% 100%);
+    }
+
+    .flag.eur {
+      background: #2257c7;
+      position: relative;
+    }
+
+    .flag.eur::before {
+      content: "•";
+      position: absolute;
+      inset: -1px 0 0 0;
+      font-size: 10px;
+      text-align: center;
+      color: #ffd250;
+    }
+
+    .rates-footer {
+      display: flex;
+      gap: 20px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: #5d7089;
+    }
+
+    .history-link {
+      color: #3083dd;
+      cursor: pointer;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .history-link:hover {
+      color: #1764ba;
+      transform: translateX(2px);
+    }
+
+    .converter {
+      align-self: start;
+      width: 100%;
+      padding: 30px 26px 28px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(4px);
+      transition: box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    .converter:hover {
+      transform: translateY(-3px);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 18px 36px rgba(56, 118, 184, 0.16);
+    }
+
+    .converter-switch {
+      display: inline-flex;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.65);
+    }
+
+    .converter-switch button {
+      border: 0;
+      background: transparent;
+      color: #7d8ca1;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .converter-switch button:hover {
+      transform: translateY(-1px);
+    }
+
+    .converter-switch button.active {
+      background: #173d84;
+      color: #ffffff;
+    }
+
+    .converter-field {
+      margin-top: 28px;
+    }
+
+    .converter-field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: #687b93;
+    }
+
+    .converter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid #9cb6d6;
+      padding-bottom: 8px;
+    }
+
+    .converter-row input {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      font-size: 19px;
+      font-weight: 700;
+      color: #203c5b;
+      outline: none;
+    }
+
+    .currency-select {
+      border: 0;
+      background: transparent;
+      color: #24558f;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .swap {
+      display: flex;
+      justify-content: center;
+      margin: 12px 0 6px;
+      color: #1d457f;
+      font-size: 18px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .swap:hover {
+      color: #0d63c5;
+      transform: rotate(180deg);
+    }
+
+    .send-button {
+      width: 100%;
+      height: 44px;
+      margin-top: 28px;
+      border: 0;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #2f8ef2 0%, #2378e6 100%);
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 18px rgba(39, 120, 230, 0.24);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+    }
+
+    .send-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 24px rgba(39, 120, 230, 0.3);
+      filter: brightness(1.03);
+    }
+
+    .paylater-section {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 50px;
+      margin-top: 64px;
+      align-items: start;
+    }
+
+    .paylater-card {
+      position: relative;
+      min-height: 266px;
+      border-radius: 16px;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.08), transparent 40%),
+        linear-gradient(135deg, #123f8a 0%, #0d58b0 58%, #1d7cf0 100%);
+      box-shadow: 0 18px 34px rgba(15, 76, 152, 0.2);
+      transition: transform 0.26s ease, box-shadow 0.26s ease;
+    }
+
+    .paylater-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 40px rgba(15, 76, 152, 0.28);
+    }
+
+    .paylater-card::before,
+    .paylater-card::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(116, 181, 255, 0.16);
+      transform: rotate(45deg);
+    }
+
+    .paylater-card::before {
+      right: 62px;
+      top: -22px;
+      width: 168px;
+      height: 168px;
+    }
+
+    .paylater-card::after {
+      right: 18px;
+      bottom: -36px;
+      width: 188px;
+      height: 188px;
+    }
+
+    .paylater-copy {
+      position: relative;
+      z-index: 1;
+      padding: 34px 0 0 38px;
+      color: #ffffff;
+      max-width: 250px;
+    }
+
+    .paylater-copy h2 {
+      margin: 0 0 16px;
+      font-size: 26px;
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .paylater-copy p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.86);
+    }
+
+    .paylater-link {
+      position: absolute;
+      left: 38px;
+      bottom: 36px;
+      color: #1cc7f4;
+      font-size: 15px;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .paylater-link:hover {
+      transform: translateX(5px);
+      color: #53dbff;
+    }
+
+    .paylater-bankcard {
+      position: absolute;
+      right: 70px;
+      top: 66px;
+      width: 156px;
+      height: 102px;
+      border-radius: 12px;
+      transform: rotate(7deg);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0) 36%),
+        linear-gradient(135deg, #1f4b9e 0%, #0a3c86 100%);
+      border: 4px solid rgba(235, 223, 192, 0.72);
+      box-shadow: 0 16px 28px rgba(7, 28, 68, 0.3);
+    }
+
+    .paylater-bankcard::after {
+      content: "";
+      position: absolute;
+      right: 22px;
+      bottom: 14px;
+      width: 42px;
+      height: 56px;
+      background: linear-gradient(180deg, rgba(42, 193, 255, 0.78), rgba(0, 92, 255, 0.28));
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    }
+
+    .paylater-bankcard-label {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      color: rgba(255,255,255,0.92);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .paylater-bankcard-small {
+      position: absolute;
+      left: 16px;
+      bottom: 14px;
+      color: rgba(255,255,255,0.48);
+      font-size: 8px;
+      letter-spacing: 0.08em;
+    }
+
+    .paylater-list {
+      padding-top: 4px;
+    }
+
+    .paylater-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0 26px;
+      border-bottom: 2px solid #d7e9fd;
+      color: #2d405a;
+      font-size: 19px;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .paylater-item + .paylater-item {
+      margin-top: 12px;
+    }
+
+    .paylater-item:hover {
+      transform: translateX(4px);
+      color: #145eb4;
+      border-color: #a9d1fb;
+    }
+
+    .paylater-arrow {
+      font-size: 28px;
+      line-height: 1;
+      color: #334962;
+    }
+
+    .full-list-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 42px;
+      color: #2f82dc;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .full-list-link:hover {
+      color: #1a67be;
+      transform: translateX(4px);
+    }
+
+    .interest-section {
+      margin-top: 84px;
+    }
+
+    .interest-section h2 {
+      margin: 0 0 34px;
+      font-size: 28px;
+      line-height: 1.2;
+      color: #173f7b;
+      letter-spacing: -0.03em;
+    }
+
+    .interest-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 18px;
+    }
+
+    .interest-card {
+      min-height: 174px;
+      padding: 18px 16px 20px;
+      border-radius: 16px;
+      border: 2px solid #89c1f7;
+      background: linear-gradient(180deg, #edf8ff 0%, #eef8ff 100%);
+      box-shadow: 0 8px 16px rgba(114, 175, 235, 0.08);
+      cursor: pointer;
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+    }
+
+    .interest-card:hover {
+      transform: translateY(-6px);
+      border-color: #58a9f2;
+      box-shadow: 0 18px 30px rgba(114, 175, 235, 0.16);
+    }
+
+    .faq-footer-zone {
+      position: relative;
+      margin-top: 74px;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+      background: linear-gradient(180deg, #0b1f3b 0%, #081a34 100%);
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    .faq-footer-zone::before,
+    .faq-footer-zone::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(205, 164, 78, 0.16);
+      transform: rotate(45deg);
+      pointer-events: none;
+    }
+
+    .faq-footer-zone::before {
+      right: 120px;
+      top: 18px;
+      width: 168px;
+      height: 168px;
+    }
+
+    .faq-footer-zone::after {
+      right: 34px;
+      top: 68px;
+      width: 206px;
+      height: 206px;
+    }
+
+    .faq-footer-shell {
+      position: relative;
+      z-index: 1;
+      width: 1136px;
+      margin: 0 auto;
+      padding: 30px 0 40px;
+    }
+
+    .faq-card-dark {
+      display: grid;
+      grid-template-columns: 1fr 290px;
+      align-items: center;
+      min-height: 192px;
+      padding: 0 34px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.03);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+    }
+
+    .faq-card-dark:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 18px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .faq-dark-copy h3 {
+      margin: 0 0 14px;
+      max-width: 260px;
+      font-size: 26px;
+      line-height: 1.12;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .faq-dark-copy p {
+      margin: 0;
+      max-width: 276px;
+      font-size: 13px;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.72);
+    }
+
+    .faq-dark-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 52px;
+      color: #d3a743;
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .faq-dark-link:hover {
+      transform: translateX(4px);
+      color: #f0c35b;
+    }
+
+    .faq-bubbles-dark {
+      position: relative;
+      height: 150px;
+    }
+
+    .faq-bubble {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: inset -14px -18px 34px rgba(0, 0, 0, 0.24), 0 18px 34px rgba(0, 0, 0, 0.22);
+      transition: transform 0.24s ease;
+    }
+
+    .faq-card-dark:hover .faq-bubble.one {
+      transform: translateY(-4px);
+    }
+
+    .faq-card-dark:hover .faq-bubble.two {
+      transform: translateY(-2px);
+    }
+
+    .faq-bubble.one {
+      left: 6px;
+      top: 8px;
+      width: 114px;
+      height: 114px;
+      background: radial-gradient(circle at 35% 30%, #5db2ff 0%, #215fdc 60%, #17439f 100%);
+    }
+
+    .faq-bubble.two {
+      right: 12px;
+      top: 4px;
+      width: 122px;
+      height: 122px;
+      background: radial-gradient(circle at 35% 30%, #7eb4ea 0%, #2b5e9e 60%, #274b7a 100%);
+    }
+
+    .faq-bubble span {
+      font-size: 82px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .faq-bubble.one span {
+      color: #e1b446;
+    }
+
+    .faq-bubble.two span {
+      color: rgba(255,255,255,0.9);
+    }
+
+    .footer-dark {
+      margin-top: 38px;
+      padding: 8px 6px 0;
+    }
+
+    .footer-main {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .footer-brand-dark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #d4a743;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+
+    .footer-brand-dark svg {
+      width: 22px;
+      height: 22px;
+      stroke: #d4a743;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .footer-text,
+    .footer-link,
+    .footer-note,
+    .footer-contact small {
+      color: rgba(255,255,255,0.72);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .footer-link {
+      display: inline-block;
+      margin-top: 18px;
+      color: #d4a743;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .footer-link:hover {
+      color: #efc25f;
+      transform: translateX(4px);
+    }
+
+    .footer-contact {
+      margin-bottom: 22px;
+    }
+
+    .footer-contact strong {
+      display: block;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.18;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .footer-contact a {
+      color: #ffffff;
+      transition: color 0.2s ease;
+    }
+
+    .footer-contact a:hover {
+      color: #d4a743;
+    }
+
+    .footer-side h4 {
+      margin: 0 0 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.86);
+    }
+
+    .app-buttons,
+    .social-grid,
+    .footer-nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .app-button {
+      min-width: 108px;
+      height: 34px;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
+      color: #d4a743;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .app-button:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(212,167,67,0.35);
+    }
+
+    .social-grid {
+      margin-top: 26px;
+      max-width: 172px;
+    }
+
+    .social-button {
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 6px;
+      background: #d4a743;
+      color: #10233f;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .social-button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    .footer-nav {
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      gap: 34px;
+    }
+
+    .footer-nav a {
+      color: rgba(255,255,255,0.76);
+      font-size: 13px;
+      transition: color 0.2s ease;
+    }
+
+    .footer-nav a:hover {
+      color: #d4a743;
+    }
+
+    .footer-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.3fr;
+      gap: 24px;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .footer-bottom .footer-note:last-child {
+      text-align: right;
+    }
+
+    .footer-email strong {
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.24;
+    }
+
+    .interest-icon {
+      position: relative;
+      width: 84px;
+      height: 84px;
+      margin: 0 auto 18px;
+    }
+
+    .interest-title {
+      font-size: 16px;
+      line-height: 1.25;
+      color: #405268;
+    }
+
+    .icon-cash,
+    .icon-pin,
+    .icon-cart,
+    .icon-dollar,
+    .icon-envelope,
+    .icon-chat {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .icon-cash::before {
+      content: "";
+      position: absolute;
+      inset: 18px 10px 22px 10px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #5fb7ff, #215ee2);
+      transform: rotate(-24deg);
+      box-shadow: 0 10px 16px rgba(35, 94, 226, 0.25);
+    }
+
+    .icon-cash::after {
+      content: "↔";
+      position: absolute;
+      left: 29px;
+      top: 28px;
+      color: #ffffff;
+      font-size: 24px;
+      transform: rotate(-24deg);
+    }
+
+    .icon-chat::before,
+    .icon-chat::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4baeff, #1e63e5);
+      box-shadow: 0 8px 16px rgba(35, 94, 226, 0.2);
+    }
+
+    .icon-chat::before {
+      width: 52px;
+      height: 52px;
+      left: 10px;
+      top: 18px;
+    }
+
+    .icon-chat::after {
+      width: 36px;
+      height: 36px;
+      right: 8px;
+      top: 8px;
+    }
+
+    .icon-chat span,
+    .icon-chat strong {
+      position: absolute;
+      z-index: 1;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .icon-chat span {
+      left: 28px;
+      top: 30px;
+      font-size: 28px;
+    }
+
+    .icon-chat strong {
+      right: 18px;
+      top: 16px;
+      font-size: 22px;
+    }
+
+    .icon-pin::before {
+      content: "";
+      position: absolute;
+      left: 22px;
+      top: 10px;
+      width: 42px;
+      height: 56px;
+      border-radius: 28px 28px 28px 8px;
+      transform: rotate(45deg);
+      background: linear-gradient(145deg, #4faeff, #215fe2);
+      box-shadow: 0 10px 18px rgba(35, 94, 226, 0.22);
+    }
+
+    .icon-pin::after {
+      content: "🏛";
+      position: absolute;
+      left: 30px;
+      top: 26px;
+      font-size: 20px;
+      transform: translate(-2px, 0);
+    }
+
+    .icon-cart::before {
+      content: "🛒";
+      position: absolute;
+      left: 18px;
+      top: 16px;
+      font-size: 56px;
+      filter: hue-rotate(180deg) saturate(1.6);
+    }
+
+    .icon-dollar::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e63e5, #3dbdff);
+      box-shadow: 0 10px 16px rgba(35, 94, 226, 0.22);
+    }
+
+    .icon-dollar::after {
+      content: "↔ $";
+      position: absolute;
+      left: 19px;
+      top: 29px;
+      color: #ffffff;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .icon-envelope::before {
+      content: "";
+      position: absolute;
+      left: 16px;
+      top: 24px;
+      width: 54px;
+      height: 38px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #4caeff, #1f63e4);
+      box-shadow: 0 10px 16px rgba(35, 94, 226, 0.2);
+    }
+
+    .icon-envelope::after {
+      content: "✉";
+      position: absolute;
+      left: 30px;
+      top: 28px;
+      color: #ffffff;
+      font-size: 24px;
+    }
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: rgba(21, 39, 69, 0.94);
+      color: #ffffff;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1200px) {
+      .page {
+        width: calc(100% - 32px);
+      }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/common-Bzbd_rB1.js"></script>
+  <script type="module" crossorigin src="/assets/index-page-DSCXgLMu.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/common-DHZQThhm.css">
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="header-top">
+        <a class="logo" href="#">
+          <svg viewBox="0 0 36 36" aria-hidden="true">
+            <circle cx="16" cy="18" r="11" stroke="#356dff" stroke-width="5" fill="none"></circle>
+            <circle cx="24.5" cy="9.5" r="4.3" fill="#356dff"></circle>
+            <circle cx="20.5" cy="22.5" r="2.5" fill="#356dff" opacity="0.95"></circle>
+          </svg>
+          <span>Сомонибонк</span>
+        </a>
+
+        <nav class="main-nav" aria-label="Главное меню">
+          <a class="active" href="#">Частным лицам</a>
+          <a href="#">Бизнесу</a>
+          <a href="#">Сомонибонк</a>
+        </nav>
+
+        <div class="header-right">
+          <a class="location" href="#">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 21s6-5.7 6-11a6 6 0 1 0-12 0c0 5.3 6 11 6 11Z"></path>
+              <circle cx="12" cy="10" r="2.5"></circle>
+            </svg>
+            <span>Адреса и банкоматы</span>
+          </a>
+          <a class="lang" href="#">Рус ˅</a>
+        </div>
+      </div>
+
+      <nav class="sub-nav" aria-label="Разделы">
+        <a href="somonibank-app.html">Приложение Somoni</a>
+          <a href="cards.html">Карты</a>
+        <a href="#">Салом</a>
+        <a href="auto.html">Покупка авто</a>
+        <a href="#">Somoni Shop</a>
+        <a href="transfers.html">Переводы</a>
+        <a href="#">Депозиты</a>
+        <a href="#">Авиабилеты</a>
+        <a href="#">Ещё ˅</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-left">
+          <h1>Кешбэк 10% с Mastercard</h1>
+          <p>Оплачивайте телефоном через Google Pay и возвращайте часть денег за покупки по всему миру</p>
+          <button type="button">Подробнее</button>
+        </div>
+
+        <div class="hero-right" aria-hidden="true">
+          <div class="ball ball-ten"><span>10</span></div>
+          <div class="ball ball-percent"><span>%</span></div>
+          <div class="ball ball-check"><span>✓</span></div>
+          <div class="slider-dots">
+            <span class="active"></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="feature-cards">
+        <article class="feature-card" data-toast="Раздел терминалов будет доступен на отдельной карте.">
+          <h3>Адреса наших терминалов</h3>
+          <p>Погашайте рассрочку, пополняйте счёт карт и кошелька — 0%</p>
+          <div class="card-art">
+            <div class="pin-shape"></div>
+          </div>
+        </article>
+
+        <article class="feature-card" data-toast="Условия рассрочки на образование скоро откроются.">
+          <h3>Образование доступно</h3>
+          <p>Оплачивайте обучение в университете или курсы в рассрочку до 24 месяцев</p>
+          <div class="card-art">
+            <div class="cap-top-art"></div>
+            <div class="cap-base-art"></div>
+            <div class="cap-ribbon-art"></div>
+            <div class="cap-loop-art"></div>
+          </div>
+        </article>
+
+        <article class="feature-card" data-toast="Google Pay можно подключить в приложении Сомонибонк.">
+          <h3>Оплата с Google Pay</h3>
+          <p>Привяжите наши карты Visa или Mastercard и получайте бесконтактно по стране и за рубежом</p>
+          <div class="card-art">
+            <div class="pay-card-art">
+              <div class="pay-brand">olif</div>
+              <div class="pay-bank"><span class="pay-bank-mark"></span><span>Сомонибонк</span></div>
+              <div class="pay-system">G Pay</div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="rate-tabs">
+        <a class="rate-tab active" href="#" data-tab="rates">Курс валют</a>
+        <a class="rate-tab" href="#" data-toast="Расчёт дохода будет добавлен позже.">Рассчитать доход</a>
+        <a class="rate-tab" href="auto.html">Покупка авто</a>
+      </section>
+
+      <section class="rates-panel">
+        <div class="rates-wrap">
+          <div class="rate-filter-group" id="rateMode">
+            <button class="rate-filter active" type="button" data-mode="transfer">Переводы</button>
+            <button class="rate-filter" type="button" data-mode="cash">В кассе</button>
+            <button class="rate-filter" type="button" data-mode="cashless">Безналичными</button>
+          </div>
+
+          <div class="mini-filter-group" id="rateMiniMode">
+            <button class="mini-filter" type="button" data-mini="card">Картой</button>
+            <button class="mini-filter" type="button" data-mini="nbt">НБТ</button>
+          </div>
+
+          <table class="rates-table">
+            <thead>
+              <tr>
+                <th>Валюта</th>
+                <th>Покупка</th>
+                <th>Продажа</th>
+              </tr>
+            </thead>
+            <tbody id="ratesTableBody">
+              <tr data-currency="USD">
+                <td>
+                  <div class="currency-cell">
+                    <span class="flag usd"></span>
+                    <span>1 USD</span>
+                  </div>
+                </td>
+                <td>9.5500</td>
+                <td>9.6200</td>
+              </tr>
+              <tr data-currency="RUB">
+                <td>
+                  <div class="currency-cell">
+                    <span class="flag rub"></span>
+                    <span>1 RUB</span>
+                  </div>
+                </td>
+                <td>0.1164</td>
+                <td>0.1187</td>
+              </tr>
+              <tr data-currency="EUR">
+                <td>
+                  <div class="currency-cell">
+                    <span class="flag eur"></span>
+                    <span>1 EUR</span>
+                  </div>
+                </td>
+                <td>10.9400</td>
+                <td>11.1500</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="rates-footer">
+            <span>Актуально на 14:32, 31 марта 2026</span>
+            <a class="history-link" href="#" data-toast="История курсов будет доступна в отдельном разделе.">История курсов</a>
+          </div>
+        </div>
+
+        <aside class="converter">
+          <div class="converter-switch" id="directionSwitch">
+            <button class="active" type="button" data-direction="buy">Купить</button>
+            <button type="button" data-direction="sell">Продать</button>
+          </div>
+
+          <div class="converter-field">
+            <label for="receiveAmount">Получу</label>
+            <div class="converter-row">
+              <input id="receiveAmount" type="number" step="0.0001" value="100">
+              <select id="receiveCurrency" class="currency-select">
+                <option value="TJS">TJS</option>
+                <option value="USD">USD</option>
+                <option value="RUB">RUB</option>
+                <option value="EUR">EUR</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="swap" id="swapButton">↕</div>
+
+          <div class="converter-field">
+            <label for="payAmount">Заплачу</label>
+            <div class="converter-row">
+              <input id="payAmount" type="number" step="0.0001" value="10.4712">
+              <select id="payCurrency" class="currency-select">
+                <option value="USD">USD</option>
+                <option value="TJS">TJS</option>
+                <option value="RUB">RUB</option>
+                <option value="EUR">EUR</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="send-button" type="button" id="sendMoneyButton">Отправить деньги</button>
+        </aside>
+      </section>
+
+      <section class="paylater-section">
+        <article class="paylater-card">
+          <div class="paylater-copy">
+            <h2>Купите сейчас, платите потом</h2>
+            <p>Покупайте желаемое сразу картой «Сомонибонк», не дожидаясь зарплаты</p>
+          </div>
+          <a class="paylater-link" href="#" data-toast="Раздел рассрочки скоро откроется полностью.">Смотреть →</a>
+          <div class="paylater-bankcard" aria-hidden="true">
+            <div class="paylater-bankcard-label">Сомонибонк</div>
+            <div class="paylater-bankcard-small">TECHNOBRAND LTD</div>
+          </div>
+        </article>
+
+        <div class="paylater-list">
+          <div class="paylater-item" data-toast="Раздел смартфонов будет открыт.">
+            <span>Смартфоны</span>
+            <span class="paylater-arrow">↗</span>
+          </div>
+          <div class="paylater-item" data-toast="Раздел кондиционеров будет открыт.">
+            <span>Кондиционеры</span>
+            <span class="paylater-arrow">↗</span>
+          </div>
+          <div class="paylater-item" data-toast="Раздел холодильников будет открыт.">
+            <span>Холодильники</span>
+            <span class="paylater-arrow">↗</span>
+          </div>
+          <a class="full-list-link" href="#" data-toast="Полный список товаров появится в отдельном каталоге.">Полный список →</a>
+        </div>
+      </section>
+
+      <section class="interest-section">
+        <h2>Вам может быть интересно</h2>
+        <div class="interest-grid">
+          <article class="interest-card" data-toast="Переход к кредитам наличными.">
+            <div class="interest-icon"><div class="icon-cash"></div></div>
+            <div class="interest-title">Кредит наличными</div>
+          </article>
+
+          <article class="interest-card" data-toast="Переход к вопросам и ответам.">
+            <div class="interest-icon">
+              <div class="icon-chat"><span>?</span><strong>?</strong></div>
+            </div>
+            <div class="interest-title">Вопросы и ответы</div>
+          </article>
+
+          <article class="interest-card" data-toast="Переход к офисам и банкоматам.">
+            <div class="interest-icon"><div class="icon-pin"></div></div>
+            <div class="interest-title">Офисы и банкоматы</div>
+          </article>
+
+          <article class="interest-card" data-toast="Переход к онлайн-покупкам.">
+            <div class="interest-icon"><div class="icon-cart"></div></div>
+            <div class="interest-title">Онлайн-покупка</div>
+          </article>
+
+          <article class="interest-card" data-toast="Переход к покупке доллара.">
+            <div class="interest-icon"><div class="icon-dollar"></div></div>
+            <div class="interest-title">Покупка доллара</div>
+          </article>
+
+          <article class="interest-card" data-toast="Переход к доставке документов.">
+            <div class="interest-icon"><div class="icon-envelope"></div></div>
+            <div class="interest-title">Доставка документов</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="faq-footer-zone">
+        <div class="faq-footer-shell">
+          <article class="faq-card-dark" data-toast="Раздел ответов на вопросы будет открыт.">
+            <div class="faq-dark-copy">
+              <h3>Ответы на ваши вопросы — здесь</h3>
+              <p>Подробно ответим на все важные вопросы о наших продуктах и услугах</p>
+              <a class="faq-dark-link" href="#">Найти нужный ответ →</a>
+            </div>
+            <div class="faq-bubbles-dark" aria-hidden="true">
+              <div class="faq-bubble one"><span>?</span></div>
+              <div class="faq-bubble two"><span>?</span></div>
+            </div>
+          </article>
+
+          <footer class="footer-dark">
+            <div class="footer-main">
+              <div>
+                <div class="footer-brand-dark">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3 20 8v8l-8 5-8-5V8l8-5Z"></path>
+                    <path d="M8 9.5 12 7l4 2.5-4 7-4-7Z"></path>
+                  </svg>
+                  <span>Сомонибонк</span>
+                </div>
+                <div class="footer-text">ул. Рудаки, 48</div>
+                <div class="footer-text">Ориентир: отель «Серена»</div>
+                <a class="footer-link" href="#" data-toast="Филиалы и точки обслуживания будут открыты на карте.">Филиалы и точки обслуживания</a>
+              </div>
+
+              <div>
+                <div class="footer-contact">
+                  <strong>900</strong>
+                  <small>Для звонков с мобильных в Таджикистане</small>
+                </div>
+                <div class="footer-contact">
+                  <strong><a href="tel:+992446007777">+992 44 600 7777</a></strong>
+                  <small>Для звонков из любой точки мира</small>
+                </div>
+                <div class="footer-contact">
+                  <strong><a href="tel:+992446008888">+992 44 600 8888</a></strong>
+                  <small>Телефон доверия, Навигатор банка, Таджикистан для жалоб и обращений</small>
+                </div>
+                <div class="footer-contact footer-email">
+                  <strong><a href="mailto:support@somonibank.tj">support@somonibank.tj</a></strong>
+                  <small>Для онлайн-обращений</small>
+                </div>
+              </div>
+
+              <div class="footer-side">
+                <h4>Приложение</h4>
+                <div class="app-buttons">
+                  <a class="app-button" href="somonibank-app.html">Сомонибонк</a>
+                  <button class="app-button" type="button" data-toast="Открытие приложения Somoni.">Сомони</button>
+                </div>
+
+                <h4 style="margin-top:28px;">Социальные сети</h4>
+                <div class="social-grid">
+                  <button class="social-button" type="button" data-toast="Переход в Telegram.">tg</button>
+                  <button class="social-button" type="button" data-toast="Переход в Facebook.">f</button>
+                  <button class="social-button" type="button" data-toast="Переход в Instagram.">ig</button>
+                  <button class="social-button" type="button" data-toast="Переход в LinkedIn.">in</button>
+                  <button class="social-button" type="button" data-toast="Переход в YouTube.">▶</button>
+                  <button class="social-button" type="button" data-toast="Переход в Rutube.">►</button>
+                  <button class="social-button" type="button" data-toast="Переход во VK.">vk</button>
+                  <button class="social-button" type="button" data-toast="Переход в TikTok.">♪</button>
+                </div>
+              </div>
+            </div>
+
+            <nav class="footer-nav">
+              <a href="#" data-toast="Раздел о нас будет открыт.">О нас</a>
+              <a href="#" data-toast="Адреса будут открыты.">Адреса</a>
+              <a href="#" data-toast="Документы и тарифы будут открыты.">Документы и тарифы</a>
+              <a href="#" data-toast="Вакансии будут открыты.">Вакансии</a>
+              <a href="#" data-toast="Связь с нами будет открыта.">Связь с нами</a>
+            </nav>
+
+            <div class="footer-bottom">
+              <div class="footer-note">© 2026 АО «Сомонибонк»</div>
+              <div class="footer-note">Лицензия НБТ РО000015 от 5 января 2020 года</div>
+              <div class="footer-note">АО «Сомонибонк» является участником Фонда страхования депозитов в Республике Таджикистан</div>
+            </div>
+          </footer>
+        </div>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+</body>
+</html>

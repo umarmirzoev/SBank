@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Покупка авто</title>
+  <style>
+    :root{--bg:#f5f9ff;--surface:#fff;--line:#dfe9f7;--text:#1f2d45;--muted:#6c7e97;--blue:#2f7df6;--deep:#1850b5;--navy:#081d44;--green:#20c77d;--shadow:0 22px 50px rgba(37,79,138,.12);--radius:24px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);font-family:"Segoe UI",Arial,sans-serif;background:radial-gradient(circle at top left,rgba(84,169,255,.18),transparent 23%),radial-gradient(circle at top right,rgba(79,215,244,.14),transparent 20%),linear-gradient(180deg,#fbfdff 0%,var(--bg) 100%)}
+    a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}
+    .page{width:100%;max-width:none;margin:0;padding:16px 20px 48px}.shell{padding:14px;border-radius:32px;background:rgba(255,255,255,.92);border:1px solid rgba(228,237,248,.96);box-shadow:0 28px 80px rgba(26,71,137,.12);backdrop-filter:blur(12px)}
+    @media (min-width:1024px){.page{padding:16px 40px 48px}} 
+    @media (min-width:1440px){.page{padding:16px 68px 54px}}
+    .header-top,.logo,.main-nav,.header-right,.location,.sub-nav,.hero-layout,.offer-grid,.calculator-layout,.step-grid,.repayment-grid,.footer-top,.footer-bottom,.store-row,.social-row,.progress-meta,.hero-actions,.form-footer{display:flex;align-items:center}
+    .header-top{gap:24px;justify-content:space-between;padding:4px 18px 18px;border-bottom:1px solid var(--line)}.logo{gap:10px;flex:0 0 auto}.logo svg{width:34px;height:34px}.logo span{font-size:24px;font-weight:700;letter-spacing:-.03em}
+    .main-nav{gap:38px;margin-left:24px;margin-right:auto;font-size:15px;font-weight:500}.main-nav a,.sub-nav a,.location,.lang{transition:color .2s ease}.main-nav a:hover,.sub-nav a:hover,.location:hover,.lang:hover{color:var(--deep)}
+    .main-nav a{position:relative;padding:12px 0 15px}.main-nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-18px;height:4px;border-radius:999px;background:var(--green)}
+    .header-right{gap:24px;font-size:15px;color:var(--muted)}.location{gap:10px;white-space:nowrap}.location svg{width:18px;height:18px;stroke:#7b8ca4;stroke-width:1.8;fill:none}.lang{color:var(--text)}
+    .sub-nav{gap:24px;padding:24px 18px 28px;font-size:15px;white-space:nowrap;overflow-x:auto}.sub-nav a.active-sub{color:var(--deep);font-weight:600}
+    .section{margin-top:18px;padding:30px;border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(247,251,255,.96));border:1px solid rgba(223,233,247,.95);box-shadow:var(--shadow)}
+    .hero{padding:16px}.hero-layout{align-items:stretch;min-height:300px;border-radius:24px;overflow:hidden;background:linear-gradient(135deg,#f8fbff 0%,#f3f7fd 52%,#f8fbff 100%)}.hero-copy{width:48%;padding:52px 48px 40px}.hero-copy h1{margin:0 0 18px;max-width:360px;font-size:clamp(34px,5vw,56px);line-height:1.05;font-weight:700;letter-spacing:-.05em}.hero-copy p{margin:0 0 34px;max-width:340px;color:#566c88;font-size:clamp(17px,2.2vw,22px);line-height:1.45}.hero-visual{width:52%;background:linear-gradient(180deg,#f9fbff 0%,#f2f6fc 100%)}.hero-visual img{width:100%;height:100%;object-fit:cover;display:block}
+    .primary-btn,.secondary-btn,.submit-btn,.step-btn,.ghost-btn,.faq-toggle{border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}.primary-btn,.submit-btn,.step-btn{min-height:54px;padding:0 28px;border:0;background:linear-gradient(180deg,var(--blue) 0%,var(--deep) 100%);color:#fff;box-shadow:0 14px 28px rgba(26,86,186,.24);font-weight:700;cursor:pointer}.secondary-btn,.ghost-btn{min-height:50px;padding:0 24px;border:1px solid #d5e3f6;background:#fff;color:var(--deep);font-weight:600;cursor:pointer}.primary-btn:hover,.secondary-btn:hover,.submit-btn:hover,.step-btn:hover,.ghost-btn:hover,.faq-toggle:hover{transform:translateY(-2px);filter:brightness(1.02)}
+    .offer-grid,.step-grid,.repayment-grid{gap:16px;align-items:stretch;flex-wrap:wrap}.offer-grid{display:grid;grid-template-columns:1fr;gap:16px}.offer-card,.summary-card,.form-shell,.docs-card,.repayment-card{border-radius:24px;background:#fff;border:1px solid var(--line);box-shadow:0 18px 42px rgba(56,103,169,.1)}
+    @media (min-width:1024px){.offer-grid{grid-template-columns:repeat(2,minmax(0,1fr));}} 
+    @media (min-width:1440px){.offer-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+    .offer-card{flex:1;padding:24px 22px;width:100%;max-width:100%}.offer-card img{width:100%;aspect-ratio:1.1/1;object-fit:contain;display:block;margin-bottom:18px}.offer-card h3{margin:0 0 12px;font-size:18px}.offer-card p,.section-copy,.step-text p,.repayment-body p,.faq-answer,.footer p,.footer a{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+    .calculator-layout{align-items:stretch;gap:28px}.calculator-main{flex:1}.summary-panel{width:310px}.summary-card{padding:24px 18px 18px}.summary-stat{margin-bottom:18px}.summary-stat span,.calc-label{display:block;color:var(--muted);font-size:13px;line-height:1.5}.summary-stat strong{display:block;margin-top:2px;font-size:22px;line-height:1.2;color:var(--navy)}
+    .currency-switch{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:14px}.currency-option{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:14px}.currency-option input,.radio-option input{accent-color:var(--blue)}
+    .calc-row{margin-top:18px}.calc-value{margin:6px 0 12px;font-size:18px;font-weight:700;color:var(--navy)}.range-input{width:100%;appearance:none;height:2px;border-radius:999px;background:linear-gradient(90deg,var(--blue) 0%,#cfdbed 0%);outline:none}.range-input::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue);box-shadow:0 6px 14px rgba(47,125,246,.32);cursor:pointer;border:0}.range-input::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--blue);box-shadow:0 6px 14px rgba(47,125,246,.32);cursor:pointer;border:0}
+    .info-line{margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#96a6bc;font-size:13px}.info-badge{width:18px;height:18px;border:1px solid #bfd1e7;border-radius:50%;display:inline-grid;place-items:center;font-size:12px;color:#8fa4c0}.months-scale{margin-top:10px;display:grid;grid-template-columns:repeat(5,1fr);color:#99a9bd;font-size:12px}
+    .steps-title,.application-heading h2{margin:0 0 22px;color:#2a57a2;font-family:Georgia,"Times New Roman",serif;font-size:clamp(32px,3.2vw,44px);font-weight:400;line-height:1.15}.step-item{width:calc(33.333% - 11px);min-width:220px;display:grid;grid-template-columns:54px 1fr;gap:14px;align-items:start}.step-icon{width:54px;height:54px;border-radius:18px;background:linear-gradient(180deg,rgba(87,149,255,.16),rgba(66,122,240,.06));position:relative}
+    .step-icon::before,.step-icon::after{content:"";position:absolute;background:linear-gradient(180deg,#5d97ff,#2b68e8)}.icon-car::before{width:40px;height:10px;left:7px;top:16px;border-radius:999px}.icon-car::after{width:30px;height:14px;left:12px;top:24px;border-radius:999px}.icon-form::before,.icon-check::before,.icon-file::before{width:28px;height:34px;left:13px;top:10px;border-radius:10px}.icon-form::after,.icon-file::after{width:12px;height:4px;left:20px;top:19px;box-shadow:0 8px 0 #5d97ff,0 16px 0 #5d97ff;border-radius:999px}.icon-clock::before{width:34px;height:34px;left:10px;top:10px;border-radius:50%;background:transparent;box-shadow:inset 0 0 0 4px #5d97ff}.icon-clock::after{width:3px;height:12px;left:26px;top:18px;box-shadow:-7px 8px 0 0 #5d97ff;border-radius:999px}.icon-check::after{width:14px;height:7px;left:20px;top:26px;transform:rotate(-35deg);box-shadow:-8px 4px 0 0 #5d97ff;border-radius:999px}.icon-money::before{width:34px;height:22px;left:10px;top:16px;border-radius:8px}.icon-money::after{width:10px;height:10px;left:22px;top:22px;border-radius:50%;background:#c6dcff}
+    .step-text h3,.repayment-body h3{margin:0 0 6px;font-size:17px;line-height:1.35}
+    .application-section{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(244,250,255,.96) 0%,rgba(232,244,255,.92) 100%)}.application-section::before,.application-section::after{content:"";position:absolute;width:120px;height:120px;background:linear-gradient(135deg,rgba(80,203,240,.18),rgba(39,113,237,.02));transform:rotate(45deg)}.application-section::before{top:-56px;right:-20px}.application-section::after{bottom:-60px;left:-40px}
+    .application-heading,.form-shell,.docs-card{position:relative;z-index:1}.application-heading{text-align:center;margin-bottom:26px}.application-heading p{margin:0;color:#5c7492;font-size:15px}.form-shell{padding:34px 44px 28px;border-color:#cfe6fb}.progress-meta{justify-content:space-between;margin-bottom:12px;color:#597399;font-size:14px}.progress-bar{width:100%;height:6px;border-radius:999px;background:#e7eff9;overflow:hidden;margin-bottom:28px}.progress-bar span{display:block;width:20%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#2dcdf0 0%,#2f7df6 100%);transition:width .25s ease}
+    .form-step{display:none;min-height:245px}.form-step.active{display:block}.step-grid-two,.review-card dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.field{margin-bottom:18px}.field label{display:block;margin-bottom:8px;color:#4f688a;font-size:14px}.field input,.field select,.field textarea{width:100%;min-height:52px;padding:14px 16px;border-radius:10px;border:1px solid #a8d4fb;background:#fff;color:var(--text);outline:none;transition:border-color .2s ease,box-shadow .2s ease}.field textarea{min-height:120px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(47,125,246,.12)}
+    .radio-row{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px}.radio-option{display:inline-flex;align-items:center;gap:8px;color:#4f688a;font-size:14px}.consent-text{margin:0;color:#5f7aa2;font-size:12px;line-height:1.5}.form-footer{justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:12px}.step-actions{display:flex;gap:12px;flex-wrap:wrap}.review-card{padding:18px;border-radius:18px;background:#f6fbff;border:1px solid #d9e9f8}.review-card dt{color:#5f7697;font-size:13px}.review-card dd{margin:0;font-weight:600}
+    .docs-card{margin-top:28px;padding:34px 30px;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center}.docs-card h3{margin:0 0 12px;color:var(--navy);font-size:clamp(28px,3vw,38px);line-height:1.15}.docs-list{margin-top:16px;color:var(--muted);font-size:15px;line-height:1.7;white-space:pre-line}.docs-illustration{min-height:220px;border-radius:24px;background:linear-gradient(180deg,#fdfefe 0%,#eef6ff 100%);display:grid;place-items:center}.docs-sheet{width:138px;height:164px;border-radius:18px 18px 32px 18px;background:linear-gradient(180deg,#fff 0%,#eef4fb 100%);box-shadow:0 18px 36px rgba(76,122,184,.16);position:relative}.docs-sheet::before,.docs-sheet::after{content:"";position:absolute;left:24px;right:24px;height:10px;border-radius:999px;background:linear-gradient(90deg,#4cca79 0%,#2da35b 100%);box-shadow:22px 26px 0 rgba(76,202,121,.85)}.docs-sheet::before{top:48px}.docs-sheet::after{top:88px}
+    .repayment-card{flex:1;min-width:0;border:1px solid #b8e8f8;overflow:hidden}.repayment-media{height:164px;position:relative;background:linear-gradient(135deg,#dfefff 0%,#f8fcff 55%,#d9f3ef 100%)}.repayment-media::before,.repayment-media::after{content:"";position:absolute;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(225,238,250,.96));box-shadow:0 18px 32px rgba(88,123,177,.15)}.repayment-media.phone::before{top:22px;width:82px;height:122px;border-radius:18px}.repayment-media.phone::after{top:48px;width:44px;height:44px;border-radius:50%;box-shadow:inset 0 0 0 3px #2f7df6}.repayment-media.terminal::before{top:22px;width:114px;height:110px;border-radius:12px}.repayment-media.terminal::after{top:44px;width:74px;height:48px;border-radius:10px;background:linear-gradient(90deg,#d6e7f8 0 24%,transparent 24% 28%,#d6e7f8 28% 52%,transparent 52% 56%,#d6e7f8 56% 80%,transparent 80% 84%,#d6e7f8 84% 100%)}.repayment-media.cash::before{top:22px;width:92px;height:116px;border-radius:40px 40px 16px 16px}.repayment-media.cash::after{top:40px;width:58px;height:72px;border-radius:16px;background:linear-gradient(180deg,#8be0b1 0%,#2bc67a 100%)}
+    .repayment-body{padding:16px 16px 18px}.faq-title{margin:0 0 20px;color:#234c8d;font-size:clamp(28px,3vw,40px);line-height:1.15}.faq-item{border-top:1px solid #d9e6f5}.faq-item:last-child{border-bottom:1px solid #d9e6f5}.faq-toggle{width:100%;min-height:62px;padding:16px 0;border:0;border-radius:0;background:transparent;display:flex;align-items:center;justify-content:space-between;gap:16px;text-align:left;color:var(--navy);font-size:15px;font-weight:500;box-shadow:none;cursor:pointer}.faq-plus{font-size:28px;line-height:1;color:#49c8f0;transition:transform .2s ease,color .2s ease}.faq-answer{display:none;padding:0 0 18px}.faq-item.open .faq-answer{display:block}.faq-item.open .faq-plus{transform:rotate(45deg);color:var(--blue)}
+    .footer{margin-top:18px;padding:32px 30px 24px;border-radius:0 0 26px 26px;background:linear-gradient(180deg,#0b1d43 0%,#081734 100%);color:rgba(255,255,255,.9)}.footer-top{align-items:flex-start;justify-content:space-between;gap:28px;flex-wrap:wrap}.footer-col{min-width:210px;flex:1}.footer strong{color:#2fd2ef;font-size:28px;line-height:1.1}.store-row,.social-row{gap:10px;flex-wrap:wrap;margin-top:12px}.store-badge,.social-pill{min-width:90px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600}.social-pill{min-width:40px;padding:0;border-radius:50%}.footer-bottom{justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.09);font-size:13px;color:rgba(226,236,255,.64)}
+    @media (max-width:1024px){.hero-layout,.calculator-layout,.footer-top{display:block}.hero-copy,.hero-visual,.summary-panel{width:100%}.hero-visual{min-height:280px}.summary-panel{margin-top:24px}.step-item{width:calc(50% - 8px)}.step-grid-two,.review-card dl,.docs-card{grid-template-columns:1fr}.docs-card{display:grid}}
+    @media (max-width:760px){.page{padding:10px 10px 36px}.shell,.section,.footer{border-radius:22px}.header-top,.sub-nav,.hero-copy,.form-shell,.docs-card,.footer{padding-left:16px;padding-right:16px}.header-top{flex-wrap:wrap}.main-nav{order:3;margin:0;width:100%;gap:22px;overflow-x:auto}.step-item{width:100%}.form-step{min-height:auto}.step-actions,.step-btn,.ghost-btn,.submit-btn{width:100%}}
+  </style>
+  <script type="module" crossorigin src="/assets/auto-CopgyCH0.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/common-Bzbd_rB1.js">
+  <link rel="stylesheet" crossorigin href="/assets/common-DHZQThhm.css">
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <header>
+        <div class="header-top">
+          <a class="logo" href="index.html">
+            <svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#356dff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#356dff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#356dff" opacity="0.95"></circle></svg>
+            <span>Сомонибонк</span>
+          </a>
+          <nav class="main-nav" aria-label="Главное меню">
+            <a class="active" href="index.html">Частным лицам</a>
+            <a href="#" data-toast="Раздел для бизнеса будет добавлен позже.">Бизнесу</a>
+            <a href="#" data-toast="Корпоративный раздел будет добавлен позже.">Сомонибонк</a>
+          </nav>
+          <div class="header-right">
+            <a class="location" href="#" data-toast="Адреса и банкоматы будут открыты на карте.">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.7 6-11a6 6 0 1 0-12 0c0 5.3 6 11 6 11Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
+              <span>Адреса и банкоматы</span>
+            </a>
+            <a class="lang" href="#" data-toast="Смена языка будет добавлена позже.">Рус ˅</a>
+          </div>
+        </div>
+        <nav class="sub-nav" aria-label="Разделы">
+          <a href="somonibank-app.html">Приложение Somoni</a>
+          <a href="cards.html">Карты</a>
+          <a href="#" data-toast="Раздел Салом будет добавлен позже.">Салом</a>
+          <a class="active-sub" href="auto.html">Покупка авто</a>
+          <a href="#" data-toast="Somoni Shop будет добавлен позже.">Somoni Shop</a>
+          <a href="transfers.html">Переводы</a>
+          <a href="#" data-toast="Депозиты будут добавлены позже.">Депозиты</a>
+          <a href="#" data-toast="Авиабилеты будут добавлены позже.">Авиабилеты</a>
+          <a href="#" data-toast="Дополнительные разделы будут добавлены позже.">Ещё ˅</a>
+        </nav>
+      </header>
+      <main>
+        <section class="section hero">
+          <div class="hero-layout">
+            <div class="hero-copy">
+              <h1>Любая машина на ваш вкус</h1>
+              <p>Электромобили и традиционные авто, выбирайте понравившийся вариант и оплачивайте до 60 месяцев</p>
+              <div class="hero-actions"><button class="primary-btn" type="button" data-scroll-target="#application-section">Оставить заявку</button></div>
+            </div>
+            <div class="hero-visual" aria-hidden="true"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20760%20420'%20fill='none'%3e%3cdefs%3e%3clinearGradient%20id='body'%20x1='148'%20y1='82'%20x2='525'%20y2='246'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ffffff'/%3e%3cstop%20offset='0.48'%20stop-color='%23f4f7fb'/%3e%3cstop%20offset='1'%20stop-color='%23d9e2ed'/%3e%3c/linearGradient%3e%3clinearGradient%20id='glass'%20x1='236'%20y1='68'%20x2='423'%20y2='159'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%236b7483'/%3e%3cstop%20offset='1'%20stop-color='%233a4452'/%3e%3c/linearGradient%3e%3clinearGradient%20id='accent'%20x1='146'%20y1='195'%20x2='539'%20y2='195'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%231ed7f1'/%3e%3cstop%20offset='1'%20stop-color='%230f67d8'/%3e%3c/linearGradient%3e%3clinearGradient%20id='rim'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3e%3cstop%20stop-color='%230f1824'/%3e%3cstop%20offset='1'%20stop-color='%232f3b49'/%3e%3c/linearGradient%3e%3cfilter%20id='softShadow'%20x='80'%20y='145'%20width='558'%20height='165'%20filterUnits='userSpaceOnUse'%3e%3cfeGaussianBlur%20stdDeviation='16'/%3e%3c/filter%3e%3cfilter%20id='carShadow'%20x='89'%20y='35'%20width='584'%20height='277'%20filterUnits='userSpaceOnUse'%3e%3cfeOffset%20dy='18'/%3e%3cfeGaussianBlur%20stdDeviation='18'/%3e%3cfeColorMatrix%20values='0%200%200%200%200.145%200%200%200%200%200.278%200%200%200%200%200.451%200%200%200%200.18%200'/%3e%3c/filter%3e%3c/defs%3e%3cg%20filter='url(%23softShadow)'%20opacity='0.45'%3e%3cellipse%20cx='356'%20cy='244'%20rx='220'%20ry='26'%20fill='%237b8ca6'/%3e%3c/g%3e%3cg%20filter='url(%23carShadow)'%3e%3cg%3e%3cpath%20d='M158%20220c18-59%2058-102%20123-131%2035-15%2084-23%20161-23h55c44%200%2077%2015%20106%2050l31%2037%2018%207c16%206%2028%2020%2034%2039l12%2038H119l10-32c7-22%2015-35%2029-45Z'%20fill='url(%23body)'/%3e%3cpath%20d='M286%2090c27-19%2066-28%20114-28h75c22%200%2040%204%2058%2012%2026%2012%2050%2030%2074%2054l14%2015H241c8-21%2022-39%2045-53Z'%20fill='url(%23glass)'/%3e%3cpath%20d='M257%2088c19-10%2045-15%2072-15h96c25%200%2056%209%2074%2021-11%204-25%207-39%207H296c-15%200-28-4-39-13Z'%20fill='%23fff'%20opacity='.72'/%3e%3cpath%20d='M160%20217h533c17%200%2031%2010%2038%2027l3%209H133l4-12c5-15%2011-24%2023-24Z'%20fill='%23eef4fa'/%3e%3cpath%20d='M170%20199c10-24%2031-39%2057-39h74c27%200%2045%2011%2059%2039H170Z'%20fill='url(%23accent)'/%3e%3cpath%20d='M461%20224h139c18%200%2032%209%2042%2024H468z'%20fill='url(%23accent)'/%3e%3cpath%20d='M155%20222h78c18%200%2032%2012%2037%2031h-136c2-12%209-24%2021-31Z'%20fill='%230f1924'/%3e%3cpath%20d='M591%20157h42c17%200%2030%208%2039%2026h-88c2-10%204-17%207-26Z'%20fill='%23dbe5ef'/%3e%3cpath%20d='M233%20175h29l8%2011h-46c3-5%205-8%209-11Z'%20fill='%23d7e4f0'/%3e%3cpath%20d='M499%20137h85c12%200%2022%207%2027%2017h-128c4-7%208-12%2016-17Z'%20fill='%237e8898'%20opacity='.75'/%3e%3cpath%20d='M169%20214c14-29%2030-48%2059-66%2018-11%2036-19%2061-26-32%2025-49%2043-77%2092H169Z'%20fill='%23d1dae5'%20opacity='.45'/%3e%3cg%20transform='translate(208%20253)'%3e%3ccircle%20r='47'%20fill='url(%23rim)'/%3e%3ccircle%20r='28'%20fill='%23b7c7d8'/%3e%3ccircle%20r='14'%20fill='%231ed7f1'/%3e%3c/g%3e%3cg%20transform='translate(528%20253)'%3e%3ccircle%20r='47'%20fill='url(%23rim)'/%3e%3ccircle%20r='28'%20fill='%23b7c7d8'/%3e%3ccircle%20r='14'%20fill='%231ed7f1'/%3e%3c/g%3e%3cpath%20d='M182%20209h66c15%200%2025%207%2032%2020h-110c3-8%206-14%2012-20Z'%20fill='%231bc9ea'/%3e%3cpath%20d='M461%20244h112c13%200%2025%207%2033%2019H469z'%20fill='%230f67d8'/%3e%3cpath%20d='M398%20124h113c7%200%2013%205%2013%2012v6H385l2-4c2-9%206-14%2011-14Z'%20fill='%2394a0b3'%20opacity='.32'/%3e%3cpath%20d='M558%20173h18c6%200%2012%205%2012%2012v9h-38l2-7c1-8%203-14%206-14Z'%20fill='%237fdcf5'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt=""></div>
+          </div>
+        </section>
+        <section class="section">
+          <div class="offer-grid">
+            <article class="offer-card"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20320%20220'%20fill='none'%3e%3cdefs%3e%3cradialGradient%20id='bg'%20cx='0'%20cy='0'%20r='1'%20gradientUnits='userSpaceOnUse'%20gradientTransform='translate(161%20103)%20rotate(90)%20scale(86%2094)'%3e%3cstop%20stop-color='%23d9ecff'/%3e%3cstop%20offset='1'%20stop-color='%23edf6ff'%20stop-opacity='0'/%3e%3c/radialGradient%3e%3clinearGradient%20id='standTop'%20x1='73'%20y1='136'%20x2='252'%20y2='136'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23fbfdff'/%3e%3cstop%20offset='1'%20stop-color='%23e9eff7'/%3e%3c/linearGradient%3e%3clinearGradient%20id='standBottom'%20x1='80'%20y1='169'%20x2='241'%20y2='169'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%2358b7ff'/%3e%3cstop%20offset='1'%20stop-color='%231e5de0'/%3e%3c/linearGradient%3e%3clinearGradient%20id='body'%20x1='89'%20y1='84'%20x2='239'%20y2='143'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ffffff'/%3e%3cstop%20offset='.55'%20stop-color='%23f2f5f9'/%3e%3cstop%20offset='1'%20stop-color='%23dce5ee'/%3e%3c/linearGradient%3e%3clinearGradient%20id='glass'%20x1='138'%20y1='72'%20x2='211'%20y2='102'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%236f7885'/%3e%3cstop%20offset='1'%20stop-color='%23495261'/%3e%3c/linearGradient%3e%3c/defs%3e%3cellipse%20cx='160'%20cy='108'%20rx='86'%20ry='72'%20fill='url(%23bg)'/%3e%3cellipse%20cx='160'%20cy='186'%20rx='72'%20ry='11'%20fill='%23dbe7f5'/%3e%3cellipse%20cx='161'%20cy='165'%20rx='81'%20ry='18'%20fill='url(%23standBottom)'/%3e%3cpath%20d='M73%20152c6-17%2024-26%2054-26h72c28%200%2045%209%2053%2026H73Z'%20fill='url(%23standTop)'/%3e%3cpath%20d='M82%20145h174c7%200%2013%205%2014%2011H67c3-7%208-11%2015-11Z'%20fill='%23eff4fa'/%3e%3cpath%20d='M92%20139c7-24%2025-43%2054-55%2015-6%2037-10%2067-10h15c15%200%2027%207%2038%2019l15%2018%204%2020H76l16-16Z'%20fill='url(%23body)'/%3e%3cpath%20d='M156%2084h66c15%200%2028%204%2038%2014l20%2019H120c6-15%2015-23%2036-33Z'%20fill='url(%23glass)'/%3e%3cpath%20d='M101%20118h46c10%200%2018%206%2022%2017H92c2-8%204-12%209-17Z'%20fill='%232ecdee'/%3e%3cpath%20d='M221%20145h48c7%200%2012%204%2016%2010h-59Z'%20fill='%23226fe6'/%3e%3ccircle%20cx='120'%20cy='141'%20r='24'%20fill='%232c3542'/%3e%3ccircle%20cx='120'%20cy='141'%20r='13'%20fill='%23c3d1de'/%3e%3ccircle%20cx='233'%20cy='141'%20r='24'%20fill='%232c3542'/%3e%3ccircle%20cx='233'%20cy='141'%20r='13'%20fill='%23c3d1de'/%3e%3ccircle%20cx='120'%20cy='141'%20r='6'%20fill='%232ed4ef'/%3e%3ccircle%20cx='233'%20cy='141'%20r='6'%20fill='%232ed4ef'/%3e%3c/svg%3e" alt="Новый автомобиль"><h3>Новый автомобиль</h3><p>С двигателем или электрический, покупайте понравившийся в автосалоне</p></article>
+            <article class="offer-card"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20320%20220'%20fill='none'%3e%3cdefs%3e%3cradialGradient%20id='bg'%20cx='0'%20cy='0'%20r='1'%20gradientUnits='userSpaceOnUse'%20gradientTransform='translate(160%20104)%20rotate(90)%20scale(84%2090)'%3e%3cstop%20stop-color='%23dcecff'/%3e%3cstop%20offset='1'%20stop-color='%23eef6ff'%20stop-opacity='0'/%3e%3c/radialGradient%3e%3clinearGradient%20id='ring'%20x1='74'%20y1='168'%20x2='248'%20y2='168'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%232fd2ee'/%3e%3cstop%20offset='1'%20stop-color='%231d66e0'/%3e%3c/linearGradient%3e%3clinearGradient%20id='plate'%20x1='80'%20y1='149'%20x2='241'%20y2='149'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23fbfdff'/%3e%3cstop%20offset='1'%20stop-color='%23e9eef6'/%3e%3c/linearGradient%3e%3clinearGradient%20id='body'%20x1='92'%20y1='90'%20x2='232'%20y2='139'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ffffff'/%3e%3cstop%20offset='.55'%20stop-color='%23f4f7fb'/%3e%3cstop%20offset='1'%20stop-color='%23dbe4ed'/%3e%3c/linearGradient%3e%3c/defs%3e%3cellipse%20cx='160'%20cy='108'%20rx='82'%20ry='66'%20fill='url(%23bg)'/%3e%3cellipse%20cx='160'%20cy='187'%20rx='70'%20ry='10'%20fill='%23dde7f3'/%3e%3cellipse%20cx='160'%20cy='166'%20rx='84'%20ry='18'%20fill='url(%23ring)'/%3e%3cpath%20d='M80%20151c7-16%2023-24%2048-24h67c23%200%2039%207%2046%2024H80Z'%20fill='url(%23plate)'/%3e%3cpath%20d='M78%20145h166c8%200%2014%204%2016%2011H65c2-5%207-11%2013-11Z'%20fill='%23eff4fa'/%3e%3cpath%20d='M93%20138c8-27%2028-47%2063-59%2016-6%2037-9%2065-9h20c14%200%2027%208%2037%2020l16%2018%205%2018H78l15-14Z'%20fill='url(%23body)'/%3e%3cpath%20d='M158%2081h65c15%200%2027%204%2037%2013l21%2019H124c6-14%2015-22%2034-32Z'%20fill='%235e6876'/%3e%3cpath%20d='M103%20119h40c9%200%2017%206%2021%2016H95c1-7%204-12%208-16Z'%20fill='%2319c0e1'/%3e%3cpath%20d='M203%20145h47c7%200%2013%204%2018%2010h-56Z'%20fill='%232c79ea'/%3e%3ccircle%20cx='123'%20cy='141'%20r='22'%20fill='%232d3643'/%3e%3ccircle%20cx='123'%20cy='141'%20r='12'%20fill='%23c5d0dc'/%3e%3ccircle%20cx='230'%20cy='141'%20r='22'%20fill='%232d3643'/%3e%3ccircle%20cx='230'%20cy='141'%20r='12'%20fill='%23c5d0dc'/%3e%3c/svg%3e" alt="Автомобиль с пробегом"><h3>С пробегом</h3><p>Выберите на сайте somon.tj или предложите его сами</p></article>
+            <article class="offer-card"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20320%20220'%20fill='none'%3e%3cdefs%3e%3cradialGradient%20id='bg'%20cx='0'%20cy='0'%20r='1'%20gradientUnits='userSpaceOnUse'%20gradientTransform='translate(160%20106)%20rotate(90)%20scale(84%2092)'%3e%3cstop%20stop-color='%23dcecff'/%3e%3cstop%20offset='1'%20stop-color='%23eef6ff'%20stop-opacity='0'/%3e%3c/radialGradient%3e%3clinearGradient%20id='ring'%20x1='68'%20y1='170'%20x2='254'%20y2='170'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23336eff'/%3e%3cstop%20offset='1'%20stop-color='%23143dc6'/%3e%3c/linearGradient%3e%3clinearGradient%20id='body'%20x1='74'%20y1='94'%20x2='254'%20y2='152'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ffffff'/%3e%3cstop%20offset='.55'%20stop-color='%23f3f6fa'/%3e%3cstop%20offset='1'%20stop-color='%23dbe4ed'/%3e%3c/linearGradient%3e%3c/defs%3e%3cellipse%20cx='160'%20cy='106'%20rx='86'%20ry='68'%20fill='url(%23bg)'/%3e%3cellipse%20cx='160'%20cy='188'%20rx='72'%20ry='11'%20fill='%23d9e5f3'/%3e%3cellipse%20cx='160'%20cy='168'%20rx='94'%20ry='19'%20fill='url(%23ring)'/%3e%3cpath%20d='M79%20151c7-18%2024-26%2050-26h70c27%200%2046%208%2054%2026H79Z'%20fill='%23eef3fa'/%3e%3cpath%20d='M80%2094h133c16%200%2029%206%2040%2018l17%2017h16c13%200%2023%208%2027%2021l6%2018H52l9-46c3-18%208-28%2019-28Z'%20fill='url(%23body)'/%3e%3cpath%20d='M108%20105h124c17%200%2030%204%2040%2013l18%2016H96l12-18Z'%20fill='%23626c79'/%3e%3crect%20x='61'%20y='104'%20width='38'%20height='31'%20rx='6'%20fill='%23dfe9f4'/%3e%3crect%20x='123'%20y='79'%20width='86'%20height='10'%20rx='4'%20fill='%234fd6f1'/%3e%3cpath%20d='M80%20143h58c10%200%2018%206%2022%2016H71z'%20fill='%232d64ea'/%3e%3ccircle%20cx='114'%20cy='165'%20r='21'%20fill='%232c3541'/%3e%3ccircle%20cx='114'%20cy='165'%20r='11'%20fill='%23c2cdd8'/%3e%3ccircle%20cx='238'%20cy='165'%20r='21'%20fill='%232c3541'/%3e%3ccircle%20cx='238'%20cy='165'%20r='11'%20fill='%23c2cdd8'/%3e%3c/svg%3e" alt="Транспорт для бизнеса"><h3>Для бизнеса</h3><p>Приобретайте фургоны, электромобили, грузовики и другой нужный транспорт</p></article>
+          </div>
+        </section>
+        <section class="section" id="calculator-section">
+          <div class="calculator-layout">
+            <div class="calculator-main">
+              <div class="currency-switch" role="radiogroup" aria-label="Валюта">
+                <label class="currency-option"><input type="radio" name="auto-currency" value="TJS" checked><span>Сомони</span></label>
+                <label class="currency-option"><input type="radio" name="auto-currency" value="USD"><span>Доллары США</span></label>
+              </div>
+              <div class="calc-row"><span class="calc-label">Стоимость авто</span><div class="calc-value" id="auto-price-value">100 000 с.</div><input class="range-input" id="auto-price" type="range" min="50000" max="400000" step="5000" value="100000"></div>
+              <div class="calc-row"><span class="calc-label">Предоплата</span><div class="calc-value" id="auto-down-payment-value">0 с.</div><input class="range-input" id="auto-down-payment" type="range" min="0" max="400000" step="5000" value="0"><div class="info-line"><span>От 0% до 100% стоимости автомобиля</span><span class="info-badge">i</span></div></div>
+              <div class="calc-row"><span class="calc-label">Сумма финансирования</span><div class="calc-value" id="auto-financed-value">100 000 с.</div><div class="info-line"><span>Сумма рассчитывается автоматически</span><span class="info-badge">i</span></div></div>
+              <div class="calc-row"><span class="calc-label">Срок финансирования в месяцах</span><div class="calc-value"><span id="auto-term-range-value">12</span></div><input class="range-input" id="auto-term-range" type="range" min="12" max="60" step="12" value="12"><div class="months-scale"><span>12</span><span>24</span><span>36</span><span>48</span><span>60</span></div></div>
+            </div>
+            <aside class="summary-panel"><div class="summary-card"><div class="summary-stat"><span>Фактическая переплата</span><strong id="auto-overpayment">10 407.4 с.</strong></div><div class="summary-stat"><span>Ежемесячный платёж</span><strong id="auto-monthly">7 533.95 с.</strong></div><div class="summary-stat"><span>Годовая ставка</span><strong id="auto-rate">23%</strong></div><button class="submit-btn" type="button" data-scroll-target="#application-section">Оставить заявку</button></div></aside>
+          </div>
+        </section>
+        <section class="section">
+          <h2 class="steps-title">Как оформить покупку:</h2>
+          <div class="step-grid">
+            <article class="step-item"><div class="step-icon icon-car"></div><div class="step-text"><h3>Выберите авто в автосалоне</h3><p>Выберите авто в автосалоне, на somon.tj или предложите сами</p></div></article>
+            <article class="step-item"><div class="step-icon icon-form"></div><div class="step-text"><h3>Отправьте заявку</h3><p>Оставьте заявку с помощью нашей формы и укажите все данные</p></div></article>
+            <article class="step-item"><div class="step-icon icon-clock"></div><div class="step-text"><h3>Получите решение</h3><p>Рассмотрим вашу заявку в течение нескольких дней</p></div></article>
+            <article class="step-item"><div class="step-icon icon-check"></div><div class="step-text"><h3>Поможем оценить машину</h3><p>При необходимости уточним параметры и стоимость автомобиля</p></div></article>
+            <article class="step-item"><div class="step-icon icon-file"></div><div class="step-text"><h3>Оформите покупку</h3><p>После одобрения мы подготовим договор и финальные условия</p></div></article>
+            <article class="step-item"><div class="step-icon icon-money"></div><div class="step-text"><h3>Подпишите договор</h3><p>Подпишите договор и получите свою машину</p></div></article>
+          </div>
+        </section>
+        <section class="section application-section" id="application-section">
+          <div class="application-heading"><h2>Оставьте заявку</h2><p>Оставьте свои контакты, и мы обязательно с вами свяжемся</p></div>
+          <div class="form-shell">
+            <div class="progress-meta"><span id="step-caption">Личные данные</span><span id="step-index-label">Шаг 1 из 5</span></div>
+            <div class="progress-bar"><span id="step-progress"></span></div>
+            <form id="auto-form">
+              <section class="form-step active" data-step="1" data-title="Личные данные">
+                <div class="field"><label for="auto-full-name">Введите имя и фамилию</label><input id="auto-full-name" name="name" type="text" placeholder="Введите имя и фамилию" required></div>
+                <div class="field"><label>Тип документа</label><div class="radio-row"><label class="radio-option"><input type="radio" name="documentType" value="salary" checked><span>Справка о заработной плате</span></label><label class="radio-option"><input type="radio" name="documentType" value="patent"><span>Патент</span></label></div></div>
+                <p class="consent-text">Соглашаюсь на обработку своих данных</p>
+              </section>
+              <section class="form-step" data-step="2" data-title="Контакты">
+                <div class="step-grid-two">
+                  <div class="field"><label for="auto-phone">Телефон</label><input id="auto-phone" name="phone" type="tel" placeholder="+992 90 000 00 00" required></div>
+                  <div class="field"><label for="auto-email">Email</label><input id="auto-email" name="email" type="email" placeholder="example@mail.com"></div>
+                </div>
+                <div class="field"><label for="auto-city">Город</label><select id="auto-city" name="city" required><option value="">Выберите город</option><option value="Душанбе">Душанбе</option><option value="Худжанд">Худжанд</option><option value="Бохтар">Бохтар</option><option value="Куляб">Куляб</option></select></div>
+              </section>
+              <section class="form-step" data-step="3" data-title="Параметры авто">
+                <div class="step-grid-two">
+                  <div class="field"><label for="auto-category">Категория авто</label><select id="auto-category" name="category" required><option value="">Выберите категорию</option><option value="Новый автомобиль">Новый автомобиль</option><option value="С пробегом">С пробегом</option><option value="Для бизнеса">Для бизнеса</option></select></div>
+                  <div class="field"><label for="auto-budget">Желаемая стоимость</label><input id="auto-budget" name="budget" type="text" placeholder="Например: 100 000 с." required></div>
+                </div>
+                <div class="field"><label for="auto-note">Комментарий</label><textarea id="auto-note" name="note" placeholder="Укажите марку, модель или дополнительные пожелания"></textarea></div>
+              </section>
+              <section class="form-step" data-step="4" data-title="Финансирование">
+                <div class="step-grid-two">
+                  <div class="field"><label for="auto-income">Ежемесячный доход</label><input id="auto-income" name="income" type="text" placeholder="Например: 8 000 с." required></div>
+                  <div class="field"><label for="auto-term">Срок кредита</label><select id="auto-term" name="term" required><option value="">Выберите срок</option><option value="12 месяцев">12 месяцев</option><option value="24 месяца">24 месяца</option><option value="36 месяцев">36 месяцев</option><option value="48 месяцев">48 месяцев</option><option value="60 месяцев">60 месяцев</option></select></div>
+                </div>
+                <div class="field"><label for="auto-down-payment-manual">Первый взнос</label><input id="auto-down-payment-manual" name="manualDownPayment" type="text" placeholder="Например: 20 000 с." required></div>
+              </section>
+              <section class="form-step" data-step="5" data-title="Подтверждение">
+                <div class="review-card">
+                  <dl>
+                    <div><dt>ФИО</dt><dd data-review="name">Не указано</dd></div>
+                    <div><dt>Телефон</dt><dd data-review="phone">Не указано</dd></div>
+                    <div><dt>Город</dt><dd data-review="city">Не указано</dd></div>
+                    <div><dt>Категория</dt><dd data-review="category">Не указано</dd></div>
+                    <div><dt>Стоимость</dt><dd data-review="budget">Не указано</dd></div>
+                    <div><dt>Срок</dt><dd data-review="term">Не указано</dd></div>
+                  </dl>
+                </div>
+                <p class="section-copy" style="margin-top:18px">После отправки менеджер свяжется с вами, уточнит детали и подскажет следующий шаг.</p>
+              </section>
+              <div class="form-footer">
+                <p class="consent-text">Нажимая кнопку, вы подтверждаете корректность введённых данных.</p>
+                <div class="step-actions">
+                  <button class="ghost-btn" type="button" id="prev-step" hidden>Назад</button>
+                  <button class="step-btn" type="button" id="next-step">Далее</button>
+                  <button class="submit-btn" type="submit" id="submit-step" hidden>Отправить заявку</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="docs-card">
+            <div>
+              <h3>Что необходимо предоставить?</h3>
+              <p>В некоторых случаях Alif имеет право потребовать дополнительный залог или поручителя.</p>
+              <div class="docs-list">Вам понадобятся следующие документы:
+Паспорт и ИНН, а также прописка в Душанбе, Худжанде, Гиссаре, Бохтаре, Турсунзаде, Вахдате, Истаравшане или Панджакенте.
+Справка о заработной плате. Частным предпринимателям необходим патент или свидетельство с выпиской и квитанцией об уплате налогов за последние 6 месяцев.
+Также необходимо будет внести предоплату, размер которой зависит от решения кредитного комитета.</div>
+            </div>
+            <div class="docs-illustration" aria-hidden="true"><div class="docs-sheet"></div></div>
+          </div>
+        </section>
+        <section class="section">
+          <h2 class="steps-title">Как осуществить погашение?</h2>
+          <div class="repayment-grid">
+            <article class="repayment-card"><div class="repayment-media phone"></div><div class="repayment-body"><h3>В приложении Alif</h3><p>Выберите раздел «Платежи Alif» и оплачивайте регистрацию и платежи онлайн.</p></div></article>
+            <article class="repayment-card"><div class="repayment-media terminal"></div><div class="repayment-body"><h3>В терминалах по всей стране</h3><p>Найдите удобный терминал, введите номер телефона или договора и внесите платёж.</p></div></article>
+            <article class="repayment-card"><div class="repayment-media cash"></div><div class="repayment-body"><h3>В наших кассах</h3><p>Приходите в ближайший офис Alif и сделайте платёж в кассу.</p></div></article>
+          </div>
+        </section>
+        <section class="section">
+          <h2 class="faq-title">Часто задаваемые вопросы</h2>
+          <div class="faq-list">
+            <article class="faq-item"><button class="faq-toggle" type="button"><span>Где можно оставить заявку на покупку авто?</span><span class="faq-plus">+</span></button><div class="faq-answer">Заявку можно оставить прямо на этой странице. После отправки анкеты с вами свяжется менеджер и подскажет дальнейшие шаги.</div></article>
+            <article class="faq-item"><button class="faq-toggle" type="button"><span>Что делать, если нет возможности оплатить предоплату за автофинансирование?</span><span class="faq-plus">+</span></button><div class="faq-answer">Минимальный первый взнос обязателен. Его точный размер зависит от автомобиля, категории заявки и решения кредитного комитета.</div></article>
+            <article class="faq-item"><button class="faq-toggle" type="button"><span>Может ли юридическое лицо получить автофинансирование?</span><span class="faq-plus">+</span></button><div class="faq-answer">Да, для бизнеса доступен отдельный сценарий. Укажите это в заявке, и менеджер предложит подходящие условия.</div></article>
+            <article class="faq-item"><button class="faq-toggle" type="button"><span>Как снять запрет с машины в ГАИ после полной оплаты автофинансирования?</span><span class="faq-plus">+</span></button><div class="faq-answer">После полного погашения банк подготовит подтверждающие документы. С ними можно обратиться в ГАИ для завершения процедуры.</div></article>
+            <article class="faq-item"><button class="faq-toggle" type="button"><span>Как посмотреть дату платежа своего автофинансирования в долларах?</span><span class="faq-plus">+</span></button><div class="faq-answer">Уточнить дату следующего платежа можно у менеджера после одобрения заявки. Мы также дополнительно напоминаем о сроках оплаты.</div></article>
+            <article class="faq-item"><button class="faq-toggle" type="button"><span>Можно ли оплачивать долларовое автофинансирование в сомони?</span><span class="faq-plus">+</span></button><div class="faq-answer">Это зависит от условий договора и выбранной программы. При оформлении менеджер сразу подскажет доступные способы оплаты.</div></article>
+          </div>
+        </section>
+      </main>
+      <footer class="footer">
+        <div class="footer-top">
+          <div class="footer-col">
+            <a class="logo" href="index.html">
+              <svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#35d2ff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#35d2ff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#35d2ff" opacity="0.95"></circle></svg>
+              <span>Сомонибонк</span>
+            </a>
+            <p>ул. Бухороуддин, 9<br>Турсунзаде, район 8, Казань</p>
+            <a href="#" data-toast="Политика конфиденциальности будет добавлена позже.">Политика и права</a>
+          </div>
+          <div class="footer-col">
+            <p><strong>900</strong><br>Для звонков с мобильных в Таджикистане</p>
+            <p><strong>+992 48 888 1111</strong><br>Для звонков из любой точки мира</p>
+            <p><strong>+992 44 600 1520</strong><br>Техническая поддержка и WhatsApp</p>
+            <p>support@alif.tj<br>Для вашей обратной связи</p>
+          </div>
+          <div class="footer-col">
+            <p>Приложения</p>
+            <div class="store-row"><span class="store-badge">Google Play</span><span class="store-badge">App Store</span></div>
+            <p style="margin-top:18px">Соцсети</p>
+            <div class="social-row"><span class="social-pill">f</span><span class="social-pill">in</span><span class="social-pill">ig</span><span class="social-pill">yt</span><span class="social-pill">vk</span><span class="social-pill">tt</span></div>
+          </div>
+        </div>
+        <div class="footer-bottom"><span>О нас</span><span>Адреса</span><span>Документы и тарифы</span><span>Вакансии</span><span>Связь с нами</span></div>
+      </footer>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+</body>
+</html>

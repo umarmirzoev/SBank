@@ -87,8 +87,8 @@ public class AutoCreditService : IAutoCreditService
             if (dto.CarPrice <= 0 || dto.DownPayment < 0 || dto.TermMonths <= 0)
                 return new Response<AutoCreditGetDto>(HttpStatusCode.BadRequest, "Invalid auto credit request");
 
-            if (dto.DownPayment >= dto.CarPrice)
-                return new Response<AutoCreditGetDto>(HttpStatusCode.BadRequest, "Down payment must be less than car price");
+            if (dto.DownPayment > dto.CarPrice)
+                return new Response<AutoCreditGetDto>(HttpStatusCode.BadRequest, "Down payment must not exceed car price");
 
             if (!Enum.TryParse<Currency>(dto.Currency, true, out var currency))
                 return new Response<AutoCreditGetDto>(HttpStatusCode.BadRequest, "Invalid currency");
