@@ -1,4 +1,4 @@
-import{m as k,s as o,o as b,a as c,b as l,f as n,c as g,r as q}from"./common-Bzbd_rB1.js";k();document.querySelectorAll("[data-toast]").forEach(t=>{t.addEventListener("click",a=>{t.getAttribute("href")==="#"&&a.preventDefault(),o(t.dataset.toast)})});const f=document.querySelectorAll(".guide-tab"),i=document.querySelectorAll(".guide-mini-card");f.forEach(t=>{t.addEventListener("click",()=>{f.forEach(a=>a.classList.toggle("active",a===t)),t.dataset.guide==="security"?(i[0]?.classList.add("primary"),i[1]?.classList.remove("primary"),i[2]?.classList.remove("primary"),o("Открыт раздел: Настройки и безопасность.")):(i[0]?.classList.remove("primary"),i[1]?.classList.add("primary"),i[2]?.classList.remove("primary"),o("Открыт раздел: Карты."))})});const A=document.querySelector(".hero"),e=document.createElement("section");e.className="sb-dashboard";e.id="sb-dashboard";e.innerHTML=`
+import{m as k,s as o,o as b,b as c,a as l,f as n,c as g,r as q}from"./common-Cwdypr2M.js";/* empty css                    */k();document.querySelectorAll("[data-toast]").forEach(t=>{t.addEventListener("click",a=>{t.getAttribute("href")==="#"&&a.preventDefault(),o(t.dataset.toast)})});const f=document.querySelectorAll(".guide-tab"),i=document.querySelectorAll(".guide-mini-card");f.forEach(t=>{t.addEventListener("click",()=>{f.forEach(a=>a.classList.toggle("active",a===t)),t.dataset.guide==="security"?(i[0]?.classList.add("primary"),i[1]?.classList.remove("primary"),i[2]?.classList.remove("primary"),o("Открыт раздел: Настройки и безопасность.")):(i[0]?.classList.remove("primary"),i[1]?.classList.add("primary"),i[2]?.classList.remove("primary"),o("Открыт раздел: Карты."))})});const A=document.querySelector(".hero"),e=document.createElement("section");e.className="sb-dashboard";e.id="sb-dashboard";e.innerHTML=`
   <div class="sb-dashboard-head">
     <div>
       <h2 class="sb-dashboard-title">Личный кабинет</h2>
@@ -16,7 +16,7 @@ import{m as k,s as o,o as b,a as c,b as l,f as n,c as g,r as q}from"./common-Bzb
         <button class="sb-btn" type="button" data-dashboard-login>Войти</button>
         <button class="sb-ghost-btn" type="button" data-dashboard-register>Регистрация</button>
       </div>
-    `,t.querySelector("[data-dashboard-login]")?.addEventListener("click",()=>b("login",d)),t.querySelector("[data-dashboard-register]")?.addEventListener("click",()=>b("register",d));return}t.innerHTML=c("info","Загружаем данные пользователя...");try{const[a,v,u,m]=await Promise.all([l("/api/accounts/my?page=1&pageSize=10",{auth:!0}),l("/api/cards/my?page=1&pageSize=10",{auth:!0}),l("/api/transactions/recent",{auth:!0}),l("/api/notifications/my?page=1&pageSize=10",{auth:!0})]),r=a.items||a.Items||[],$=v.items||v.Items||[],h=u.items||u.Items||[],p=m.items||m.Items||[],L=r.reduce((s,y)=>s+Number(y.balance||y.Balance||0),0);t.innerHTML=`
+    `,t.querySelector("[data-dashboard-login]")?.addEventListener("click",()=>b("login",d)),t.querySelector("[data-dashboard-register]")?.addEventListener("click",()=>b("register",d));return}t.innerHTML=c("info","Загружаем данные пользователя...");try{const[a,v,u,m]=await Promise.all([l("/api/accounts/my?page=1&pageSize=10",{auth:!0}),l("/api/cards/my?page=1&pageSize=10",{auth:!0}),l("/api/transactions/recent",{auth:!0}),l("/api/notifications/my?page=1&pageSize=10",{auth:!0})]),r=a.items||a.Items||[],$=v.items||v.Items||[],p=u.items||u.Items||[],h=m.items||m.Items||[],L=r.reduce((s,y)=>s+Number(y.balance||y.Balance||0),0);t.innerHTML=`
       <div class="sb-grid">
         <article class="sb-card span-4"><div class="sb-kpi"><strong>${r.length}</strong><span>Счетов</span></div></article>
         <article class="sb-card span-4"><div class="sb-kpi"><strong>${n(L)}</strong><span>Общий баланс</span></div></article>
@@ -45,7 +45,7 @@ import{m as k,s as o,o as b,a as c,b as l,f as n,c as g,r as q}from"./common-Bzb
 
         <article class="sb-card span-6">
           <h3>Последние операции</h3>
-          ${h.length===0?'<div class="sb-empty">Операций пока нет.</div>':`<div class="sb-list">${h.slice(0,5).map(s=>`
+          ${p.length===0?'<div class="sb-empty">Операций пока нет.</div>':`<div class="sb-list">${p.slice(0,5).map(s=>`
             <div class="sb-list-item">
               <div class="sb-list-main">
                 <div class="sb-list-title">${s.type||s.Type}</div>
@@ -57,7 +57,7 @@ import{m as k,s as o,o as b,a as c,b as l,f as n,c as g,r as q}from"./common-Bzb
 
         <article class="sb-card span-6">
           <h3>Уведомления</h3>
-          ${p.length===0?'<div class="sb-empty">Уведомлений пока нет.</div>':`<div class="sb-list">${p.slice(0,5).map(s=>`
+          ${h.length===0?'<div class="sb-empty">Уведомлений пока нет.</div>':`<div class="sb-list">${h.slice(0,5).map(s=>`
             <div class="sb-list-item">
               <div class="sb-list-main">
                 <div class="sb-list-title">${s.title||s.Title}</div>

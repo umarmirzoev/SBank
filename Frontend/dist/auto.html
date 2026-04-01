@@ -3,241 +3,1705 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Покупка авто</title>
+  <title>Покупка авто — Сомонибонк</title>
   <style>
-    :root{--bg:#f5f9ff;--surface:#fff;--line:#dfe9f7;--text:#1f2d45;--muted:#6c7e97;--blue:#2f7df6;--deep:#1850b5;--navy:#081d44;--green:#20c77d;--shadow:0 22px 50px rgba(37,79,138,.12);--radius:24px}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--text);font-family:"Segoe UI",Arial,sans-serif;background:radial-gradient(circle at top left,rgba(84,169,255,.18),transparent 23%),radial-gradient(circle at top right,rgba(79,215,244,.14),transparent 20%),linear-gradient(180deg,#fbfdff 0%,var(--bg) 100%)}
-    a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}
-    .page{width:100%;max-width:none;margin:0;padding:16px 20px 48px}.shell{padding:14px;border-radius:32px;background:rgba(255,255,255,.92);border:1px solid rgba(228,237,248,.96);box-shadow:0 28px 80px rgba(26,71,137,.12);backdrop-filter:blur(12px)}
-    @media (min-width:1024px){.page{padding:16px 40px 48px}} 
-    @media (min-width:1440px){.page{padding:16px 68px 54px}}
-    .header-top,.logo,.main-nav,.header-right,.location,.sub-nav,.hero-layout,.offer-grid,.calculator-layout,.step-grid,.repayment-grid,.footer-top,.footer-bottom,.store-row,.social-row,.progress-meta,.hero-actions,.form-footer{display:flex;align-items:center}
-    .header-top{gap:24px;justify-content:space-between;padding:4px 18px 18px;border-bottom:1px solid var(--line)}.logo{gap:10px;flex:0 0 auto}.logo svg{width:34px;height:34px}.logo span{font-size:24px;font-weight:700;letter-spacing:-.03em}
-    .main-nav{gap:38px;margin-left:24px;margin-right:auto;font-size:15px;font-weight:500}.main-nav a,.sub-nav a,.location,.lang{transition:color .2s ease}.main-nav a:hover,.sub-nav a:hover,.location:hover,.lang:hover{color:var(--deep)}
-    .main-nav a{position:relative;padding:12px 0 15px}.main-nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-18px;height:4px;border-radius:999px;background:var(--green)}
-    .header-right{gap:24px;font-size:15px;color:var(--muted)}.location{gap:10px;white-space:nowrap}.location svg{width:18px;height:18px;stroke:#7b8ca4;stroke-width:1.8;fill:none}.lang{color:var(--text)}
-    .sub-nav{gap:24px;padding:24px 18px 28px;font-size:15px;white-space:nowrap;overflow-x:auto}.sub-nav a.active-sub{color:var(--deep);font-weight:600}
-    .section{margin-top:18px;padding:30px;border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(247,251,255,.96));border:1px solid rgba(223,233,247,.95);box-shadow:var(--shadow)}
-    .hero{padding:16px}.hero-layout{align-items:stretch;min-height:300px;border-radius:24px;overflow:hidden;background:linear-gradient(135deg,#f8fbff 0%,#f3f7fd 52%,#f8fbff 100%)}.hero-copy{width:48%;padding:52px 48px 40px}.hero-copy h1{margin:0 0 18px;max-width:360px;font-size:clamp(34px,5vw,56px);line-height:1.05;font-weight:700;letter-spacing:-.05em}.hero-copy p{margin:0 0 34px;max-width:340px;color:#566c88;font-size:clamp(17px,2.2vw,22px);line-height:1.45}.hero-visual{width:52%;background:linear-gradient(180deg,#f9fbff 0%,#f2f6fc 100%)}.hero-visual img{width:100%;height:100%;object-fit:cover;display:block}
-    .primary-btn,.secondary-btn,.submit-btn,.step-btn,.ghost-btn,.faq-toggle{border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}.primary-btn,.submit-btn,.step-btn{min-height:54px;padding:0 28px;border:0;background:linear-gradient(180deg,var(--blue) 0%,var(--deep) 100%);color:#fff;box-shadow:0 14px 28px rgba(26,86,186,.24);font-weight:700;cursor:pointer}.secondary-btn,.ghost-btn{min-height:50px;padding:0 24px;border:1px solid #d5e3f6;background:#fff;color:var(--deep);font-weight:600;cursor:pointer}.primary-btn:hover,.secondary-btn:hover,.submit-btn:hover,.step-btn:hover,.ghost-btn:hover,.faq-toggle:hover{transform:translateY(-2px);filter:brightness(1.02)}
-    .offer-grid,.step-grid,.repayment-grid{gap:16px;align-items:stretch;flex-wrap:wrap}.offer-grid{display:grid;grid-template-columns:1fr;gap:16px}.offer-card,.summary-card,.form-shell,.docs-card,.repayment-card{border-radius:24px;background:#fff;border:1px solid var(--line);box-shadow:0 18px 42px rgba(56,103,169,.1)}
-    @media (min-width:1024px){.offer-grid{grid-template-columns:repeat(2,minmax(0,1fr));}} 
-    @media (min-width:1440px){.offer-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
-    .offer-card{flex:1;padding:24px 22px;width:100%;max-width:100%}.offer-card img{width:100%;aspect-ratio:1.1/1;object-fit:contain;display:block;margin-bottom:18px}.offer-card h3{margin:0 0 12px;font-size:18px}.offer-card p,.section-copy,.step-text p,.repayment-body p,.faq-answer,.footer p,.footer a{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
-    .calculator-layout{align-items:stretch;gap:28px}.calculator-main{flex:1}.summary-panel{width:310px}.summary-card{padding:24px 18px 18px}.summary-stat{margin-bottom:18px}.summary-stat span,.calc-label{display:block;color:var(--muted);font-size:13px;line-height:1.5}.summary-stat strong{display:block;margin-top:2px;font-size:22px;line-height:1.2;color:var(--navy)}
-    .currency-switch{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:14px}.currency-option{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:14px}.currency-option input,.radio-option input{accent-color:var(--blue)}
-    .calc-row{margin-top:18px}.calc-value{margin:6px 0 12px;font-size:18px;font-weight:700;color:var(--navy)}.range-input{width:100%;appearance:none;height:2px;border-radius:999px;background:linear-gradient(90deg,var(--blue) 0%,#cfdbed 0%);outline:none}.range-input::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue);box-shadow:0 6px 14px rgba(47,125,246,.32);cursor:pointer;border:0}.range-input::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--blue);box-shadow:0 6px 14px rgba(47,125,246,.32);cursor:pointer;border:0}
-    .info-line{margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#96a6bc;font-size:13px}.info-badge{width:18px;height:18px;border:1px solid #bfd1e7;border-radius:50%;display:inline-grid;place-items:center;font-size:12px;color:#8fa4c0}.months-scale{margin-top:10px;display:grid;grid-template-columns:repeat(5,1fr);color:#99a9bd;font-size:12px}
-    .steps-title,.application-heading h2{margin:0 0 22px;color:#2a57a2;font-family:Georgia,"Times New Roman",serif;font-size:clamp(32px,3.2vw,44px);font-weight:400;line-height:1.15}.step-item{width:calc(33.333% - 11px);min-width:220px;display:grid;grid-template-columns:54px 1fr;gap:14px;align-items:start}.step-icon{width:54px;height:54px;border-radius:18px;background:linear-gradient(180deg,rgba(87,149,255,.16),rgba(66,122,240,.06));position:relative}
-    .step-icon::before,.step-icon::after{content:"";position:absolute;background:linear-gradient(180deg,#5d97ff,#2b68e8)}.icon-car::before{width:40px;height:10px;left:7px;top:16px;border-radius:999px}.icon-car::after{width:30px;height:14px;left:12px;top:24px;border-radius:999px}.icon-form::before,.icon-check::before,.icon-file::before{width:28px;height:34px;left:13px;top:10px;border-radius:10px}.icon-form::after,.icon-file::after{width:12px;height:4px;left:20px;top:19px;box-shadow:0 8px 0 #5d97ff,0 16px 0 #5d97ff;border-radius:999px}.icon-clock::before{width:34px;height:34px;left:10px;top:10px;border-radius:50%;background:transparent;box-shadow:inset 0 0 0 4px #5d97ff}.icon-clock::after{width:3px;height:12px;left:26px;top:18px;box-shadow:-7px 8px 0 0 #5d97ff;border-radius:999px}.icon-check::after{width:14px;height:7px;left:20px;top:26px;transform:rotate(-35deg);box-shadow:-8px 4px 0 0 #5d97ff;border-radius:999px}.icon-money::before{width:34px;height:22px;left:10px;top:16px;border-radius:8px}.icon-money::after{width:10px;height:10px;left:22px;top:22px;border-radius:50%;background:#c6dcff}
-    .step-text h3,.repayment-body h3{margin:0 0 6px;font-size:17px;line-height:1.35}
-    .application-section{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(244,250,255,.96) 0%,rgba(232,244,255,.92) 100%)}.application-section::before,.application-section::after{content:"";position:absolute;width:120px;height:120px;background:linear-gradient(135deg,rgba(80,203,240,.18),rgba(39,113,237,.02));transform:rotate(45deg)}.application-section::before{top:-56px;right:-20px}.application-section::after{bottom:-60px;left:-40px}
-    .application-heading,.form-shell,.docs-card{position:relative;z-index:1}.application-heading{text-align:center;margin-bottom:26px}.application-heading p{margin:0;color:#5c7492;font-size:15px}.form-shell{padding:34px 44px 28px;border-color:#cfe6fb}.progress-meta{justify-content:space-between;margin-bottom:12px;color:#597399;font-size:14px}.progress-bar{width:100%;height:6px;border-radius:999px;background:#e7eff9;overflow:hidden;margin-bottom:28px}.progress-bar span{display:block;width:20%;height:100%;border-radius:inherit;background:linear-gradient(90deg,#2dcdf0 0%,#2f7df6 100%);transition:width .25s ease}
-    .form-step{display:none;min-height:245px}.form-step.active{display:block}.step-grid-two,.review-card dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.field{margin-bottom:18px}.field label{display:block;margin-bottom:8px;color:#4f688a;font-size:14px}.field input,.field select,.field textarea{width:100%;min-height:52px;padding:14px 16px;border-radius:10px;border:1px solid #a8d4fb;background:#fff;color:var(--text);outline:none;transition:border-color .2s ease,box-shadow .2s ease}.field textarea{min-height:120px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(47,125,246,.12)}
-    .radio-row{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px}.radio-option{display:inline-flex;align-items:center;gap:8px;color:#4f688a;font-size:14px}.consent-text{margin:0;color:#5f7aa2;font-size:12px;line-height:1.5}.form-footer{justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:12px}.step-actions{display:flex;gap:12px;flex-wrap:wrap}.review-card{padding:18px;border-radius:18px;background:#f6fbff;border:1px solid #d9e9f8}.review-card dt{color:#5f7697;font-size:13px}.review-card dd{margin:0;font-weight:600}
-    .docs-card{margin-top:28px;padding:34px 30px;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center}.docs-card h3{margin:0 0 12px;color:var(--navy);font-size:clamp(28px,3vw,38px);line-height:1.15}.docs-list{margin-top:16px;color:var(--muted);font-size:15px;line-height:1.7;white-space:pre-line}.docs-illustration{min-height:220px;border-radius:24px;background:linear-gradient(180deg,#fdfefe 0%,#eef6ff 100%);display:grid;place-items:center}.docs-sheet{width:138px;height:164px;border-radius:18px 18px 32px 18px;background:linear-gradient(180deg,#fff 0%,#eef4fb 100%);box-shadow:0 18px 36px rgba(76,122,184,.16);position:relative}.docs-sheet::before,.docs-sheet::after{content:"";position:absolute;left:24px;right:24px;height:10px;border-radius:999px;background:linear-gradient(90deg,#4cca79 0%,#2da35b 100%);box-shadow:22px 26px 0 rgba(76,202,121,.85)}.docs-sheet::before{top:48px}.docs-sheet::after{top:88px}
-    .repayment-card{flex:1;min-width:0;border:1px solid #b8e8f8;overflow:hidden}.repayment-media{height:164px;position:relative;background:linear-gradient(135deg,#dfefff 0%,#f8fcff 55%,#d9f3ef 100%)}.repayment-media::before,.repayment-media::after{content:"";position:absolute;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(225,238,250,.96));box-shadow:0 18px 32px rgba(88,123,177,.15)}.repayment-media.phone::before{top:22px;width:82px;height:122px;border-radius:18px}.repayment-media.phone::after{top:48px;width:44px;height:44px;border-radius:50%;box-shadow:inset 0 0 0 3px #2f7df6}.repayment-media.terminal::before{top:22px;width:114px;height:110px;border-radius:12px}.repayment-media.terminal::after{top:44px;width:74px;height:48px;border-radius:10px;background:linear-gradient(90deg,#d6e7f8 0 24%,transparent 24% 28%,#d6e7f8 28% 52%,transparent 52% 56%,#d6e7f8 56% 80%,transparent 80% 84%,#d6e7f8 84% 100%)}.repayment-media.cash::before{top:22px;width:92px;height:116px;border-radius:40px 40px 16px 16px}.repayment-media.cash::after{top:40px;width:58px;height:72px;border-radius:16px;background:linear-gradient(180deg,#8be0b1 0%,#2bc67a 100%)}
-    .repayment-body{padding:16px 16px 18px}.faq-title{margin:0 0 20px;color:#234c8d;font-size:clamp(28px,3vw,40px);line-height:1.15}.faq-item{border-top:1px solid #d9e6f5}.faq-item:last-child{border-bottom:1px solid #d9e6f5}.faq-toggle{width:100%;min-height:62px;padding:16px 0;border:0;border-radius:0;background:transparent;display:flex;align-items:center;justify-content:space-between;gap:16px;text-align:left;color:var(--navy);font-size:15px;font-weight:500;box-shadow:none;cursor:pointer}.faq-plus{font-size:28px;line-height:1;color:#49c8f0;transition:transform .2s ease,color .2s ease}.faq-answer{display:none;padding:0 0 18px}.faq-item.open .faq-answer{display:block}.faq-item.open .faq-plus{transform:rotate(45deg);color:var(--blue)}
-    .footer{margin-top:18px;padding:32px 30px 24px;border-radius:0 0 26px 26px;background:linear-gradient(180deg,#0b1d43 0%,#081734 100%);color:rgba(255,255,255,.9)}.footer-top{align-items:flex-start;justify-content:space-between;gap:28px;flex-wrap:wrap}.footer-col{min-width:210px;flex:1}.footer strong{color:#2fd2ef;font-size:28px;line-height:1.1}.store-row,.social-row{gap:10px;flex-wrap:wrap;margin-top:12px}.store-badge,.social-pill{min-width:90px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600}.social-pill{min-width:40px;padding:0;border-radius:50%}.footer-bottom{justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.09);font-size:13px;color:rgba(226,236,255,.64)}
-    @media (max-width:1024px){.hero-layout,.calculator-layout,.footer-top{display:block}.hero-copy,.hero-visual,.summary-panel{width:100%}.hero-visual{min-height:280px}.summary-panel{margin-top:24px}.step-item{width:calc(50% - 8px)}.step-grid-two,.review-card dl,.docs-card{grid-template-columns:1fr}.docs-card{display:grid}}
-    @media (max-width:760px){.page{padding:10px 10px 36px}.shell,.section,.footer{border-radius:22px}.header-top,.sub-nav,.hero-copy,.form-shell,.docs-card,.footer{padding-left:16px;padding-right:16px}.header-top{flex-wrap:wrap}.main-nav{order:3;margin:0;width:100%;gap:22px;overflow-x:auto}.step-item{width:100%}.form-step{min-height:auto}.step-actions,.step-btn,.ghost-btn,.submit-btn{width:100%}}
-  </style>
-  <script type="module" crossorigin src="/assets/auto-CopgyCH0.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/common-Bzbd_rB1.js">
-  <link rel="stylesheet" crossorigin href="/assets/common-DHZQThhm.css">
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #10b981;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .sb-header {
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .sb-header-top {
+      border-bottom: 1px solid var(--border);
+      padding: 12px 48px;
+    }
+
+    .sb-header-bottom {
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px;
+    }
+
+    .sb-header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .sb-nav-top {
+      display: flex;
+      gap: 40px;
+    }
+
+    .sb-nav-top a {
+      color: #4b5563;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      padding: 8px 0;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    .sb-nav-top a.active {
+      color: var(--text);
+    }
+
+    .sb-nav-top a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--secondary);
+      border-radius: 2px;
+    }
+
+    .sb-nav-bottom {
+      display: flex;
+      gap: 32px;
+      padding: 12px 0;
+    }
+
+    .sb-nav-bottom a {
+      color: #4b5563;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .sb-nav-bottom a.active {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .sb-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .sb-location-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #4b5563;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sb-lang-btn {
+      background: transparent;
+      border: none;
+      font-size: 14px;
+      color: #4b5563;
+      cursor: pointer;
+    }
+
+    /* Main */
+    .sb-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 48px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-content {
+      padding: 60px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-title {
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      max-width: 400px;
+    }
+
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+      width: fit-content;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(37, 99, 235, 0.4);
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .hero-car {
+      width: 100%;
+      max-width: 500px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .hero-car.hero-photo {
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+      object-fit: cover;
+      aspect-ratio: 16 / 9;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Car Cards Section */
+    .car-cards-section {
+      margin-bottom: 64px;
+    }
+
+    .car-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .car-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease backwards;
+    }
+
+    .car-card:nth-child(1) { animation-delay: 0.1s; }
+    .car-card:nth-child(2) { animation-delay: 0.2s; }
+    .car-card:nth-child(3) { animation-delay: 0.3s; }
+
+    .car-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .car-card-image {
+      width: 100%;
+      height: 160px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .car-card-image svg {
+      width: 100%;
+      height: 100%;
+      max-width: 220px;
+    }
+
+    .car-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 14px;
+    }
+
+    .sb-message {
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.4;
+      border: 1px solid transparent;
+      margin-bottom: 16px;
+    }
+
+    .sb-message.info {
+      background: #eff6ff;
+      color: #1e3a8a;
+      border-color: #bfdbfe;
+    }
+
+    .sb-message.success {
+      background: #ecfdf5;
+      color: #065f46;
+      border-color: #a7f3d0;
+    }
+
+    .sb-message.error {
+      background: #fef2f2;
+      color: #991b1b;
+      border-color: #fecaca;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .form-btn[disabled] {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .car-card-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .car-card-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Calculator Section */
+    .calculator-section {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 40px;
+      margin-bottom: 64px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 48px;
+    }
+
+    .calculator-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .currency-selector {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .currency-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .currency-option input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+
+    .slider-group {
+      margin-bottom: 32px;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .slider-label {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .slider-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #e2e8f0;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .slider::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
+    }
+
+    .slider-scale {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .calculator-result {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-radius: 20px;
+      padding: 32px 24px;
+      height: fit-content;
+    }
+
+    .result-item {
+      margin-bottom: 24px;
+    }
+
+    .result-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .result-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .result-value.highlight {
+      color: var(--secondary);
+    }
+
+    .calculator-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .calculator-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+    }
+
+    /* Steps Section */
+    .steps-section {
+      margin-bottom: 64px;
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      text-align: center;
+      font-family: Georgia, serif;
+      color: #1e3a5f;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 16px;
+      animation: fadeInUp 0.6s ease backwards;
+    }
+
+    .step-item:nth-child(1) { animation-delay: 0.1s; }
+    .step-item:nth-child(2) { animation-delay: 0.2s; }
+    .step-item:nth-child(3) { animation-delay: 0.3s; }
+    .step-item:nth-child(4) { animation-delay: 0.4s; }
+    .step-item:nth-child(5) { animation-delay: 0.5s; }
+    .step-item:nth-child(6) { animation-delay: 0.6s; }
+
+    .step-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--primary);
+    }
+
+    .step-content h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .step-content p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Application Form Section */
+    .application-section {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 24px;
+      padding: 60px 40px;
+      margin-bottom: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .application-section::before,
+    .application-section::after {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), transparent);
+      border-radius: 50%;
+    }
+
+    .application-section::before {
+      top: -100px;
+      right: -50px;
+    }
+
+    .application-section::after {
+      bottom: -100px;
+      left: -50px;
+    }
+
+    .application-header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .application-header h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .application-header p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .form-container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .form-step-label {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: #e2e8f0;
+      border-radius: 2px;
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 20%;
+      background: linear-gradient(90deg, #06b6d4, var(--primary));
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .radio-option input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+
+    .form-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .consent-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      max-width: 300px;
+    }
+
+    .form-btn {
+      padding: 14px 32px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .form-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+    }
+
+    /* Documents Section */
+    .documents-section {
+      background: white;
+      border-radius: 24px;
+      padding: 48px;
+      margin-bottom: 64px;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 48px;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .documents-content h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #1e3a5f;
+    }
+
+    .documents-content > p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .documents-list {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text);
+    }
+
+    .documents-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .document-icon {
+      width: 180px;
+      height: 220px;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-radius: 20px;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .document-icon::before {
+      content: '';
+      position: absolute;
+      top: 40px;
+      left: 30px;
+      right: 30px;
+      height: 12px;
+      background: linear-gradient(90deg, #4ade80, #22c55e);
+      border-radius: 6px;
+    }
+
+    .document-icon::after {
+      content: '';
+      position: absolute;
+      top: 70px;
+      left: 30px;
+      right: 30px;
+      height: 12px;
+      background: linear-gradient(90deg, #4ade80, #22c55e);
+      border-radius: 6px;
+    }
+
+    /* Repayment Section */
+    .repayment-section {
+      margin-bottom: 64px;
+    }
+
+    .repayment-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .repayment-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+    }
+
+    .repayment-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .repayment-image {
+      height: 180px;
+      background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .repayment-image svg {
+      width: 80px;
+      height: 80px;
+      color: var(--primary);
+    }
+
+    .repayment-content {
+      padding: 24px;
+    }
+
+    .repayment-content h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .repayment-content p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      margin-bottom: 64px;
+    }
+
+    .faq-list {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: none;
+      border: none;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      color: var(--text);
+      transition: color 0.2s ease;
+    }
+
+    .faq-question:hover {
+      color: var(--primary);
+    }
+
+    .faq-icon {
+      width: 24px;
+      height: 24px;
+      color: #06b6d4;
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 200px;
+    }
+
+    .faq-answer p {
+      padding-bottom: 24px;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .sb-footer {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 60px 48px 30px;
+    }
+
+    .sb-footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .sb-footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1fr;
+      gap: 60px;
+      margin-bottom: 50px;
+    }
+
+    .sb-footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .sb-footer-address {
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .sb-footer-link {
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sb-contact-item {
+      margin-bottom: 24px;
+    }
+
+    .sb-contact-number {
+      font-size: 24px;
+      font-weight: 600;
+      color: #fbbf24;
+      margin-bottom: 4px;
+    }
+
+    .sb-contact-email {
+      font-size: 18px;
+      font-weight: 500;
+      color: #e2e8f0;
+    }
+
+    .sb-contact-label {
+      color: #94a3b8;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .sb-footer-section h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .sb-app-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .sb-app-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #e2e8f0;
+      text-decoration: none;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+
+    .sb-app-btn:hover {
+      background: #334155;
+    }
+
+    .sb-social-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .sb-social-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e293b;
+      border-radius: 50%;
+      color: #94a3b8;
+      transition: all 0.2s ease;
+    }
+
+    .sb-social-icon:hover {
+      background: #334155;
+      color: #e2e8f0;
+    }
+
+    .sb-footer-bottom {
+      border-top: 1px solid #1e293b;
+      padding: 24px 0;
+      margin-bottom: 24px;
+    }
+
+    .sb-footer-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .sb-footer-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .sb-footer-links a:hover {
+      color: #e2e8f0;
+    }
+
+    .sb-footer-copyright {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid #1e293b;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-section,
+      .calculator-section,
+      .documents-section {
+        grid-template-columns: 1fr;
+      }
+
+      .car-cards-grid,
+      .steps-grid,
+      .repayment-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .sb-footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sb-header-top,
+      .sb-header-bottom {
+        padding: 12px 20px;
+      }
+
+      .sb-nav-top,
+      .sb-nav-bottom {
+        display: none;
+      }
+
+      .hero-title {
+        font-size: 32px;
+      }
+
+      .hero-section {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        order: -1;
+      }
+
+      .car-cards-grid,
+      .steps-grid,
+      .repayment-grid,
+      .sb-footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sb-main {
+        padding: 20px 16px;
+      }
+
+      .form-container {
+        padding: 24px;
+      }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/auto-DnbCFjuX.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/common-Cwdypr2M.js">
 </head>
 <body>
-  <div class="page">
-    <div class="shell">
-      <header>
-        <div class="header-top">
-          <a class="logo" href="index.html">
-            <svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#356dff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#356dff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#356dff" opacity="0.95"></circle></svg>
-            <span>Сомонибонк</span>
-          </a>
-          <nav class="main-nav" aria-label="Главное меню">
-            <a class="active" href="index.html">Частным лицам</a>
-            <a href="#" data-toast="Раздел для бизнеса будет добавлен позже.">Бизнесу</a>
-            <a href="#" data-toast="Корпоративный раздел будет добавлен позже.">Сомонибонк</a>
-          </nav>
-          <div class="header-right">
-            <a class="location" href="#" data-toast="Адреса и банкоматы будут открыты на карте.">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-5.7 6-11a6 6 0 1 0-12 0c0 5.3 6 11 6 11Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
-              <span>Адреса и банкоматы</span>
-            </a>
-            <a class="lang" href="#" data-toast="Смена языка будет добавлена позже.">Рус ˅</a>
-          </div>
-        </div>
-        <nav class="sub-nav" aria-label="Разделы">
-          <a href="somonibank-app.html">Приложение Somoni</a>
-          <a href="cards.html">Карты</a>
-          <a href="#" data-toast="Раздел Салом будет добавлен позже.">Салом</a>
-          <a class="active-sub" href="auto.html">Покупка авто</a>
-          <a href="#" data-toast="Somoni Shop будет добавлен позже.">Somoni Shop</a>
-          <a href="transfers.html">Переводы</a>
-          <a href="#" data-toast="Депозиты будут добавлены позже.">Депозиты</a>
-          <a href="#" data-toast="Авиабилеты будут добавлены позже.">Авиабилеты</a>
-          <a href="#" data-toast="Дополнительные разделы будут добавлены позже.">Ещё ˅</a>
+  <!-- Header -->
+  <header class="sb-header">
+    <div class="sb-header-top">
+      <div class="sb-header-inner">
+        <a href="index.html" class="sb-logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="3"/>
+            <circle cx="22" cy="10" r="4" fill="#2563eb"/>
+          </svg>
+          <span>Сомонибонк</span>
+        </a>
+        <nav class="sb-nav-top">
+          <a href="index.html">Частным лицам</a>
+          <a href="business.html">Бизнесу</a>
+          <a href="#">Сомонибонк</a>
         </nav>
-      </header>
-      <main>
-        <section class="section hero">
-          <div class="hero-layout">
-            <div class="hero-copy">
-              <h1>Любая машина на ваш вкус</h1>
-              <p>Электромобили и традиционные авто, выбирайте понравившийся вариант и оплачивайте до 60 месяцев</p>
-              <div class="hero-actions"><button class="primary-btn" type="button" data-scroll-target="#application-section">Оставить заявку</button></div>
-            </div>
-            <div class="hero-visual" aria-hidden="true"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20760%20420'%20fill='none'%3e%3cdefs%3e%3clinearGradient%20id='body'%20x1='148'%20y1='82'%20x2='525'%20y2='246'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ffffff'/%3e%3cstop%20offset='0.48'%20stop-color='%23f4f7fb'/%3e%3cstop%20offset='1'%20stop-color='%23d9e2ed'/%3e%3c/linearGradient%3e%3clinearGradient%20id='glass'%20x1='236'%20y1='68'%20x2='423'%20y2='159'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%236b7483'/%3e%3cstop%20offset='1'%20stop-color='%233a4452'/%3e%3c/linearGradient%3e%3clinearGradient%20id='accent'%20x1='146'%20y1='195'%20x2='539'%20y2='195'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%231ed7f1'/%3e%3cstop%20offset='1'%20stop-color='%230f67d8'/%3e%3c/linearGradient%3e%3clinearGradient%20id='rim'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3e%3cstop%20stop-color='%230f1824'/%3e%3cstop%20offset='1'%20stop-color='%232f3b49'/%3e%3c/linearGradient%3e%3cfilter%20id='softShadow'%20x='80'%20y='145'%20width='558'%20height='165'%20filterUnits='userSpaceOnUse'%3e%3cfeGaussianBlur%20stdDeviation='16'/%3e%3c/filter%3e%3cfilter%20id='carShadow'%20x='89'%20y='35'%20width='584'%20height='277'%20filterUnits='userSpaceOnUse'%3e%3cfeOffset%20dy='18'/%3e%3cfeGaussianBlur%20stdDeviation='18'/%3e%3cfeColorMatrix%20values='0%200%200%200%200.145%200%200%200%200%200.278%200%200%200%200%200.451%200%200%200%200.18%200'/%3e%3c/filter%3e%3c/defs%3e%3cg%20filter='url(%23softShadow)'%20opacity='0.45'%3e%3cellipse%20cx='356'%20cy='244'%20rx='220'%20ry='26'%20fill='%237b8ca6'/%3e%3c/g%3e%3cg%20filter='url(%23carShadow)'%3e%3cg%3e%3cpath%20d='M158%20220c18-59%2058-102%20123-131%2035-15%2084-23%20161-23h55c44%200%2077%2015%20106%2050l31%2037%2018%207c16%206%2028%2020%2034%2039l12%2038H119l10-32c7-22%2015-35%2029-45Z'%20fill='url(%23body)'/%3e%3cpath%20d='M286%2090c27-19%2066-28%20114-28h75c22%200%2040%204%2058%2012%2026%2012%2050%2030%2074%2054l14%2015H241c8-21%2022-39%2045-53Z'%20fill='url(%23glass)'/%3e%3cpath%20d='M257%2088c19-10%2045-15%2072-15h96c25%200%2056%209%2074%2021-11%204-25%207-39%207H296c-15%200-28-4-39-13Z'%20fill='%23fff'%20opacity='.72'/%3e%3cpath%20d='M160%20217h533c17%200%2031%2010%2038%2027l3%209H133l4-12c5-15%2011-24%2023-24Z'%20fill='%23eef4fa'/%3e%3cpath%20d='M170%20199c10-24%2031-39%2057-39h74c27%200%2045%2011%2059%2039H170Z'%20fill='url(%23accent)'/%3e%3cpath%20d='M461%20224h139c18%200%2032%209%2042%2024H468z'%20fill='url(%23accent)'/%3e%3cpath%20d='M155%20222h78c18%200%2032%2012%2037%2031h-136c2-12%209-24%2021-31Z'%20fill='%230f1924'/%3e%3cpath%20d='M591%20157h42c17%200%2030%208%2039%2026h-88c2-10%204-17%207-26Z'%20fill='%23dbe5ef'/%3e%3cpath%20d='M233%20175h29l8%2011h-46c3-5%205-8%209-11Z'%20fill='%23d7e4f0'/%3e%3cpath%20d='M499%20137h85c12%200%2022%207%2027%2017h-128c4-7%208-12%2016-17Z'%20fill='%237e8898'%20opacity='.75'/%3e%3cpath%20d='M169%20214c14-29%2030-48%2059-66%2018-11%2036-19%2061-26-32%2025-49%2043-77%2092H169Z'%20fill='%23d1dae5'%20opacity='.45'/%3e%3cg%20transform='translate(208%20253)'%3e%3ccircle%20r='47'%20fill='url(%23rim)'/%3e%3ccircle%20r='28'%20fill='%23b7c7d8'/%3e%3ccircle%20r='14'%20fill='%231ed7f1'/%3e%3c/g%3e%3cg%20transform='translate(528%20253)'%3e%3ccircle%20r='47'%20fill='url(%23rim)'/%3e%3ccircle%20r='28'%20fill='%23b7c7d8'/%3e%3ccircle%20r='14'%20fill='%231ed7f1'/%3e%3c/g%3e%3cpath%20d='M182%20209h66c15%200%2025%207%2032%2020h-110c3-8%206-14%2012-20Z'%20fill='%231bc9ea'/%3e%3cpath%20d='M461%20244h112c13%200%2025%207%2033%2019H469z'%20fill='%230f67d8'/%3e%3cpath%20d='M398%20124h113c7%200%2013%205%2013%2012v6H385l2-4c2-9%206-14%2011-14Z'%20fill='%2394a0b3'%20opacity='.32'/%3e%3cpath%20d='M558%20173h18c6%200%2012%205%2012%2012v9h-38l2-7c1-8%203-14%206-14Z'%20fill='%237fdcf5'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e" alt=""></div>
+        <div class="sb-header-actions">
+          <a href="#" class="sb-location-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Адреса и банкоматы
+          </a>
+          <button class="sb-lang-btn">Рус ▾</button>
+        </div>
+      </div>
+    </div>
+    <div class="sb-header-bottom">
+      <div class="sb-header-inner">
+        <nav class="sb-nav-bottom">
+          <a href="index.html">Приложение Somoni</a>
+          <a href="cards.html">Карты</a>
+          <a href="#">Салом</a>
+          <a href="auto.html" class="active">Покупка авто</a>
+          <a href="#">Somoni Shop</a>
+          <a href="transfers.html">Переводы</a>
+          <a href="#">Депозиты</a>
+          <a href="#">Авиабилеты</a>
+          <a href="#">Ещё ▾</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="sb-main">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Любая машина на ваш вкус</h1>
+        <p class="hero-desc">Электромобили и традиционные авто — выбирайте понравившийся и оплачивайте до 60 месяцев</p>
+        <button class="hero-btn" onclick="scrollToForm()">Оставить заявку</button>
+      </div>
+      <div class="hero-visual">
+        <img
+          class="hero-car hero-photo"
+          alt="Автомобиль"
+          src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1200&q=80"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        />
+      </div>
+    </section>
+
+    <!-- Car Cards Section -->
+    <section class="car-cards-section">
+      <div class="car-cards-grid">
+        <!-- New Car -->
+        <div class="car-card">
+          <div class="car-card-image">
+            <img
+              alt="Новый автомобиль"
+              src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=80"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
           </div>
-        </section>
-        <section class="section">
-          <div class="offer-grid">
-            <article class="offer-card"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20320%20220'%20fill='none'%3e%3cdefs%3e%3cradialGradient%20id='bg'%20cx='0'%20cy='0'%20r='1'%20gradientUnits='userSpaceOnUse'%20gradientTransform='translate(161%20103)%20rotate(90)%20scale(86%2094)'%3e%3cstop%20stop-color='%23d9ecff'/%3e%3cstop%20offset='1'%20stop-color='%23edf6ff'%20stop-opacity='0'/%3e%3c/radialGradient%3e%3clinearGradient%20id='standTop'%20x1='73'%20y1='136'%20x2='252'%20y2='136'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23fbfdff'/%3e%3cstop%20offset='1'%20stop-color='%23e9eff7'/%3e%3c/linearGradient%3e%3clinearGradient%20id='standBottom'%20x1='80'%20y1='169'%20x2='241'%20y2='169'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%2358b7ff'/%3e%3cstop%20offset='1'%20stop-color='%231e5de0'/%3e%3c/linearGradient%3e%3clinearGradient%20id='body'%20x1='89'%20y1='84'%20x2='239'%20y2='143'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ffffff'/%3e%3cstop%20offset='.55'%20stop-color='%23f2f5f9'/%3e%3cstop%20offset='1'%20stop-color='%23dce5ee'/%3e%3c/linearGradient%3e%3clinearGradient%20id='glass'%20x1='138'%20y1='72'%20x2='211'%20y2='102'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%236f7885'/%3e%3cstop%20offset='1'%20stop-color='%23495261'/%3e%3c/linearGradient%3e%3c/defs%3e%3cellipse%20cx='160'%20cy='108'%20rx='86'%20ry='72'%20fill='url(%23bg)'/%3e%3cellipse%20cx='160'%20cy='186'%20rx='72'%20ry='11'%20fill='%23dbe7f5'/%3e%3cellipse%20cx='161'%20cy='165'%20rx='81'%20ry='18'%20fill='url(%23standBottom)'/%3e%3cpath%20d='M73%20152c6-17%2024-26%2054-26h72c28%200%2045%209%2053%2026H73Z'%20fill='url(%23standTop)'/%3e%3cpath%20d='M82%20145h174c7%200%2013%205%2014%2011H67c3-7%208-11%2015-11Z'%20fill='%23eff4fa'/%3e%3cpath%20d='M92%20139c7-24%2025-43%2054-55%2015-6%2037-10%2067-10h15c15%200%2027%207%2038%2019l15%2018%204%2020H76l16-16Z'%20fill='url(%23body)'/%3e%3cpath%20d='M156%2084h66c15%200%2028%204%2038%2014l20%2019H120c6-15%2015-23%2036-33Z'%20fill='url(%23glass)'/%3e%3cpath%20d='M101%20118h46c10%200%2018%206%2022%2017H92c2-8%204-12%209-17Z'%20fill='%232ecdee'/%3e%3cpath%20d='M221%20145h48c7%200%2012%204%2016%2010h-59Z'%20fill='%23226fe6'/%3e%3ccircle%20cx='120'%20cy='141'%20r='24'%20fill='%232c3542'/%3e%3ccircle%20cx='120'%20cy='141'%20r='13'%20fill='%23c3d1de'/%3e%3ccircle%20cx='233'%20cy='141'%20r='24'%20fill='%232c3542'/%3e%3ccircle%20cx='233'%20cy='141'%20r='13'%20fill='%23c3d1de'/%3e%3ccircle%20cx='120'%20cy='141'%20r='6'%20fill='%232ed4ef'/%3e%3ccircle%20cx='233'%20cy='141'%20r='6'%20fill='%232ed4ef'/%3e%3c/svg%3e" alt="Новый автомобиль"><h3>Новый автомобиль</h3><p>С двигателем или электрический, покупайте понравившийся в автосалоне</p></article>
-            <article class="offer-card"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20320%20220'%20fill='none'%3e%3cdefs%3e%3cradialGradient%20id='bg'%20cx='0'%20cy='0'%20r='1'%20gradientUnits='userSpaceOnUse'%20gradientTransform='translate(160%20104)%20rotate(90)%20scale(84%2090)'%3e%3cstop%20stop-color='%23dcecff'/%3e%3cstop%20offset='1'%20stop-color='%23eef6ff'%20stop-opacity='0'/%3e%3c/radialGradient%3e%3clinearGradient%20id='ring'%20x1='74'%20y1='168'%20x2='248'%20y2='168'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%232fd2ee'/%3e%3cstop%20offset='1'%20stop-color='%231d66e0'/%3e%3c/linearGradient%3e%3clinearGradient%20id='plate'%20x1='80'%20y1='149'%20x2='241'%20y2='149'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23fbfdff'/%3e%3cstop%20offset='1'%20stop-color='%23e9eef6'/%3e%3c/linearGradient%3e%3clinearGradient%20id='body'%20x1='92'%20y1='90'%20x2='232'%20y2='139'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ffffff'/%3e%3cstop%20offset='.55'%20stop-color='%23f4f7fb'/%3e%3cstop%20offset='1'%20stop-color='%23dbe4ed'/%3e%3c/linearGradient%3e%3c/defs%3e%3cellipse%20cx='160'%20cy='108'%20rx='82'%20ry='66'%20fill='url(%23bg)'/%3e%3cellipse%20cx='160'%20cy='187'%20rx='70'%20ry='10'%20fill='%23dde7f3'/%3e%3cellipse%20cx='160'%20cy='166'%20rx='84'%20ry='18'%20fill='url(%23ring)'/%3e%3cpath%20d='M80%20151c7-16%2023-24%2048-24h67c23%200%2039%207%2046%2024H80Z'%20fill='url(%23plate)'/%3e%3cpath%20d='M78%20145h166c8%200%2014%204%2016%2011H65c2-5%207-11%2013-11Z'%20fill='%23eff4fa'/%3e%3cpath%20d='M93%20138c8-27%2028-47%2063-59%2016-6%2037-9%2065-9h20c14%200%2027%208%2037%2020l16%2018%205%2018H78l15-14Z'%20fill='url(%23body)'/%3e%3cpath%20d='M158%2081h65c15%200%2027%204%2037%2013l21%2019H124c6-14%2015-22%2034-32Z'%20fill='%235e6876'/%3e%3cpath%20d='M103%20119h40c9%200%2017%206%2021%2016H95c1-7%204-12%208-16Z'%20fill='%2319c0e1'/%3e%3cpath%20d='M203%20145h47c7%200%2013%204%2018%2010h-56Z'%20fill='%232c79ea'/%3e%3ccircle%20cx='123'%20cy='141'%20r='22'%20fill='%232d3643'/%3e%3ccircle%20cx='123'%20cy='141'%20r='12'%20fill='%23c5d0dc'/%3e%3ccircle%20cx='230'%20cy='141'%20r='22'%20fill='%232d3643'/%3e%3ccircle%20cx='230'%20cy='141'%20r='12'%20fill='%23c5d0dc'/%3e%3c/svg%3e" alt="Автомобиль с пробегом"><h3>С пробегом</h3><p>Выберите на сайте somon.tj или предложите его сами</p></article>
-            <article class="offer-card"><img src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20320%20220'%20fill='none'%3e%3cdefs%3e%3cradialGradient%20id='bg'%20cx='0'%20cy='0'%20r='1'%20gradientUnits='userSpaceOnUse'%20gradientTransform='translate(160%20106)%20rotate(90)%20scale(84%2092)'%3e%3cstop%20stop-color='%23dcecff'/%3e%3cstop%20offset='1'%20stop-color='%23eef6ff'%20stop-opacity='0'/%3e%3c/radialGradient%3e%3clinearGradient%20id='ring'%20x1='68'%20y1='170'%20x2='254'%20y2='170'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23336eff'/%3e%3cstop%20offset='1'%20stop-color='%23143dc6'/%3e%3c/linearGradient%3e%3clinearGradient%20id='body'%20x1='74'%20y1='94'%20x2='254'%20y2='152'%20gradientUnits='userSpaceOnUse'%3e%3cstop%20stop-color='%23ffffff'/%3e%3cstop%20offset='.55'%20stop-color='%23f3f6fa'/%3e%3cstop%20offset='1'%20stop-color='%23dbe4ed'/%3e%3c/linearGradient%3e%3c/defs%3e%3cellipse%20cx='160'%20cy='106'%20rx='86'%20ry='68'%20fill='url(%23bg)'/%3e%3cellipse%20cx='160'%20cy='188'%20rx='72'%20ry='11'%20fill='%23d9e5f3'/%3e%3cellipse%20cx='160'%20cy='168'%20rx='94'%20ry='19'%20fill='url(%23ring)'/%3e%3cpath%20d='M79%20151c7-18%2024-26%2050-26h70c27%200%2046%208%2054%2026H79Z'%20fill='%23eef3fa'/%3e%3cpath%20d='M80%2094h133c16%200%2029%206%2040%2018l17%2017h16c13%200%2023%208%2027%2021l6%2018H52l9-46c3-18%208-28%2019-28Z'%20fill='url(%23body)'/%3e%3cpath%20d='M108%20105h124c17%200%2030%204%2040%2013l18%2016H96l12-18Z'%20fill='%23626c79'/%3e%3crect%20x='61'%20y='104'%20width='38'%20height='31'%20rx='6'%20fill='%23dfe9f4'/%3e%3crect%20x='123'%20y='79'%20width='86'%20height='10'%20rx='4'%20fill='%234fd6f1'/%3e%3cpath%20d='M80%20143h58c10%200%2018%206%2022%2016H71z'%20fill='%232d64ea'/%3e%3ccircle%20cx='114'%20cy='165'%20r='21'%20fill='%232c3541'/%3e%3ccircle%20cx='114'%20cy='165'%20r='11'%20fill='%23c2cdd8'/%3e%3ccircle%20cx='238'%20cy='165'%20r='21'%20fill='%232c3541'/%3e%3ccircle%20cx='238'%20cy='165'%20r='11'%20fill='%23c2cdd8'/%3e%3c/svg%3e" alt="Транспорт для бизнеса"><h3>Для бизнеса</h3><p>Приобретайте фургоны, электромобили, грузовики и другой нужный транспорт</p></article>
+          <h3 class="car-card-title">Новый автомобиль</h3>
+          <p class="car-card-desc">С двигателем или электрический — покупайте понравившийся в автосалоне</p>
+        </div>
+
+        <!-- Used Car -->
+        <div class="car-card">
+          <div class="car-card-image">
+            <img
+              alt="Автомобиль с пробегом"
+              src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=900&q=80"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
           </div>
-        </section>
-        <section class="section" id="calculator-section">
-          <div class="calculator-layout">
-            <div class="calculator-main">
-              <div class="currency-switch" role="radiogroup" aria-label="Валюта">
-                <label class="currency-option"><input type="radio" name="auto-currency" value="TJS" checked><span>Сомони</span></label>
-                <label class="currency-option"><input type="radio" name="auto-currency" value="USD"><span>Доллары США</span></label>
-              </div>
-              <div class="calc-row"><span class="calc-label">Стоимость авто</span><div class="calc-value" id="auto-price-value">100 000 с.</div><input class="range-input" id="auto-price" type="range" min="50000" max="400000" step="5000" value="100000"></div>
-              <div class="calc-row"><span class="calc-label">Предоплата</span><div class="calc-value" id="auto-down-payment-value">0 с.</div><input class="range-input" id="auto-down-payment" type="range" min="0" max="400000" step="5000" value="0"><div class="info-line"><span>От 0% до 100% стоимости автомобиля</span><span class="info-badge">i</span></div></div>
-              <div class="calc-row"><span class="calc-label">Сумма финансирования</span><div class="calc-value" id="auto-financed-value">100 000 с.</div><div class="info-line"><span>Сумма рассчитывается автоматически</span><span class="info-badge">i</span></div></div>
-              <div class="calc-row"><span class="calc-label">Срок финансирования в месяцах</span><div class="calc-value"><span id="auto-term-range-value">12</span></div><input class="range-input" id="auto-term-range" type="range" min="12" max="60" step="12" value="12"><div class="months-scale"><span>12</span><span>24</span><span>36</span><span>48</span><span>60</span></div></div>
-            </div>
-            <aside class="summary-panel"><div class="summary-card"><div class="summary-stat"><span>Фактическая переплата</span><strong id="auto-overpayment">10 407.4 с.</strong></div><div class="summary-stat"><span>Ежемесячный платёж</span><strong id="auto-monthly">7 533.95 с.</strong></div><div class="summary-stat"><span>Годовая ставка</span><strong id="auto-rate">23%</strong></div><button class="submit-btn" type="button" data-scroll-target="#application-section">Оставить заявку</button></div></aside>
+          <h3 class="car-card-title">С пробегом</h3>
+          <p class="car-card-desc">Выберите на сайте somon.tj или предложите его сами</p>
+        </div>
+
+        <!-- Business Car -->
+        <div class="car-card">
+          <div class="car-card-image">
+            <img
+              alt="Авто для бизнеса"
+              src="https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=900&q=80"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
           </div>
-        </section>
-        <section class="section">
-          <h2 class="steps-title">Как оформить покупку:</h2>
-          <div class="step-grid">
-            <article class="step-item"><div class="step-icon icon-car"></div><div class="step-text"><h3>Выберите авто в автосалоне</h3><p>Выберите авто в автосалоне, на somon.tj или предложите сами</p></div></article>
-            <article class="step-item"><div class="step-icon icon-form"></div><div class="step-text"><h3>Отправьте заявку</h3><p>Оставьте заявку с помощью нашей формы и укажите все данные</p></div></article>
-            <article class="step-item"><div class="step-icon icon-clock"></div><div class="step-text"><h3>Получите решение</h3><p>Рассмотрим вашу заявку в течение нескольких дней</p></div></article>
-            <article class="step-item"><div class="step-icon icon-check"></div><div class="step-text"><h3>Поможем оценить машину</h3><p>При необходимости уточним параметры и стоимость автомобиля</p></div></article>
-            <article class="step-item"><div class="step-icon icon-file"></div><div class="step-text"><h3>Оформите покупку</h3><p>После одобрения мы подготовим договор и финальные условия</p></div></article>
-            <article class="step-item"><div class="step-icon icon-money"></div><div class="step-text"><h3>Подпишите договор</h3><p>Подпишите договор и получите свою машину</p></div></article>
+          <h3 class="car-card-title">Для бизнеса</h3>
+          <p class="car-card-desc">Приобретите фургоны, электромобили, грузовики и другой нужный транспорт</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calculator Section -->
+    <section class="calculator-section">
+      <div class="calculator-main">
+        <h2 class="calculator-title">Рассчитайте свой кредит</h2>
+        
+        <div class="currency-selector" aria-label="Валюта кредита">
+          <label class="currency-option">
+            <input type="radio" name="currency" value="TJS" checked>
+            <span>Сомони (TJS)</span>
+          </label>
+          <label class="currency-option">
+            <input type="radio" name="currency" value="USD">
+            <span>Доллары США (USD)</span>
+          </label>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-label">Стоимость авто</span>
+            <span class="slider-value" id="carPriceValue">100 000 с.</span>
           </div>
-        </section>
-        <section class="section application-section" id="application-section">
-          <div class="application-heading"><h2>Оставьте заявку</h2><p>Оставьте свои контакты, и мы обязательно с вами свяжемся</p></div>
-          <div class="form-shell">
-            <div class="progress-meta"><span id="step-caption">Личные данные</span><span id="step-index-label">Шаг 1 из 5</span></div>
-            <div class="progress-bar"><span id="step-progress"></span></div>
-            <form id="auto-form">
-              <section class="form-step active" data-step="1" data-title="Личные данные">
-                <div class="field"><label for="auto-full-name">Введите имя и фамилию</label><input id="auto-full-name" name="name" type="text" placeholder="Введите имя и фамилию" required></div>
-                <div class="field"><label>Тип документа</label><div class="radio-row"><label class="radio-option"><input type="radio" name="documentType" value="salary" checked><span>Справка о заработной плате</span></label><label class="radio-option"><input type="radio" name="documentType" value="patent"><span>Патент</span></label></div></div>
-                <p class="consent-text">Соглашаюсь на обработку своих данных</p>
-              </section>
-              <section class="form-step" data-step="2" data-title="Контакты">
-                <div class="step-grid-two">
-                  <div class="field"><label for="auto-phone">Телефон</label><input id="auto-phone" name="phone" type="tel" placeholder="+992 90 000 00 00" required></div>
-                  <div class="field"><label for="auto-email">Email</label><input id="auto-email" name="email" type="email" placeholder="example@mail.com"></div>
-                </div>
-                <div class="field"><label for="auto-city">Город</label><select id="auto-city" name="city" required><option value="">Выберите город</option><option value="Душанбе">Душанбе</option><option value="Худжанд">Худжанд</option><option value="Бохтар">Бохтар</option><option value="Куляб">Куляб</option></select></div>
-              </section>
-              <section class="form-step" data-step="3" data-title="Параметры авто">
-                <div class="step-grid-two">
-                  <div class="field"><label for="auto-category">Категория авто</label><select id="auto-category" name="category" required><option value="">Выберите категорию</option><option value="Новый автомобиль">Новый автомобиль</option><option value="С пробегом">С пробегом</option><option value="Для бизнеса">Для бизнеса</option></select></div>
-                  <div class="field"><label for="auto-budget">Желаемая стоимость</label><input id="auto-budget" name="budget" type="text" placeholder="Например: 100 000 с." required></div>
-                </div>
-                <div class="field"><label for="auto-note">Комментарий</label><textarea id="auto-note" name="note" placeholder="Укажите марку, модель или дополнительные пожелания"></textarea></div>
-              </section>
-              <section class="form-step" data-step="4" data-title="Финансирование">
-                <div class="step-grid-two">
-                  <div class="field"><label for="auto-income">Ежемесячный доход</label><input id="auto-income" name="income" type="text" placeholder="Например: 8 000 с." required></div>
-                  <div class="field"><label for="auto-term">Срок кредита</label><select id="auto-term" name="term" required><option value="">Выберите срок</option><option value="12 месяцев">12 месяцев</option><option value="24 месяца">24 месяца</option><option value="36 месяцев">36 месяцев</option><option value="48 месяцев">48 месяцев</option><option value="60 месяцев">60 месяцев</option></select></div>
-                </div>
-                <div class="field"><label for="auto-down-payment-manual">Первый взнос</label><input id="auto-down-payment-manual" name="manualDownPayment" type="text" placeholder="Например: 20 000 с." required></div>
-              </section>
-              <section class="form-step" data-step="5" data-title="Подтверждение">
-                <div class="review-card">
-                  <dl>
-                    <div><dt>ФИО</dt><dd data-review="name">Не указано</dd></div>
-                    <div><dt>Телефон</dt><dd data-review="phone">Не указано</dd></div>
-                    <div><dt>Город</dt><dd data-review="city">Не указано</dd></div>
-                    <div><dt>Категория</dt><dd data-review="category">Не указано</dd></div>
-                    <div><dt>Стоимость</dt><dd data-review="budget">Не указано</dd></div>
-                    <div><dt>Срок</dt><dd data-review="term">Не указано</dd></div>
-                  </dl>
-                </div>
-                <p class="section-copy" style="margin-top:18px">После отправки менеджер свяжется с вами, уточнит детали и подскажет следующий шаг.</p>
-              </section>
-              <div class="form-footer">
-                <p class="consent-text">Нажимая кнопку, вы подтверждаете корректность введённых данных.</p>
-                <div class="step-actions">
-                  <button class="ghost-btn" type="button" id="prev-step" hidden>Назад</button>
-                  <button class="step-btn" type="button" id="next-step">Далее</button>
-                  <button class="submit-btn" type="submit" id="submit-step" hidden>Отправить заявку</button>
-                </div>
-              </div>
-            </form>
+          <input type="range" class="slider" id="carPrice" min="50000" max="500000" value="100000" step="5000">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-label">Предоплата</span>
+            <span class="slider-value" id="downPaymentValue">20 000 с.</span>
           </div>
-          <div class="docs-card">
-            <div>
-              <h3>Что необходимо предоставить?</h3>
-              <p>В некоторых случаях Alif имеет право потребовать дополнительный залог или поручителя.</p>
-              <div class="docs-list">Вам понадобятся следующие документы:
-Паспорт и ИНН, а также прописка в Душанбе, Худжанде, Гиссаре, Бохтаре, Турсунзаде, Вахдате, Истаравшане или Панджакенте.
-Справка о заработной плате. Частным предпринимателям необходим патент или свидетельство с выпиской и квитанцией об уплате налогов за последние 6 месяцев.
-Также необходимо будет внести предоплату, размер которой зависит от решения кредитного комитета.</div>
-            </div>
-            <div class="docs-illustration" aria-hidden="true"><div class="docs-sheet"></div></div>
-          </div>
-        </section>
-        <section class="section">
-          <h2 class="steps-title">Как осуществить погашение?</h2>
-          <div class="repayment-grid">
-            <article class="repayment-card"><div class="repayment-media phone"></div><div class="repayment-body"><h3>В приложении Alif</h3><p>Выберите раздел «Платежи Alif» и оплачивайте регистрацию и платежи онлайн.</p></div></article>
-            <article class="repayment-card"><div class="repayment-media terminal"></div><div class="repayment-body"><h3>В терминалах по всей стране</h3><p>Найдите удобный терминал, введите номер телефона или договора и внесите платёж.</p></div></article>
-            <article class="repayment-card"><div class="repayment-media cash"></div><div class="repayment-body"><h3>В наших кассах</h3><p>Приходите в ближайший офис Alif и сделайте платёж в кассу.</p></div></article>
-          </div>
-        </section>
-        <section class="section">
-          <h2 class="faq-title">Часто задаваемые вопросы</h2>
-          <div class="faq-list">
-            <article class="faq-item"><button class="faq-toggle" type="button"><span>Где можно оставить заявку на покупку авто?</span><span class="faq-plus">+</span></button><div class="faq-answer">Заявку можно оставить прямо на этой странице. После отправки анкеты с вами свяжется менеджер и подскажет дальнейшие шаги.</div></article>
-            <article class="faq-item"><button class="faq-toggle" type="button"><span>Что делать, если нет возможности оплатить предоплату за автофинансирование?</span><span class="faq-plus">+</span></button><div class="faq-answer">Минимальный первый взнос обязателен. Его точный размер зависит от автомобиля, категории заявки и решения кредитного комитета.</div></article>
-            <article class="faq-item"><button class="faq-toggle" type="button"><span>Может ли юридическое лицо получить автофинансирование?</span><span class="faq-plus">+</span></button><div class="faq-answer">Да, для бизнеса доступен отдельный сценарий. Укажите это в заявке, и менеджер предложит подходящие условия.</div></article>
-            <article class="faq-item"><button class="faq-toggle" type="button"><span>Как снять запрет с машины в ГАИ после полной оплаты автофинансирования?</span><span class="faq-plus">+</span></button><div class="faq-answer">После полного погашения банк подготовит подтверждающие документы. С ними можно обратиться в ГАИ для завершения процедуры.</div></article>
-            <article class="faq-item"><button class="faq-toggle" type="button"><span>Как посмотреть дату платежа своего автофинансирования в долларах?</span><span class="faq-plus">+</span></button><div class="faq-answer">Уточнить дату следующего платежа можно у менеджера после одобрения заявки. Мы также дополнительно напоминаем о сроках оплаты.</div></article>
-            <article class="faq-item"><button class="faq-toggle" type="button"><span>Можно ли оплачивать долларовое автофинансирование в сомони?</span><span class="faq-plus">+</span></button><div class="faq-answer">Это зависит от условий договора и выбранной программы. При оформлении менеджер сразу подскажет доступные способы оплаты.</div></article>
-          </div>
-        </section>
-      </main>
-      <footer class="footer">
-        <div class="footer-top">
-          <div class="footer-col">
-            <a class="logo" href="index.html">
-              <svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#35d2ff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#35d2ff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#35d2ff" opacity="0.95"></circle></svg>
-              <span>Сомонибонк</span>
-            </a>
-            <p>ул. Бухороуддин, 9<br>Турсунзаде, район 8, Казань</p>
-            <a href="#" data-toast="Политика конфиденциальности будет добавлена позже.">Политика и права</a>
-          </div>
-          <div class="footer-col">
-            <p><strong>900</strong><br>Для звонков с мобильных в Таджикистане</p>
-            <p><strong>+992 48 888 1111</strong><br>Для звонков из любой точки мира</p>
-            <p><strong>+992 44 600 1520</strong><br>Техническая поддержка и WhatsApp</p>
-            <p>support@alif.tj<br>Для вашей обратной связи</p>
-          </div>
-          <div class="footer-col">
-            <p>Приложения</p>
-            <div class="store-row"><span class="store-badge">Google Play</span><span class="store-badge">App Store</span></div>
-            <p style="margin-top:18px">Соцсети</p>
-            <div class="social-row"><span class="social-pill">f</span><span class="social-pill">in</span><span class="social-pill">ig</span><span class="social-pill">yt</span><span class="social-pill">vk</span><span class="social-pill">tt</span></div>
+          <input type="range" class="slider" id="downPayment" min="0" max="100000" value="20000" step="1000">
+          <div class="slider-scale">
+            <span>0%</span>
+            <span>50%</span>
+            <span>100%</span>
           </div>
         </div>
-        <div class="footer-bottom"><span>О нас</span><span>Адреса</span><span>Документы и тарифы</span><span>Вакансии</span><span>Связь с нами</span></div>
-      </footer>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-label">Сумма финансирования</span>
+            <span class="slider-value" id="financingValue">80 000 с.</span>
+          </div>
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-label">Срок финансирования в месяцах</span>
+            <span class="slider-value" id="termValue">12</span>
+          </div>
+          <input type="range" class="slider" id="term" min="12" max="60" value="12" step="12">
+          <div class="slider-scale">
+            <span>12</span>
+            <span>24</span>
+            <span>36</span>
+            <span>48</span>
+            <span>60</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="calculator-result">
+        <div class="result-item">
+          <div class="result-label">Фактическая переплата</div>
+          <div class="result-value" id="overpayment">10 407.4 с.</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">Ежемесячный платёж</div>
+          <div class="result-value highlight" id="monthlyPayment">7 533.95 с.</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">Годовая ставка</div>
+          <div class="result-value">23%</div>
+        </div>
+        <button class="calculator-btn" onclick="scrollToForm()">Оставить заявку</button>
+      </div>
+    </section>
+
+    <!-- Steps Section -->
+    <section class="steps-section">
+      <h2 class="section-title">Как оформить покупку:</h2>
+      <div class="steps-grid">
+        <div class="step-item">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M3 9h18"/>
+              <path d="M9 21V9"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <h4>Выберите авто</h4>
+            <p>Выберите авто в автосалоне, на somon.tj или предложите сами</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <h4>Отправьте заявку</h4>
+            <p>Отправьте заявку с помощью нашей формы</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12,6 12,12 16,14"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <h4>Рассмотрение</h4>
+            <p>Рассмотрим вашу заявку в течение нескольких дней</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <h4>Оценка</h4>
+            <p>Поможем оценить машину</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+              <polyline points="9,15 12,12 15,15"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <h4>Оформление покупки</h4>
+            <p>Оформите покупку после нашего одобрения</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="5" width="20" height="14" rx="2"/>
+              <line x1="2" y1="10" x2="22" y2="10"/>
+            </svg>
+          </div>
+          <div class="step-content">
+            <h4>Получение авто</h4>
+            <p>Подпишите договор и получите машину</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Application Form Section -->
+    <section class="application-section" id="applicationForm">
+      <div class="application-header">
+        <h2>Оставьте заявку</h2>
+        <p>Заполните данные по автомобилю и выберите счёт для первоначального взноса</p>
+      </div>
+      <div class="form-container">
+        <div class="form-header">
+          <span class="form-step-label">Данные для автокредита</span>
+          <span>Форма заявки</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+        <form id="autoLoanForm">
+          <div id="autoLoanMessage" class="sb-message info" style="display:none;"></div>
+
+          <div class="form-group">
+            <label for="accountId" class="form-hint" style="display:block;margin-bottom:8px;">Счёт для списания первоначального взноса (AccountId)</label>
+            <select id="accountId" name="accountId" class="form-input" required>
+              <option value="" selected disabled>Загрузка счетов…</option>
+            </select>
+            <div class="form-hint" id="accountsHint">Для загрузки счетов требуется авторизация.</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <input id="carBrand" name="carBrand" type="text" class="form-input" placeholder="Марка (CarBrand)" required minlength="1" maxlength="50">
+            </div>
+            <div class="form-group">
+              <input id="carModel" name="carModel" type="text" class="form-input" placeholder="Модель (CarModel)" required minlength="1" maxlength="50">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <input id="carYear" name="carYear" type="number" class="form-input" placeholder="Год выпуска (CarYear)" required min="1980" max="2099" inputmode="numeric">
+            </div>
+            <div class="form-group">
+              <select id="currency" name="currency" class="form-input" required>
+                <option value="TJS" selected>Сомони (TJS)</option>
+                <option value="USD">Доллары США (USD)</option>
+              </select>
+              <div class="form-hint">Валюта будет отправлена как поле Currency.</div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <input id="carPriceInput" name="carPrice" type="number" class="form-input" placeholder="Стоимость авто (CarPrice)" required min="0" step="0.01" inputmode="decimal">
+            </div>
+            <div class="form-group">
+              <input id="downPaymentInput" name="downPayment" type="number" class="form-input" placeholder="Первоначальный взнос (DownPayment)" required min="0" step="0.01" inputmode="decimal">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <input id="termMonths" name="termMonths" type="number" class="form-input" placeholder="Срок в месяцах (TermMonths)" required min="6" max="84" step="1" inputmode="numeric">
+            <div class="form-hint">Подсказка: можно синхронизировать со слайдером (12–60).</div>
+          </div>
+
+          <div class="form-footer">
+            <p class="consent-text">Соглашаюсь на обработку своих данных</p>
+            <button id="autoLoanSubmit" type="submit" class="form-btn">Отправить заявку</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Documents Section -->
+    <section class="documents-section">
+      <div class="documents-content">
+        <h2>Что необходимо предоставить?</h2>
+        <p>В некоторых случаях банк имеет право потребовать дополнительный залог или поручителя.</p>
+        <div class="documents-list">
+          Вам и поручителю понадобятся следующие документы:<br>
+          — Паспорт или ИНН, а также прописка в Душанбе, Худжанде, Гиссаре, Бохтаре, Турсунзаде, Вахдате, Истаравшане или Панджакенте;<br>
+          — Справка о заработной плате. Частным предпринимателям необходимо предоставить патент или свидетельство с выпиской и квитанции об оплате налогов за последние 6 месяцев.<br><br>
+          Также необходимо будет внести предоплату, размер которой зависит от решения кредитного комитета.
+        </div>
+      </div>
+      <div class="documents-visual">
+        <div class="document-icon"></div>
+      </div>
+    </section>
+
+    <!-- Repayment Section -->
+    <section class="repayment-section">
+      <h2 class="section-title">Как осуществить погашение?</h2>
+      <div class="repayment-grid">
+        <div class="repayment-card">
+          <div class="repayment-image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="5" y="2" width="14" height="20" rx="2"/>
+              <line x1="12" y1="18" x2="12" y2="18"/>
+            </svg>
+          </div>
+          <div class="repayment-content">
+            <h4>В приложении Alif</h4>
+            <p>Выберите раздел «Оплата» в Alif.mobi, найдите «Погашение рассрочки» и оплатите</p>
+          </div>
+        </div>
+        <div class="repayment-card">
+          <div class="repayment-image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="M6 8h.01M6 12h.01M6 16h.01"/>
+            </svg>
+          </div>
+          <div class="repayment-content">
+            <h4>В терминалах по всей стране</h4>
+            <p>Найдите на «Городских» разделение «Банки и страховка», выберите «Alif» внесите деньги, чтобы выплатить рассрочку</p>
+          </div>
+        </div>
+        <div class="repayment-card">
+          <div class="repayment-image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <div class="repayment-content">
+            <h4>В наших кассах</h4>
+            <p>Приходите в ближайший офис Alif и обратитесь в кассу</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2 class="section-title">Часто задаваемые вопросы</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Где можно оставить заявку на покупку авто?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Заявку можно оставить на нашем сайте, в мобильном приложении или в любом отделении банка.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Что делать, если нет возможности оплатить предоплату за автокредит?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>В некоторых случаях возможно оформление кредита без предоплаты. Свяжитесь с нами для уточнения деталей.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Может ли одержимец ещё получить автокредит?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Каждая заявка рассматривается индивидуально. Наличие других кредитов учитывается при оценке платёжеспособности.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Как снять запрет с машины в ГАИ после полной оплаты автокредитирования?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>После полного погашения кредита мы предоставим необходимые документы для снятия ограничений в ГАИ.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Как посмотреть дату погашения своего автокредитования в договоре?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Дату погашения можно узнать в мобильном приложении, личном кабинете на сайте или в договоре кредитования.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Можно ли оплачивать досрочное погашение автокредитования в Alif?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Да, досрочное погашение возможно без дополнительных комиссий. Свяжитесь с нами для уточнения суммы.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="sb-footer">
+    <div class="sb-footer-inner">
+      <div class="sb-footer-grid">
+        <div class="sb-footer-col">
+          <div class="sb-footer-logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="#fbbf24" stroke-width="2" fill="none"/>
+              <path d="M16 6L24 10V22L16 26L8 22V10L16 6Z" fill="#fbbf24"/>
+            </svg>
+            <span>Сомонибонк</span>
+          </div>
+          <p class="sb-footer-address">
+            ул. Рудаки, 48<br>
+            Душанбе, Таджикистан
+          </p>
+          <a href="#" class="sb-footer-link">Филиалы и точки обслуживания</a>
+        </div>
+
+        <div class="sb-footer-col">
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">900</div>
+            <div class="sb-contact-label">Для звонков с мобильных<br>в Таджикистане</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">+992 44 600 1111</div>
+            <div class="sb-contact-label">Для звонков из любой<br>точки мира</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">+992 44 600 1520</div>
+            <div class="sb-contact-label">Телефон доверия<br>Наблюдательный Совет<br>Безопасность и Compliance<br>Жалобы и обращения</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-email">support@somoni.tj</div>
+            <div class="sb-contact-label">Для онлайн-обращений</div>
+          </div>
+        </div>
+
+        <div class="sb-footer-col">
+          <div class="sb-footer-section">
+            <h4>Приложения</h4>
+            <div class="sb-app-buttons">
+              <a href="#" class="sb-app-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                </svg>
+                Google Play
+              </a>
+              <a href="#" class="sb-app-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.37 12.36,4.26 13,3.5Z"/>
+                </svg>
+                App Store
+              </a>
+            </div>
+          </div>
+          <div class="sb-footer-section">
+            <h4>Социальные сети</h4>
+            <div class="sb-social-grid">
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.04C20.54,3.74 21.21,4.22 20.94,5.32L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.66,16.27L10.65,18.23C10.43,18.45 10.25,18.65 9.78,18.65Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M12,2C6.48,2 2,6.48 2,12C2,16.84 5.44,20.87 10,21.8V15H8V12H10V9.5C10,7.57 11.57,6 13.5,6H16V9H14C13.45,9 13,9.45 13,10V12H16L15.5,15H13V21.8C18.56,20.87 22,16.84 22,12C22,6.48 17.52,2 12,2Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19M18.5,18.5V13.2A3.26,3.26 0 0,0 15.24,9.94C14.39,9.94 13.4,10.46 12.92,11.24V10.13H10.13V18.5H12.92V13.57C12.92,12.8 13.54,12.17 14.31,12.17A1.4,1.4 0 0,1 15.71,13.57V18.5H18.5M6.88,8.56A1.68,1.68 0 0,0 8.56,6.88C8.56,5.95 7.81,5.19 6.88,5.19A1.69,1.69 0 0,0 5.19,6.88C5.19,7.81 5.95,8.56 6.88,8.56M8.27,18.5V10.13H5.5V18.5H8.27Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4M12,7C10.5,7 9.15,7.6 8.19,8.57C7.22,9.53 6.62,10.88 6.62,12.38C6.62,13.88 7.22,15.22 8.19,16.19L9.61,14.77C9.06,14.22 8.74,13.53 8.74,12.76C8.74,12 9.06,11.31 9.61,10.76C10.16,10.21 10.85,9.89 11.61,9.89C12.38,9.89 13.07,10.21 13.62,10.76C14.17,11.31 14.49,12 14.49,12.76C14.49,13.53 14.17,14.22 13.62,14.77L15.04,16.19C16.01,15.22 16.61,13.88 16.61,12.38C16.61,10.88 16.01,9.53 15.04,8.57C14.08,7.6 12.73,7 12,7M12,13.5C11.17,13.5 10.5,14.17 10.5,15C10.5,15.83 11.17,16.5 12,16.5C12.83,16.5 13.5,15.83 13.5,15C13.5,14.17 12.83,13.5 12,13.5Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M15.07,2H8.93C3.33,2 2,3.33 2,8.93V15.07C2,20.67 3.33,22 8.93,22H15.07C20.67,22 22,20.67 22,15.07V8.93C22,3.33 20.67,2 15.07,2M12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4M12,7C10.5,7 9.15,7.6 8.19,8.57C7.22,9.53 6.62,10.88 6.62,12.38C6.62,13.88 7.22,15.22 8.19,16.19L9.61,14.77C9.06,14.22 8.74,13.53 8.74,12.76C8.74,12 9.06,11.31 9.61,10.76C10.16,10.21 10.85,9.89 11.61,9.89C12.38,9.89 13.07,10.21 13.62,10.76C14.17,11.31 14.49,12 14.49,12.76C14.49,13.53 14.17,14.22 13.62,14.77L15.04,16.19C16.01,15.22 16.61,13.88 16.61,12.38C16.61,10.88 16.01,9.53 15.04,8.57C14.08,7.6 12.73,7 12,7M12,13.5C11.17,13.5 10.5,14.17 10.5,15C10.5,15.83 11.17,16.5 12,16.5C12.83,16.5 13.5,15.83 13.5,15C13.5,14.17 12.83,13.5 12,13.5Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M19.59,6.69A4.83,4.83 0 0,1 21.5,9.5C21.5,11.99 19.49,14 17,14V11A2,2 0 0,0 15,9H14V16.5A3.5,3.5 0 0,1 10.5,20A3.5,3.5 0 0,1 7,16.5A3.5,3.5 0 0,1 10.5,13C10.8,13 11.09,13.04 11.37,13.11V10.35C11.05,10.27 10.71,10.23 10.36,10.23A6.36,6.36 0 0,0 4,16.59A6.36,6.36 0 0,0 10.36,22.95C14.31,22.95 17.5,19.76 17.5,15.81V9.5H19.59Z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sb-footer-bottom">
+        <div class="sb-footer-links">
+          <a href="#">О нас</a>
+          <a href="#">Адреса</a>
+          <a href="#">Документы и тарифы</a>
+          <a href="#">Вакансии</a>
+          <a href="#">Связь с нами</a>
+        </div>
+      </div>
+
+      <div class="sb-footer-copyright">
+        <p>© 2024 ПАО Сомонибонк</p>
+        <p>Лицензия НБТ №0000114 от 3 января 2020 года</p>
+        <p>ПАО Сомонибонк является участником Фонда страхования вкладов и Объединения Таджикистана</p>
+      </div>
     </div>
-  </div>
-  <div class="toast" id="toast"></div>
+  </footer>
+
 </body>
 </html>
