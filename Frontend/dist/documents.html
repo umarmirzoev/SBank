@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Документы — Сомонибонк</title>
+  <style>
+    :root{--bg:#eef5ff;--surface:#fff;--text:#16355e;--muted:#637a99;--line:#dbe9f8;--blue:#2d6df2;--dark:#082247;--shadow:0 24px 60px rgba(29,72,132,.16)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#f7fbff 0%,var(--bg) 100%);color:var(--text);font-family:"Segoe UI",Arial,Helvetica,sans-serif}
+    a{color:inherit;text-decoration:none}button{font:inherit}
+    .page{width:min(1180px,calc(100% - 24px));margin:0 auto;padding:14px 0 34px}.shell{overflow:hidden;border-radius:30px;border:1px solid rgba(216,231,248,.94);background:rgba(255,255,255,.9);box-shadow:0 28px 90px rgba(24,63,122,.14)}
+    .header-top,.header-main,.logo,.main-nav,.sub-nav,.doc-layout,.footer-top,.footer-bottom,.store-row,.social-row{display:flex;align-items:center}
+    .header-top{justify-content:center;padding:14px 20px 18px;border-bottom:1px solid var(--line)}.header-main{gap:34px;justify-content:center}.logo{gap:10px}.logo svg{width:34px;height:34px}.logo span{font-size:24px;font-weight:700;letter-spacing:-.03em}
+    .main-nav{gap:34px;font-size:15px;font-weight:500}.main-nav a,.sub-nav a,.doc-link,.side-link,.archive-toggle,.store-badge,.social-pill{transition:transform .22s ease,box-shadow .22s ease,color .22s ease,background .22s ease,border-color .22s ease,filter .22s ease}
+    .main-nav a,.sub-nav a{position:relative;padding:12px 0 15px}.main-nav a:hover,.sub-nav a:hover,.doc-link:hover,.side-link:hover{color:#145eb4}.main-nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-18px;height:5px;border-radius:999px;background:#3474ff}
+    .sub-nav{gap:34px;padding:22px 20px 26px;font-size:16px;white-space:nowrap;overflow-x:auto;justify-content:center;border-bottom:1px solid var(--line)}.sub-nav a{padding-bottom:10px;color:#3f5270}.sub-nav a.active-sub{color:#2e6df1;font-weight:600}.sub-nav a.active-sub::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:999px;background:#3474ff}
+    .section{padding:28px 40px 0}.section-title{margin:0 0 18px;font-family:Georgia,"Times New Roman",serif;font-size:42px;font-weight:400;letter-spacing:-.04em}
+    .docs-panel{padding:30px 34px 22px;border-radius:0;background:linear-gradient(180deg,#eef6ff,#edf5ff)}
+    .doc-layout{align-items:stretch;gap:34px}.doc-column{flex:1;min-width:0}.doc-column.left{padding-right:34px;border-right:1px solid rgba(196,215,238,.92)}.doc-column.right{max-width:300px}
+    .doc-link,.side-link{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;padding:14px 0;border:0;background:transparent;box-shadow:none;text-align:left;border-bottom:1px solid rgba(221,234,248,.84);color:#214062;cursor:pointer;appearance:none;-webkit-appearance:none}
+    .doc-link span,.side-link span{font-size:13px;line-height:1.45;letter-spacing:.04em;text-transform:uppercase}
+    .doc-link::after{content:"";flex:0 0 auto;width:0;height:3px;border-radius:999px;background:#3474ff;transition:width .22s ease}
+    .doc-link:hover,.doc-link.active{color:var(--blue);transform:translateX(6px)}
+    .doc-link:hover::after,.doc-link.active::after{width:34px}
+    .side-link{padding-left:14px;border-radius:14px;border:1px solid transparent}.side-link::before{content:"▣";color:#2bc0a1;font-size:14px}
+    .side-link:hover{transform:translateY(-2px);background:rgba(255,255,255,.65);border-color:rgba(194,216,241,.95);box-shadow:0 14px 26px rgba(95,138,198,.12)}
+    .archive-wrap{margin-top:22px;padding-top:22px}.archive-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:62px;padding:0 20px;border:1px solid rgba(205,223,244,.96);border-radius:18px;background:rgba(255,255,255,.78);color:#3c5778;cursor:pointer}
+    .archive-toggle:hover{transform:translateY(-3px);box-shadow:0 16px 28px rgba(97,145,209,.14)}.archive-toggle strong{font-size:12px;letter-spacing:.06em;text-transform:uppercase}.archive-toggle span:last-child{font-size:20px;transition:transform .22s ease}
+    .archive-toggle.open span:last-child{transform:rotate(180deg)}
+    .archive-list{display:grid;gap:10px;margin-top:14px}.archive-list[hidden]{display:none}.archive-item{padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.7);border:1px solid rgba(209,225,245,.94);color:#365273;transition:transform .22s ease,box-shadow .22s ease}.archive-item:hover{transform:translateX(6px);box-shadow:0 12px 24px rgba(88,132,194,.14)}
+    .footer{margin:0 0 0;padding:30px 30px 24px;background:linear-gradient(180deg,#081d3b 0%,#0a2346 100%);color:rgba(255,255,255,.9)}.footer-top{align-items:flex-start;justify-content:space-between;gap:28px;flex-wrap:wrap}.footer-col{min-width:210px;flex:1}.footer strong{color:#2fd2ef;font-size:28px;line-height:1.1}.footer p,.footer a{margin:0;color:rgba(230,238,252,.82);font-size:14px;line-height:1.65}
+    .store-row,.social-row{gap:10px;flex-wrap:wrap;margin-top:12px}.store-badge,.social-pill{min-width:90px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;cursor:pointer}.store-badge:hover,.social-pill:hover{transform:translateY(-3px);filter:brightness(1.05)}.social-pill{min-width:40px;padding:0;border-radius:50%}
+    .footer-bottom{justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.09);font-size:13px;color:rgba(226,236,255,.64)}
+    .reveal{opacity:0;transform:translateY(24px)}.reveal.visible{opacity:1;transform:none;transition:opacity .65s ease,transform .65s ease}
+    .toast{position:fixed;right:20px;bottom:20px;background:rgba(21,39,69,.94);color:#fff;padding:12px 16px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s ease,transform .2s ease;z-index:1000}.toast.show{opacity:1;transform:translateY(0)}
+    @media (max-width:860px){.page{width:calc(100% - 16px)}.shell{border-radius:24px}.header-top,.sub-nav,.section,.footer{padding-left:18px;padding-right:18px}.header-top{display:block}.header-main{display:block}.logo{justify-content:center}.main-nav{margin-top:10px;gap:22px;overflow-x:auto;justify-content:flex-start}.sub-nav{justify-content:flex-start}.section-title{font-size:34px}.doc-layout{display:block}.doc-column.left{padding-right:0;border-right:0;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid rgba(196,215,238,.92)}}
+  </style>
+  <script type="module" crossorigin src="/assets/documents-4yMO1fwy.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/common-Cwdypr2M.js">
+  <link rel="stylesheet" crossorigin href="/assets/integration-DHZQThhm.css">
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <header>
+        <div class="header-top">
+          <div class="header-main">
+            <a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#356dff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#356dff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#356dff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a>
+            <nav class="main-nav" aria-label="Главное меню"><a href="index.html">Частным лицам</a><a href="business.html">Бизнесу</a><a class="active" href="somonibank.html">Сомонибонк</a><a href="addresses.html">Адреса и банкоматы</a></nav>
+          </div>
+        </div>
+        <nav class="sub-nav" aria-label="Разделы Сомонибонк"><a href="somonibank.html#history">О нас</a><a href="news.html">Новости</a><a href="addresses.html">Адреса</a><a class="active-sub" href="documents.html">Документы</a><a href="delivery.html">Доставка</a><a href="contact.html">Связь с нами</a></nav>
+      </header>
+      <main>
+        <section class="section reveal">
+          <h1 class="section-title">Документы</h1>
+          <div class="docs-panel">
+            <div class="doc-layout">
+              <div class="doc-column left">
+                <button class="doc-link active" type="button" data-doc-title="Карты / авторизация"><span>Карты / авторизация</span></button>
+                <button class="doc-link" type="button" data-doc-title="Финансовые показатели"><span>Финансовые показатели</span></button>
+                <button class="doc-link" type="button" data-doc-title="Комплексное обслуживание физических лиц"><span>Комплексное обслуживание физических лиц</span></button>
+                <button class="doc-link" type="button" data-doc-title="Расчётно-кассовое обслуживание"><span>Расчётно-кассовое обслуживание</span></button>
+                <button class="doc-link" type="button" data-doc-title="Условия по вкладам"><span>Условия по вкладам</span></button>
+                <button class="doc-link" type="button" data-doc-title="Электронные денежные средства"><span>Электронные денежные средства</span></button>
+                <button class="doc-link" type="button" data-doc-title="Платёжные терминалы"><span>Платёжные терминалы</span></button>
+                <button class="doc-link" type="button" data-doc-title="Карта рассрочки «Салом»"><span>Карта рассрочки «Салом»</span></button>
+                <button class="doc-link" type="button" data-doc-title="Для юридических лиц и индивидуальных предпринимателей"><span>Для юридических лиц и индивидуальных предпринимателей</span></button>
+                <button class="doc-link" type="button" data-doc-title="Защита персональных данных клиентов"><span>Защита персональных данных клиентов</span></button>
+                <button class="doc-link" type="button" data-doc-title="Противодействие коррупции"><span>Противодействие коррупции</span></button>
+                <button class="doc-link" type="button" data-doc-title="Кредитные продукты"><span>Кредитные продукты</span></button>
+                <button class="doc-link" type="button" data-doc-title="Банковские реквизиты"><span>Банковские реквизиты</span></button>
+                <button class="doc-link" type="button" data-doc-title="Комплаенс-политика"><span>Комплаенс-политика</span></button>
+                <button class="doc-link" type="button" data-doc-title="Акции"><span>Акции</span></button>
+              </div>
+              <div class="doc-column right">
+                <button class="side-link" type="button" data-toast="Открытие анкеты гостевого клиента."><span>Анкета гостевого клиента и обработка персональных данных</span></button>
+                <button class="side-link" type="button" data-toast="Открытие политики конфиденциальности."><span>Политика конфиденциальности</span></button>
+                <button class="side-link" type="button" data-toast="Скачивание выбранного документа."><span id="selectedDocTitle">Карты / авторизация</span></button>
+              </div>
+            </div>
+            <div class="archive-wrap">
+              <button class="archive-toggle" type="button" id="archiveToggle"><strong>Архив юридических документов</strong><span>⌄</span></button>
+              <div class="archive-list" id="archiveList" hidden>
+                <div class="archive-item">Архив тарифов за 2023 год</div>
+                <div class="archive-item">Архив условий по вкладам за 2024 год</div>
+                <div class="archive-item">Архив внутренних регламентов</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="footer reveal">
+        <div class="footer-top">
+          <div class="footer-col"><a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#35d2ff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#35d2ff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#35d2ff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a><p style="margin-top:12px;">ул. Рудаки, 48,<br>Душанбе, Таджикистан</p><a href="#" data-toast="Филиалы и точки обслуживания будут открыты позже." style="display:inline-block;margin-top:12px;">Филиалы и точки обслуживания</a></div>
+          <div class="footer-col"><p><strong>900</strong><br>Бесплатно с мобильных в Таджикистане</p><p style="margin-top:14px;"><strong>+992 48 888 1111</strong><br>Для звонков из любой точки мира</p><p style="margin-top:14px;"><strong>+992 44 600 1520</strong><br>Телефон доверия</p></div>
+          <div class="footer-col"><p>Приложения</p><div class="store-row"><button class="store-badge" type="button" data-toast="Открытие Google Play.">Google Play</button><button class="store-badge" type="button" data-toast="Открытие App Store.">App Store</button></div><p style="margin-top:18px;">Социальные сети</p><div class="social-row"><button class="social-pill" type="button" data-toast="Переход в Telegram.">tg</button><button class="social-pill" type="button" data-toast="Переход в Facebook.">f</button><button class="social-pill" type="button" data-toast="Переход в LinkedIn.">in</button><button class="social-pill" type="button" data-toast="Переход в Одноклассники.">ok</button><button class="social-pill" type="button" data-toast="Переход в Instagram.">ig</button><button class="social-pill" type="button" data-toast="Переход в YouTube.">▶</button><button class="social-pill" type="button" data-toast="Переход во VK.">vk</button><button class="social-pill" type="button" data-toast="Переход в TikTok.">♪</button></div></div>
+        </div>
+        <div class="footer-bottom"><span>О банке</span><span>Документы</span><span>Тарифы</span><span>Вакансии</span><span>Связь с нами</span></div>
+      </footer>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+</body>
+</html>

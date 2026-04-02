@@ -22,6 +22,11 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, "index.html"),
         somonibank: resolve(__dirname, "somonibank.html"),
+        news: resolve(__dirname, "news.html"),
+        addresses: resolve(__dirname, "addresses.html"),
+        documents: resolve(__dirname, "documents.html"),
+        delivery: resolve(__dirname, "delivery.html"),
+        contact: resolve(__dirname, "contact.html"),
         business: resolve(__dirname, "business.html"),
         salaryProject: resolve(__dirname, "salary-project.html"),
         financing: resolve(__dirname, "financing.html"),

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Доставка — Сомонибонк</title>
+  <style>
+    :root{--bg:#eef5ff;--surface:#fff;--text:#163560;--muted:#627b9b;--line:#d9e7f8;--blue:#2f6ef2;--blue-deep:#174fb8;--dark:#072247;--shadow:0 28px 72px rgba(23,67,128,.16)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at top,#fbfdff 0%,#eef5ff 55%,#e6f0ff 100%);color:var(--text);font-family:"Segoe UI",Arial,Helvetica,sans-serif}
+    a{color:inherit;text-decoration:none}button{font:inherit}
+    .page{width:min(1180px,calc(100% - 24px));margin:0 auto;padding:14px 0 34px}.shell{overflow:hidden;border-radius:30px;border:1px solid rgba(216,231,248,.94);background:rgba(255,255,255,.92);box-shadow:0 28px 90px rgba(24,63,122,.14)}
+    .header-top,.header-main,.logo,.main-nav,.sub-nav,.hero-panel,.section-top,.table-head,.table-row,.question-card,.footer-top,.footer-bottom,.store-row,.social-row,.city-switch,.hero-actions{display:flex;align-items:center}
+    .header-top{justify-content:center;padding:14px 20px 18px;border-bottom:1px solid var(--line)}.header-main{gap:34px;justify-content:center}.logo{gap:10px}.logo svg{width:34px;height:34px}.logo span{font-size:24px;font-weight:700;letter-spacing:-.03em}
+    .main-nav{gap:34px;font-size:15px;font-weight:500}.main-nav a,.sub-nav a,.city-pill,.hero-btn,.question-btn,.table-link,.store-badge,.social-pill,.contact-link{transition:transform .22s ease,box-shadow .22s ease,color .22s ease,background .22s ease,border-color .22s ease,filter .22s ease}
+    .main-nav a,.sub-nav a{position:relative;padding:12px 0 15px}.main-nav a:hover,.sub-nav a:hover,.table-link:hover,.contact-link:hover{color:#145eb4}.main-nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-18px;height:5px;border-radius:999px;background:#3474ff}
+    .sub-nav{gap:34px;padding:22px 20px 26px;font-size:16px;white-space:nowrap;overflow-x:auto;justify-content:center;border-bottom:1px solid var(--line)}.sub-nav a{padding-bottom:10px;color:#3f5270}.sub-nav a.active-sub{color:#2e6df1;font-weight:600}.sub-nav a.active-sub::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:999px;background:#3474ff}
+    .section{padding:26px 30px 0}.hero-panel{justify-content:space-between;gap:26px;padding:24px 38px 0;border-radius:28px;background:linear-gradient(120deg,#f8fbff 0%,#f0f6ff 45%,#ffffff 100%);border:1px solid rgba(220,232,248,.96);box-shadow:var(--shadow);overflow:hidden;position:relative}
+    .hero-panel::after{content:"";position:absolute;right:-60px;top:-70px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(67,138,255,.18),rgba(67,138,255,0))}
+    .hero-copy{position:relative;z-index:1;max-width:420px;padding:42px 0 42px}.hero-copy h1,.section-title{margin:0;font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.04em;color:#193e72}
+    .hero-copy h1{font-size:54px;line-height:.98}.hero-copy p{margin:20px 0 0;color:var(--muted);font-size:18px;line-height:1.6}.hero-actions{gap:14px;margin-top:26px;flex-wrap:wrap}
+    .hero-btn,.question-btn{min-height:48px;padding:0 22px;border-radius:14px;border:1px solid transparent;font-weight:700;cursor:pointer}.hero-btn.primary,.question-btn{background:linear-gradient(180deg,#3d82ff 0%,#2b68ec 100%);color:#fff;box-shadow:0 16px 28px rgba(43,104,236,.24)}.hero-btn.secondary{border-color:rgba(47,110,242,.22);background:#fff;color:#2458be}
+    .hero-btn:hover,.question-btn:hover,.store-badge:hover,.social-pill:hover{transform:translateY(-3px);filter:brightness(1.04)}.hero-btn.secondary:hover,.city-pill:hover{box-shadow:0 14px 28px rgba(56,111,197,.14)}
+    .hero-visual{position:relative;align-self:stretch;min-height:360px;flex:1;min-width:300px}.delivery-figure{position:absolute;right:28px;bottom:0;width:min(100%,420px);height:100%}
+    .delivery-figure::before{content:"";position:absolute;right:10px;bottom:-4px;width:230px;height:310px;border-radius:28px 28px 0 0;background:linear-gradient(180deg,#ffffff 0%,#f5f8ff 100%);box-shadow:0 24px 48px rgba(34,81,153,.16)}
+    .delivery-figure::after{content:"";position:absolute;right:82px;bottom:72px;width:120px;height:210px;border-radius:18px;background:linear-gradient(180deg,#3adb95 0%,#52c879 100%);transform:rotate(12deg);box-shadow:0 16px 32px rgba(62,181,126,.28)}
+    .delivery-avatar{position:absolute;right:52px;bottom:0;width:255px;height:330px}
+    .delivery-avatar .head{position:absolute;left:108px;top:28px;width:82px;height:82px;border-radius:50%;background:radial-gradient(circle at 36% 34%,#f7d4bc 0%,#e9b791 70%,#d89f7b 100%);box-shadow:0 8px 18px rgba(44,68,112,.16)}
+    .delivery-avatar .hair{position:absolute;left:94px;top:6px;width:112px;height:86px;border-radius:48px 48px 38px 44px;background:#52342a;transform:rotate(4deg)}
+    .delivery-avatar .body{position:absolute;left:58px;top:92px;width:190px;height:214px;border-radius:34px 34px 0 0;background:linear-gradient(180deg,#ffffff 0%,#f4f8ff 100%);box-shadow:0 18px 36px rgba(40,82,140,.15)}
+    .delivery-avatar .arm{position:absolute;left:88px;top:166px;width:64px;height:128px;border-radius:30px;background:linear-gradient(180deg,#f3cfb8 0%,#ddb08b 100%);transform:rotate(8deg)}
+    .delivery-avatar .logo-mark{position:absolute;left:146px;top:154px;color:#2d6df0;font-size:13px;font-weight:700}
+    .section-top{justify-content:space-between;gap:18px;margin-bottom:26px;flex-wrap:wrap}.section-title{font-size:46px}.city-switch{gap:12px;flex-wrap:wrap}
+    .city-pill{min-height:42px;padding:0 18px;border-radius:999px;border:1px solid #8cb5ff;background:#fff;color:#2760d1;font-weight:600;cursor:pointer}.city-pill.active{background:linear-gradient(180deg,#3e82ff 0%,#2d67ea 100%);border-color:transparent;color:#fff;box-shadow:0 14px 24px rgba(43,104,236,.22)}
+    .tariff-card{padding:26px 12px 12px;border-radius:26px;background:linear-gradient(180deg,#ffffff 0%,#fbfdff 100%);border:1px solid rgba(220,233,248,.96);box-shadow:var(--shadow)}
+    .table-head,.table-row{padding:0 22px}.table-head{min-height:50px;color:#77a0dd;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.table-head span:nth-child(1),.table-row span:nth-child(1){flex:1.35}.table-head span:nth-child(2),.table-row span:nth-child(2){flex:.95}.table-head span:nth-child(3),.table-row span:nth-child(3){flex:.8}
+    .table-row{min-height:82px;border-top:1px solid rgba(217,231,248,.96);background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(247,251,255,.5));border-radius:16px}.table-row:hover{transform:translateY(-2px);box-shadow:0 16px 26px rgba(43,104,236,.08)}.table-row strong{display:block;font-size:18px;font-weight:600;letter-spacing:-.02em}.table-row small{display:block;margin-top:6px;color:var(--muted);font-size:13px;line-height:1.5}
+    .table-row span{padding:18px 0}.table-row .price{font-size:18px;font-weight:700;color:#173b6d}.table-row .term{font-size:16px;font-weight:600;color:#2457b7}
+    .table-footer{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:18px 22px 12px;flex-wrap:wrap}.table-link{display:inline-flex;align-items:center;gap:8px;color:#2a69ee;font-weight:700}.table-link:hover{transform:translateX(4px)}.city-note{color:var(--muted);font-size:14px}
+    .question-card{justify-content:space-between;gap:24px;margin-top:32px;padding:28px 30px;border-radius:24px;background:linear-gradient(115deg,#f8fbff 0%,#eef5ff 100%);border:1px solid rgba(219,232,247,.96);box-shadow:0 22px 44px rgba(43,104,236,.1)}
+    .question-copy{max-width:430px}.question-copy h3{margin:0 0 10px;font-size:36px;font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.04em;color:#1b3f74}.question-copy p{margin:0 0 18px;color:var(--muted);font-size:16px;line-height:1.6}
+    .question-visual{position:relative;width:210px;height:130px;flex:none}.question-visual::before{content:"";position:absolute;right:0;bottom:0;width:124px;height:74px;border-radius:18px;background:linear-gradient(180deg,#ffffff 0%,#edf3ff 100%);box-shadow:0 18px 34px rgba(72,112,176,.18)}
+    .question-visual::after{content:"";position:absolute;right:62px;top:18px;width:56px;height:56px;border-radius:50%;background:#62c7a5;box-shadow:0 12px 24px rgba(98,199,165,.28)}
+    .phone-illustration{position:absolute;left:22px;top:10px;width:90px;height:90px;border-radius:36px 36px 40px 18px;background:linear-gradient(180deg,#4f5662 0%,#262c35 100%);transform:rotate(28deg);box-shadow:0 18px 26px rgba(46,58,79,.28)}
+    .phone-illustration::after{content:"";position:absolute;left:18px;top:18px;width:54px;height:54px;border-radius:28px;background:linear-gradient(180deg,#171b20 0%,#353c47 100%)}
+    .footer{margin-top:32px;padding:30px 30px 24px;background:linear-gradient(180deg,#081d3b 0%,#0a2346 100%);color:rgba(255,255,255,.9)}.footer-top{align-items:flex-start;justify-content:space-between;gap:28px;flex-wrap:wrap}.footer-col{min-width:210px;flex:1}.footer strong{color:#fff;font-size:28px;line-height:1.1}.footer p,.footer a{margin:0;color:rgba(230,238,252,.82);font-size:14px;line-height:1.65}
+    .contact-link{display:inline-block;margin-top:10px;color:#d6f0ff;text-decoration:underline;text-underline-offset:4px}.store-row,.social-row{gap:10px;flex-wrap:wrap;margin-top:12px}.store-badge,.social-pill{min-width:90px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;cursor:pointer}.social-pill{min-width:40px;padding:0;border-radius:50%}
+    .footer-bottom{justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.09);font-size:13px;color:rgba(226,236,255,.64)}
+    .reveal{opacity:0;transform:translateY(26px)}.reveal.visible{opacity:1;transform:none;transition:opacity .65s ease,transform .65s ease}
+    @media (max-width:980px){.hero-panel{display:block;padding:26px 24px 0}.hero-copy{max-width:none;padding-top:16px}.hero-copy h1{font-size:44px}.hero-visual{min-height:310px}.delivery-figure{right:0;left:0;margin:0 auto}.section-title{font-size:38px}.question-card{display:block}.question-visual{margin:22px auto 0}}
+    @media (max-width:760px){.page{width:calc(100% - 16px)}.shell{border-radius:24px}.header-top,.sub-nav,.section,.footer{padding-left:18px;padding-right:18px}.header-top{display:block}.header-main{display:block}.logo{justify-content:center}.main-nav{margin-top:10px;gap:22px;overflow-x:auto;justify-content:flex-start}.sub-nav{justify-content:flex-start}.hero-copy h1,.section-title,.question-copy h3{font-size:34px}.hero-copy p{font-size:16px}.table-head{display:none}.table-row{display:grid;grid-template-columns:1fr;gap:2px;padding:16px 18px;min-height:0}.table-row span{padding:0}.table-row span+span{margin-top:10px}.question-card{padding:24px 18px}.footer{padding-left:18px;padding-right:18px}}
+  </style>
+  <script type="module" crossorigin src="/assets/delivery-BtSkOrX5.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/common-Cwdypr2M.js">
+  <link rel="stylesheet" crossorigin href="/assets/integration-DHZQThhm.css">
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <header>
+        <div class="header-top">
+          <div class="header-main">
+            <a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#356dff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#356dff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#356dff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a>
+            <nav class="main-nav" aria-label="Главное меню"><a href="index.html">Частным лицам</a><a href="business.html">Бизнесу</a><a class="active" href="somonibank.html">Сомонибонк</a><a href="addresses.html">Адреса и банкоматы</a></nav>
+          </div>
+        </div>
+        <nav class="sub-nav" aria-label="Разделы Сомонибонк"><a href="somonibank.html#history">О нас</a><a href="news.html">Новости</a><a href="addresses.html">Адреса</a><a href="documents.html">Документы</a><a class="active-sub" href="delivery.html">Доставка</a><a href="contact.html">Связь с нами</a></nav>
+      </header>
+
+      <main>
+        <section class="section reveal">
+          <div class="hero-panel">
+            <div class="hero-copy">
+              <h1>Доставим всё до вашей двери</h1>
+              <p>Закажите доставку онлайн и приобретайте карты, документы и другие услуги в два счёта.</p>
+              <div class="hero-actions">
+                <a class="hero-btn primary" href="contact.html">Оставить заявку</a>
+                <button class="hero-btn secondary" type="button" data-toast="Курьер свяжется с вами после оформления заявки.">Как это работает</button>
+              </div>
+            </div>
+            <div class="hero-visual" aria-hidden="true">
+              <div class="delivery-figure">
+                <div class="delivery-avatar">
+                  <div class="hair"></div>
+                  <div class="head"></div>
+                  <div class="body"></div>
+                  <div class="arm"></div>
+                  <div class="logo-mark">Сомонибанк</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section reveal">
+          <div class="section-top">
+            <h2 class="section-title">Тарифы и условия</h2>
+            <div class="city-switch" role="tablist" aria-label="Город доставки">
+              <button class="city-pill active" type="button" data-city="dushanbe">Душанбе</button>
+              <button class="city-pill" type="button" data-city="khujand">Худжанд</button>
+            </div>
+          </div>
+
+          <div class="tariff-card">
+            <div class="table-head">
+              <span>Услуги</span>
+              <span>Стоимость</span>
+              <span>Срок</span>
+            </div>
+            <div id="tariffRows"></div>
+            <div class="table-footer">
+              <button class="table-link" type="button" data-toast="Подробные тарифы будут доступны в PDF немного позже.">Тарифы доставки →</button>
+              <span class="city-note" id="cityNote">Доставка по Душанбе каждый день с 09:00 до 20:00.</span>
+            </div>
+          </div>
+
+          <div class="question-card reveal">
+            <div class="question-copy">
+              <h3>Остались вопросы?</h3>
+              <p>Позвоните нам по номеру 48 888 1818 или оставьте заявку, и мы расскажем, как работает доставка и какие документы нужны.</p>
+              <a class="question-btn" href="contact.html">Связаться с нами</a>
+            </div>
+            <div class="question-visual" aria-hidden="true">
+              <div class="phone-illustration"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer reveal">
+        <div class="footer-top">
+          <div class="footer-col">
+            <a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#35d2ff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#35d2ff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#35d2ff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a>
+            <p style="margin-top:12px;">ул. Бухаризода, 9<br>Ориентир: ресторан «Канд»</p>
+            <a class="contact-link" href="addresses.html">Филиалы и точки обслуживания</a>
+          </div>
+          <div class="footer-col">
+            <p><strong>900</strong><br>Для звонков с мобильных в Таджикистане</p>
+            <p style="margin-top:14px;"><strong>+992 48 888 1818</strong><br>Для звонков из любой точки мира</p>
+            <p style="margin-top:14px;"><strong>+992 44 600 2520</strong><br>Телефон доверия Национального банка Таджикистана</p>
+            <p style="margin-top:14px;"><strong>support@somoni.tj</strong><br>Для онлайн-обращений</p>
+          </div>
+          <div class="footer-col">
+            <p>Приложения</p>
+            <div class="store-row">
+              <button class="store-badge" type="button" data-toast="Открытие Google Play.">Google Play</button>
+              <button class="store-badge" type="button" data-toast="Открытие App Store.">App Store</button>
+            </div>
+            <p style="margin-top:18px;">Соцмедиа</p>
+            <div class="social-row">
+              <button class="social-pill" type="button" data-toast="Переход в Telegram.">tg</button>
+              <button class="social-pill" type="button" data-toast="Переход в Facebook.">f</button>
+              <button class="social-pill" type="button" data-toast="Переход в LinkedIn.">in</button>
+              <button class="social-pill" type="button" data-toast="Переход в Одноклассники.">ok</button>
+              <button class="social-pill" type="button" data-toast="Переход в Instagram.">ig</button>
+              <button class="social-pill" type="button" data-toast="Переход в YouTube.">▶</button>
+              <button class="social-pill" type="button" data-toast="Переход во VK.">vk</button>
+              <button class="social-pill" type="button" data-toast="Переход в TikTok.">♪</button>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom"><span>О нас</span><span>Адреса</span><span>Документы и тарифы</span><span>Вакансии</span><span>Связь с нами</span></div>
+      </footer>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</body>
+</html>

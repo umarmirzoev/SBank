@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="integration.css">
+  <title>Адреса и банкоматы — Сомонибонк</title>
+  <style>
+    :root{--bg:#eef5ff;--surface:#fff;--text:#15355e;--muted:#657b99;--line:#d9e8f8;--blue:#2f6ef2;--blue-dark:#103f82;--dark:#082247;--shadow:0 24px 60px rgba(28,73,136,.16)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#f7fbff 0%,var(--bg) 100%);color:var(--text);font-family:"Segoe UI",Arial,Helvetica,sans-serif}
+    a{color:inherit;text-decoration:none}button{font:inherit}
+    .page{width:min(1180px,calc(100% - 24px));margin:0 auto;padding:14px 0 34px}.shell{overflow:hidden;border-radius:30px;border:1px solid rgba(216,231,248,.94);background:rgba(255,255,255,.9);box-shadow:0 28px 90px rgba(24,63,122,.14)}
+    .header-top,.header-main,.logo,.main-nav,.sub-nav,.info-grid,.visit-card,.tabs,.branch-row,.footer-top,.footer-bottom,.store-row,.social-row{display:flex;align-items:center}
+    .header-top{justify-content:center;padding:14px 20px 18px;border-bottom:1px solid var(--line)}.header-main{gap:34px;justify-content:center}.logo{gap:10px}.logo svg{width:34px;height:34px}.logo span{font-size:24px;font-weight:700;letter-spacing:-.03em}
+    .main-nav{gap:34px;font-size:15px;font-weight:500}.main-nav a,.sub-nav a,.map-link,.branch-item,.tab-btn,.show-more,.store-badge,.social-pill{transition:transform .22s ease,box-shadow .22s ease,color .22s ease,background .22s ease,border-color .22s ease,filter .22s ease}
+    .main-nav a,.sub-nav a{position:relative;padding:12px 0 15px}.main-nav a:hover,.sub-nav a:hover,.map-link:hover{color:#145eb4}.main-nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-18px;height:5px;border-radius:999px;background:#3474ff}
+    .sub-nav{gap:34px;padding:22px 20px 26px;font-size:16px;white-space:nowrap;overflow-x:auto;justify-content:center;border-bottom:1px solid var(--line)}.sub-nav a{padding-bottom:10px;color:#3f5270}.sub-nav a.active-sub{color:#2e6df1;font-weight:600}.sub-nav a.active-sub::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:999px;background:#3474ff}
+    .section{padding:26px 34px 0}.page-title{margin:0 0 4px;font-family:Georgia,"Times New Roman",serif;font-size:38px;font-weight:400;letter-spacing:-.04em}.subtitle{margin:0 0 18px;color:var(--muted);font-size:14px}
+    .panel{padding:24px 28px 28px;border-radius:18px;background:linear-gradient(180deg,#fff,#f9fbff);border:1px solid rgba(217,231,247,.95);box-shadow:var(--shadow)}
+    .info-grid{align-items:flex-start;gap:40px;padding-bottom:18px;border-bottom:1px solid rgba(219,231,245,.94)}.info-block{flex:1;min-width:0}.label{margin:0 0 8px;color:#8aa0bc;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.info-block p{margin:0 0 10px;color:var(--muted);font-size:14px;line-height:1.6}.phone{display:block;margin-bottom:6px;color:var(--text);font-weight:700}
+    .map-link{display:inline-flex;align-items:center;gap:8px;margin-top:10px;color:#286be9;font-weight:600;cursor:pointer}.map-link::after{content:"⌄";font-size:16px}
+    .visit-wrap{margin-top:22px}.visit-title{margin:0 0 14px;font-size:22px;font-family:Georgia,"Times New Roman",serif;font-weight:400}
+    .visit-card{display:block;padding:18px 18px 16px;border-radius:16px;background:linear-gradient(180deg,#edf6ff,#e8f2ff);border:1px solid rgba(211,226,244,.96)}
+    .visit-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.weekday-row{display:flex;gap:18px;color:#6f819b;font-size:12px}.weekday-row strong{color:#143a6d}
+    .chart{display:grid;grid-template-columns:repeat(9,1fr);gap:14px;align-items:end;height:180px;padding:10px 6px 0}.bar-col{text-align:center}.bar{width:100%;max-width:28px;margin:0 auto;border-radius:6px 6px 0 0;background:linear-gradient(180deg,#1b4d96,#3f86ff);box-shadow:0 10px 20px rgba(43,110,242,.18)}.bar.light{background:linear-gradient(180deg,#3d86ff,#67a3ff)}
+    .bar-time{margin-top:8px;color:#5f7797;font-size:11px}.visit-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px}.arrow-btn,.book-btn{border:0;cursor:pointer}.arrow-btn{width:28px;height:28px;border-radius:50%;background:#dbe9fb;color:#5475a0}.arrow-btn:hover,.branch-item:hover,.show-more:hover,.store-badge:hover,.social-pill:hover{transform:translateY(-3px);filter:brightness(1.05)}
+    .book-btn{min-height:38px;padding:0 18px;border-radius:10px;background:linear-gradient(180deg,#163969,#081f42);color:#fff;font-weight:700}
+    .office-section{margin-top:24px}.office-title{margin:0 0 14px;font-size:28px;font-family:Georgia,"Times New Roman",serif;font-weight:400}
+    .tabs{gap:8px;margin-bottom:16px}.tab-btn{min-height:34px;padding:0 14px;border-radius:999px;border:1px solid rgba(196,214,239,.96);background:#f4f8fd;color:#6d81a0;cursor:pointer}.tab-btn.active{background:linear-gradient(180deg,#0d356a,#164c92);border-color:transparent;color:#fff;box-shadow:0 14px 22px rgba(16,63,130,.18)}
+    .branch-list{display:grid;gap:10px}.branch-item{padding:18px 0;border:0;background:transparent;border-bottom:1px solid rgba(219,231,245,.94);text-align:left;cursor:pointer}.branch-row{justify-content:space-between;gap:16px}.branch-name{font-size:16px;font-weight:700}.branch-meta{margin-top:4px;color:var(--muted);font-size:13px}.branch-arrow{color:#7590b0;font-size:18px}.branch-details{margin-top:12px;padding:14px 16px;border-radius:14px;background:rgba(236,245,255,.88);color:#567090;font-size:14px;line-height:1.6}
+    .show-more-wrap{text-align:center;margin-top:18px}.show-more{min-height:40px;padding:0 20px;border:0;border-radius:12px;background:linear-gradient(180deg,#74a7ff,#4c87f0);color:#fff;font-weight:700;cursor:pointer;box-shadow:0 16px 26px rgba(76,135,240,.2)}
+    .footer{margin-top:0;padding:30px 30px 24px;background:linear-gradient(180deg,#081d3b 0%,#0a2346 100%);color:rgba(255,255,255,.9)}.footer-top{align-items:flex-start;justify-content:space-between;gap:28px;flex-wrap:wrap}.footer-col{min-width:210px;flex:1}.footer strong{color:#2fd2ef;font-size:28px;line-height:1.1}.footer p,.footer a{margin:0;color:rgba(230,238,252,.82);font-size:14px;line-height:1.65}
+    .store-row,.social-row{gap:10px;flex-wrap:wrap;margin-top:12px}.store-badge,.social-pill{min-width:90px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;cursor:pointer}.social-pill{min-width:40px;padding:0;border-radius:50%}
+    .footer-bottom{justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.09);font-size:13px;color:rgba(226,236,255,.64)}
+    .reveal{opacity:0;transform:translateY(24px)}.reveal.visible{opacity:1;transform:none;transition:opacity .65s ease,transform .65s ease}
+    .toast{position:fixed;right:20px;bottom:20px;background:rgba(21,39,69,.94);color:#fff;padding:12px 16px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s ease,transform .2s ease;z-index:1000}.toast.show{opacity:1;transform:translateY(0)}
+    @media (max-width:860px){.page{width:calc(100% - 16px)}.shell{border-radius:24px}.header-top,.sub-nav,.section,.footer{padding-left:18px;padding-right:18px}.header-top{display:block}.header-main{display:block}.logo{justify-content:center}.main-nav{margin-top:10px;gap:22px;overflow-x:auto;justify-content:flex-start}.sub-nav{justify-content:flex-start}.page-title,.office-title{font-size:32px}.info-grid{display:block}.info-block+ .info-block{margin-top:18px}.chart{gap:8px}.visit-footer{gap:10px;flex-wrap:wrap}}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <header>
+        <div class="header-top">
+          <div class="header-main">
+            <a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#356dff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#356dff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#356dff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a>
+            <nav class="main-nav" aria-label="Главное меню"><a href="index.html">Частным лицам</a><a href="business.html">Бизнесу</a><a class="active" href="somonibank.html">Сомонибонк</a><a href="addresses.html">Адреса и банкоматы</a></nav>
+          </div>
+        </div>
+        <nav class="sub-nav" aria-label="Разделы Сомонибонк"><a href="somonibank.html#history">О нас</a><a href="news.html">Новости</a><a class="active-sub" href="addresses.html">Адреса</a><a href="documents.html">Документы</a><a href="delivery.html">Доставка</a><a href="contact.html">Связь с нами</a></nav>
+      </header>
+      <main>
+        <section class="section reveal">
+          <div class="panel">
+            <h1 class="page-title">Адреса и банкоматы</h1>
+            <p class="subtitle">Сомонибонк</p>
+            <div class="info-grid">
+              <div class="info-block">
+                <div class="label">Адрес</div>
+                <p>г. Душанбе, ул. Рудаки, 48,<br>Бизнес-центр «Сомони»</p>
+                <div class="label" style="margin-top:14px;">Режим работы</div>
+                <p>Пн – Пт: 09:00–18:00 (касса 09:30–17:00)<br>Сб: 09:00–15:30 (касса 10:00–14:00)<br>Вс: 09:00–14:00 (касса выходной)</p>
+                <a class="map-link" href="#" data-toast="Открытие карты с адресом.">Посмотреть на карте</a>
+              </div>
+              <div class="info-block">
+                <div class="label">Контакты</div>
+                <p><strong>900</strong> и <strong>+992 48 888 1111</strong><br>support@somoni.tj</p>
+                <div class="label" style="margin-top:14px;">Услуги</div>
+                <p>Выдача карт Сомонибонк, Visa, Mastercard и бизнес-карты, снятие наличных, платежи, переводы, обмен валют, консультации по сервисам и продуктам, обслуживание корпоративных клиентов.</p>
+              </div>
+            </div>
+
+            <div class="visit-wrap">
+              <h2 class="visit-title">Посещаемость офиса</h2>
+              <div class="visit-card">
+                <div class="visit-top">
+                  <div class="weekday-row"><strong>Пн</strong><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
+                  <div style="color:#6e829f;font-size:12px;">14:00 Обычно оживлённо</div>
+                </div>
+                <div class="chart">
+                  <div class="bar-col"><div class="bar" style="height:48px;"></div><div class="bar-time">08:00</div></div>
+                  <div class="bar-col"><div class="bar" style="height:72px;"></div><div class="bar-time">09:00</div></div>
+                  <div class="bar-col"><div class="bar" style="height:58px;"></div><div class="bar-time">10:00</div></div>
+                  <div class="bar-col"><div class="bar" style="height:80px;"></div><div class="bar-time">11:00</div></div>
+                  <div class="bar-col"><div class="bar" style="height:96px;"></div><div class="bar-time">12:00</div></div>
+                  <div class="bar-col"><div class="bar light" style="height:156px;"></div><div class="bar-time">14:00</div></div>
+                  <div class="bar-col"><div class="bar" style="height:98px;"></div><div class="bar-time">16:00</div></div>
+                  <div class="bar-col"><div class="bar light" style="height:114px;"></div><div class="bar-time">18:00</div></div>
+                  <div class="bar-col"><div class="bar" style="height:66px;"></div><div class="bar-time">20:00</div></div>
+                </div>
+                <div class="visit-footer">
+                  <div style="display:flex;align-items:center;gap:10px;"><button class="arrow-btn" type="button" data-toast="Переход к предыдущему периоду.">◀</button><button class="arrow-btn" type="button" data-toast="Переход к следующему периоду.">▶</button></div>
+                  <div style="color:#677d9d;font-size:13px;">Займите очередь, не выходя из дома</div>
+                  <button class="book-btn" type="button" data-toast="Запись в очередь будет доступна позже.">Записаться</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="office-section">
+              <h2 class="office-title">Филиалы и точки обслуживания</h2>
+              <div class="tabs">
+                <button class="tab-btn active" type="button" data-filter="all">Душанбе</button>
+                <button class="tab-btn" type="button" data-filter="atm">БТТ</button>
+                <button class="tab-btn" type="button" data-filter="service">Сети</button>
+                <button class="tab-btn" type="button" data-filter="other">Хатлон</button>
+              </div>
+              <div class="branch-list" id="branchList">
+                <button class="branch-item" type="button"><span class="branch-row"><span><span class="branch-name">Филиал «Сомони» в районе Исмоили Сомони</span><span class="branch-meta">Филиал банка</span></span><span class="branch-arrow">⌄</span></span><span class="branch-details" hidden>г. Душанбе, ул. Рудаки, 48. График: 09:00–18:00. Услуги: карты, переводы, касса, обмен валют.</span></button>
+                <button class="branch-item" type="button"><span class="branch-row"><span><span class="branch-name">Филиал «Сафо» в районе Шохмансур</span><span class="branch-meta">Филиал банка</span></span><span class="branch-arrow">⌄</span></span><span class="branch-details" hidden>г. Душанбе, район Шохмансур. Обслуживание физических и юридических лиц.</span></button>
+                <button class="branch-item" type="button"><span class="branch-row"><span><span class="branch-name">АИЦ Вавилон</span><span class="branch-meta">Банкомат и терминал</span></span><span class="branch-arrow">⌄</span></span><span class="branch-details" hidden>Круглосуточная зона самообслуживания: снятие наличных, переводы, пополнение карт.</span></button>
+                <button class="branch-item" type="button"><span class="branch-row"><span><span class="branch-name">ЦБУ</span><span class="branch-meta">Центр банковского обслуживания № 1</span></span><span class="branch-arrow">⌄</span></span><span class="branch-details" hidden>Приём платежей, консультации, оформление карт, обслуживание клиентов банка.</span></button>
+                <button class="branch-item" type="button"><span class="branch-row"><span><span class="branch-name">Авиоцентр</span><span class="branch-meta">Центр банковского обслуживания № 2</span></span><span class="branch-arrow">⌄</span></span><span class="branch-details" hidden>г. Душанбе, район аэропорта. Услуги: банкоматы, платежи, переводы.</span></button>
+                <button class="branch-item" type="button"><span class="branch-row"><span><span class="branch-name">«Дружба» Молл</span><span class="branch-meta">Центр банковского обслуживания № 10</span></span><span class="branch-arrow">⌄</span></span><span class="branch-details" hidden>Точка обслуживания в торговом центре с вечерним графиком.</span></button>
+                <button class="branch-item" type="button"><span class="branch-row"><span><span class="branch-name">Рынок «Кушониён»</span><span class="branch-meta">Центр банковского обслуживания № 13</span></span><span class="branch-arrow">⌄</span></span><span class="branch-details" hidden>Приём платежей и обслуживание предпринимателей рынка.</span></button>
+              </div>
+              <div class="show-more-wrap"><button class="show-more" id="showMoreBtn" type="button">Показать ещё</button></div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="footer reveal">
+        <div class="footer-top">
+          <div class="footer-col"><a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#35d2ff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#35d2ff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#35d2ff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a><p style="margin-top:12px;">ул. Рудаки, 48,<br>Душанбе, Таджикистан</p><a href="#" data-toast="Филиалы и точки обслуживания будут открыты позже." style="display:inline-block;margin-top:12px;">Филиалы и точки обслуживания</a></div>
+          <div class="footer-col"><p><strong>900</strong><br>Для звонков с мобильных в Таджикистане</p><p style="margin-top:14px;"><strong>+992 48 888 1111</strong><br>Для звонков из любой точки мира</p><p style="margin-top:14px;"><strong>+992 44 600 1520</strong><br>Телефон доверия Национального банка Таджикистана для жалоб</p></div>
+          <div class="footer-col"><p>Приложения</p><div class="store-row"><button class="store-badge" type="button" data-toast="Открытие Google Play.">Google Play</button><button class="store-badge" type="button" data-toast="Открытие App Store.">App Store</button></div><p style="margin-top:18px;">Социальные сети</p><div class="social-row"><button class="social-pill" type="button" data-toast="Переход в Telegram.">tg</button><button class="social-pill" type="button" data-toast="Переход в Facebook.">f</button><button class="social-pill" type="button" data-toast="Переход в LinkedIn.">in</button><button class="social-pill" type="button" data-toast="Переход в Одноклассники.">ok</button><button class="social-pill" type="button" data-toast="Переход в Instagram.">ig</button><button class="social-pill" type="button" data-toast="Переход в YouTube.">▶</button><button class="social-pill" type="button" data-toast="Переход во VK.">vk</button><button class="social-pill" type="button" data-toast="Переход в TikTok.">♪</button></div></div>
+        </div>
+        <div class="footer-bottom"><span>О нас</span><span>Адреса</span><span>Документы и тарифы</span><span>Вакансии</span><span>Связь с нами</span></div>
+      </footer>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script type="module" src="scripts/addresses-page.js"></script>
+</body>
+</html>

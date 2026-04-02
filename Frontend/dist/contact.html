@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Связь с нами — Сомонибонк</title>
+  <style>
+    :root{--bg:#eef5ff;--surface:#fff;--text:#15355e;--muted:#657b99;--line:#d9e8f8;--blue:#2f6ef2;--dark:#082247;--shadow:0 24px 60px rgba(28,73,136,.16)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#f7fbff 0%,var(--bg) 100%);color:var(--text);font-family:"Segoe UI",Arial,Helvetica,sans-serif}
+    a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}
+    .page{width:min(1180px,calc(100% - 24px));margin:0 auto;padding:14px 0 34px}.shell{overflow:hidden;border-radius:30px;border:1px solid rgba(216,231,248,.94);background:rgba(255,255,255,.9);box-shadow:0 28px 90px rgba(24,63,122,.14)}
+    .header-top,.header-main,.logo,.main-nav,.sub-nav,.feedback-layout,.footer-top,.footer-bottom,.store-row,.social-row{display:flex;align-items:center}
+    .header-top{justify-content:center;padding:14px 20px 18px;border-bottom:1px solid var(--line)}.header-main{gap:34px;justify-content:center}.logo{gap:10px}.logo svg{width:34px;height:34px}.logo span{font-size:24px;font-weight:700;letter-spacing:-.03em}
+    .main-nav{gap:34px;font-size:15px;font-weight:500}.main-nav a,.sub-nav a,.submit-btn,.store-badge,.social-pill,.input,.select,.textarea{transition:transform .22s ease,box-shadow .22s ease,color .22s ease,background .22s ease,border-color .22s ease,filter .22s ease}
+    .main-nav a,.sub-nav a{position:relative;padding:12px 0 15px}.main-nav a:hover,.sub-nav a:hover{color:#145eb4}.main-nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-18px;height:5px;border-radius:999px;background:#3474ff}
+    .sub-nav{gap:34px;padding:22px 20px 26px;font-size:16px;white-space:nowrap;overflow-x:auto;justify-content:center;border-bottom:1px solid var(--line)}.sub-nav a{padding-bottom:10px;color:#3f5270}.sub-nav a.active-sub{color:#2e6df1;font-weight:600}.sub-nav a.active-sub::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:999px;background:#3474ff}
+    .section{padding:26px 30px 0}.panel{padding:24px 28px 26px;border-radius:18px;background:linear-gradient(180deg,#fff,#f9fbff);border:1px solid rgba(217,231,247,.95);box-shadow:var(--shadow)}
+    .page-title{margin:0 0 18px;font-family:Georgia,"Times New Roman",serif;font-size:38px;font-weight:400;letter-spacing:-.04em}.lead-title{margin:0 0 18px;font-size:34px;font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.04em}
+    .content-copy h2,.help-copy h2{margin:0 0 16px;font-size:34px;font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.04em}.content-copy h3{margin:0 0 8px;font-size:18px}.content-copy p,.help-copy p,.note{margin:0 0 14px;color:var(--muted);font-size:14px;line-height:1.65}
+    .phone-link{display:block;margin-bottom:6px;color:var(--blue);font-size:34px;font-weight:700;letter-spacing:-.03em}.phone-link:hover{transform:translateX(4px)}
+    .mini-note{display:flex;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(216,229,245,.92);color:#4e6788;font-size:12px;line-height:1.55}.mini-note::before{content:"▣";color:#3474ff}
+    .divider{height:1px;margin:24px 0;background:rgba(217,229,245,.96)}.feedback-layout{align-items:flex-start;gap:34px}.help-copy{flex:1;max-width:280px}.form-card{flex:1;max-width:420px;padding:18px;border-radius:16px;background:linear-gradient(180deg,#fff,#f8fbff);border:1px solid rgba(215,230,247,.96);box-shadow:0 18px 36px rgba(102,146,208,.12)}
+    .field{margin-bottom:12px}.input,.select,.textarea{width:100%;padding:14px 14px;border-radius:12px;border:1px solid rgba(205,221,241,.96);background:#fff;color:#1b3c67;outline:none}.input:focus,.select:focus,.textarea:focus{border-color:#6fa4ff;box-shadow:0 0 0 4px rgba(52,116,255,.08)}.textarea{min-height:110px;resize:vertical}
+    .checkbox-row{display:flex;gap:10px;align-items:flex-start;margin:10px 0;color:#5b7595;font-size:12px;line-height:1.5}.checkbox-row input{margin-top:2px}
+    .submit-btn{min-height:46px;padding:0 22px;border:0;border-radius:12px;background:linear-gradient(180deg,#3b82ff 0%,#2c67ea 100%);color:#fff;font-weight:700;cursor:pointer;box-shadow:0 16px 28px rgba(44,103,234,.24)}.submit-btn:hover,.store-badge:hover,.social-pill:hover{transform:translateY(-3px);filter:brightness(1.05)}
+    .footer{margin-top:0;padding:30px 30px 24px;background:linear-gradient(180deg,#081d3b 0%,#0a2346 100%);color:rgba(255,255,255,.9)}.footer-top{align-items:flex-start;justify-content:space-between;gap:28px;flex-wrap:wrap}.footer-col{min-width:210px;flex:1}.footer strong{color:#2fd2ef;font-size:28px;line-height:1.1}.footer p,.footer a{margin:0;color:rgba(230,238,252,.82);font-size:14px;line-height:1.65}
+    .store-row,.social-row{gap:10px;flex-wrap:wrap;margin-top:12px}.store-badge,.social-pill{min-width:90px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;cursor:pointer}.social-pill{min-width:40px;padding:0;border-radius:50%}
+    .footer-bottom{justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.09);font-size:13px;color:rgba(226,236,255,.64)}
+    .reveal{opacity:0;transform:translateY(24px)}.reveal.visible{opacity:1;transform:none;transition:opacity .65s ease,transform .65s ease}
+    .toast{position:fixed;right:20px;bottom:20px;background:rgba(21,39,69,.94);color:#fff;padding:12px 16px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s ease,transform .2s ease;z-index:1000}.toast.show{opacity:1;transform:translateY(0)}
+    @media (max-width:860px){.page{width:calc(100% - 16px)}.shell{border-radius:24px}.header-top,.sub-nav,.section,.footer{padding-left:18px;padding-right:18px}.header-top{display:block}.header-main{display:block}.logo{justify-content:center}.main-nav{margin-top:10px;gap:22px;overflow-x:auto;justify-content:flex-start}.sub-nav{justify-content:flex-start}.page-title,.lead-title,.content-copy h2,.help-copy h2{font-size:30px}.feedback-layout{display:block}.form-card{max-width:none;margin-top:20px}}
+  </style>
+  <script type="module" crossorigin src="/assets/contact-BLEPsTqp.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/common-Cwdypr2M.js">
+  <link rel="stylesheet" crossorigin href="/assets/integration-DHZQThhm.css">
+</head>
+<body>
+  <div class="page"><div class="shell">
+    <header>
+      <div class="header-top"><div class="header-main">
+        <a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#356dff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#356dff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#356dff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a>
+        <nav class="main-nav" aria-label="Главное меню"><a href="index.html">Частным лицам</a><a href="business.html">Бизнесу</a><a class="active" href="somonibank.html">Сомонибонк</a><a href="addresses.html">Адреса и банкоматы</a></nav>
+      </div></div>
+      <nav class="sub-nav" aria-label="Разделы Сомонибонк"><a href="somonibank.html#history">О нас</a><a href="news.html">Новости</a><a href="addresses.html">Адреса</a><a href="documents.html">Документы</a><a href="delivery.html">Доставка</a><a class="active-sub" href="contact.html">Связь с нами</a></nav>
+    </header>
+    <main><section class="section reveal"><div class="panel">
+      <h1 class="page-title">Связь с нами</h1>
+      <div class="content-copy">
+        <h2 class="lead-title">Обратная связь</h2>
+        <h3>Форма обращений граждан</h3>
+        <p>Граждане имеют право обращаться в Сомонибонк с заявлениями, предложениями и жалобами. Рассмотрение обращений проводится в установленные сроки, а каждое обращение получает регистрацию и проверку.</p>
+        <h3>Виды обращений граждан</h3>
+        <p>Мы принимаем вопросы, предложения, жалобы и обращения по качеству обслуживания. Обращения могут быть поданы по телефону доверия, письменно или через форму ниже.</p>
+        <h3>Требования, предъявляемые к обращениям граждан</h3>
+        <p>В обращении желательно указать ФИО, телефон и суть вопроса. Анонимные обращения могут быть рассмотрены без обратной связи, если они содержат важную информацию.</p>
+        <h3>Телефоны доверия для жалоб и обращений</h3>
+        <a class="phone-link" href="tel:+992446008888">+992 44 600 88 88</a>
+        <a class="phone-link" href="tel:+992446008889">+992 44 600 88 89</a>
+        <div class="mini-note">Порядок рассмотрения жалоб и предложений. Все обращения принимаются в течение 15 рабочих дней.</div>
+      </div>
+      <div class="divider"></div>
+      <div class="feedback-layout">
+        <div class="help-copy"><h2>Нужна помощь?</h2><p>Напишите нам, и мы по возможности предложим решение или свяжемся с вами для уточнения деталей.</p></div>
+        <form class="form-card" id="feedbackForm">
+          <div class="field"><select class="select" id="topic"><option>Выберите тему обращения</option><option>Жалоба</option><option>Предложение</option><option>Вопрос по доставке</option></select></div>
+          <div class="field"><input class="input" id="fullName" type="text" placeholder="ФИО *"></div>
+          <div class="field"><input class="input" id="phone" type="tel" placeholder="Телефон *"></div>
+          <div class="field"><textarea class="textarea" id="question" placeholder="Вопрос *"></textarea></div>
+          <label class="checkbox-row"><input type="checkbox" id="agreeData"><span>Подтверждаю согласие на устный/письменный ответ и даю согласие на обработку своих данных</span></label>
+          <label class="checkbox-row"><input type="checkbox" id="agreeSms"><span>Соглашаюсь на получение ответа по SMS</span></label>
+          <button class="submit-btn" type="submit">Отправить</button>
+        </form>
+      </div>
+      <p class="note" style="margin-top:18px;">В соответствии с требованиями законодательства обращения, не соответствующие установленным требованиям, могут быть оставлены без рассмотрения. Обращения, которые не могут быть идентифицированы, могут быть оставлены без ответа.</p>
+    </div></section></main>
+    <footer class="footer reveal"><div class="footer-top">
+      <div class="footer-col"><a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#35d2ff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#35d2ff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#35d2ff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a><p style="margin-top:12px;">ул. Бегунова, 9,<br>Ориентир: ресторан «Канда»</p><a href="#" data-toast="Филиалы и точки обслуживания будут открыты позже." style="display:inline-block;margin-top:12px;">Филиалы и точки обслуживания</a></div>
+      <div class="footer-col"><p><strong>900</strong><br>Для звонков с мобильных в Таджикистане</p><p style="margin-top:14px;"><strong>+992 48 888 1111</strong><br>Для звонков из любой точки мира</p><p style="margin-top:14px;"><strong>+992 44 600 1520</strong><br>Телефон доверия Национального банка Таджикистана для жалоб и обращений</p><p style="margin-top:14px;"><strong>support@somoni.tj</strong><br>Для онлайн-обращений</p></div>
+      <div class="footer-col"><p>Приложения</p><div class="store-row"><button class="store-badge" type="button" data-toast="Открытие Google Play.">Google Play</button><button class="store-badge" type="button" data-toast="Открытие App Store.">App Store</button></div><p style="margin-top:18px;">Социальные сети</p><div class="social-row"><button class="social-pill" type="button" data-toast="Переход в Telegram.">tg</button><button class="social-pill" type="button" data-toast="Переход в Facebook.">f</button><button class="social-pill" type="button" data-toast="Переход в LinkedIn.">in</button><button class="social-pill" type="button" data-toast="Переход в Одноклассники.">ok</button><button class="social-pill" type="button" data-toast="Переход в Instagram.">ig</button><button class="social-pill" type="button" data-toast="Переход в YouTube.">▶</button><button class="social-pill" type="button" data-toast="Переход во VK.">vk</button><button class="social-pill" type="button" data-toast="Переход в TikTok.">♪</button></div></div>
+    </div><div class="footer-bottom"><span>О нас</span><span>Адреса</span><span>Документы и тарифы</span><span>Вакансии</span><span>Связь с нами</span></div></footer>
+  </div></div>
+  <div class="toast" id="toast"></div>
+</body>
+</html>

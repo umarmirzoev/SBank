@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="integration.css">
+  <title>Новости — Сомонибонк</title>
+  <style>
+    :root{--bg:#eef5ff;--surface:#fff;--text:#15355e;--muted:#657b99;--line:#d9e8f8;--blue:#2f6ef2;--blue-dark:#103f82;--dark:#082247;--shadow:0 24px 60px rgba(28,73,136,.16)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#f7fbff 0%,var(--bg) 100%);color:var(--text);font-family:"Segoe UI",Arial,Helvetica,sans-serif}
+    a{color:inherit;text-decoration:none}button{font:inherit}
+    .page{width:min(1180px,calc(100% - 24px));margin:0 auto;padding:14px 0 34px}.shell{overflow:hidden;border-radius:30px;border:1px solid rgba(216,231,248,.94);background:rgba(255,255,255,.9);box-shadow:0 28px 90px rgba(24,63,122,.14)}
+    .header-top,.header-main,.logo,.main-nav,.sub-nav,.tabs,.year-row,.footer-top,.footer-bottom,.store-row,.social-row{display:flex;align-items:center}
+    .header-top{justify-content:center;padding:14px 20px 18px;border-bottom:1px solid var(--line)}.header-main{gap:34px;justify-content:center}.logo{gap:10px}.logo svg{width:34px;height:34px}.logo span{font-size:24px;font-weight:700;letter-spacing:-.03em}
+    .main-nav{gap:34px;font-size:15px;font-weight:500}.main-nav a,.sub-nav a,.tab-btn,.year-btn,.news-item,.store-badge,.social-pill{transition:transform .22s ease,box-shadow .22s ease,color .22s ease,background .22s ease,border-color .22s ease,filter .22s ease}
+    .main-nav a,.sub-nav a{position:relative;padding:12px 0 15px}.main-nav a:hover,.sub-nav a:hover{color:#145eb4}.main-nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-18px;height:5px;border-radius:999px;background:#3474ff}
+    .sub-nav{gap:34px;padding:22px 20px 26px;font-size:16px;white-space:nowrap;overflow-x:auto;justify-content:center;border-bottom:1px solid var(--line)}.sub-nav a{padding-bottom:10px;color:#3f5270}.sub-nav a.active-sub{color:#2e6df1;font-weight:600}.sub-nav a.active-sub::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:999px;background:#3474ff}
+    .section{padding:26px 30px 0}.page-title{margin:0 0 18px;font-family:Georgia,"Times New Roman",serif;font-size:38px;font-weight:400;letter-spacing:-.04em}
+    .tabs{gap:22px;margin-bottom:18px}.tab-btn{padding:0;border:0;background:transparent;color:#6f829f;font-size:15px;cursor:pointer}.tab-btn.active{color:#17355e;font-weight:700}
+    .news-panel{padding:26px 40px 24px;border-radius:18px;background:linear-gradient(180deg,#fff,#f9fbff);border:1px solid rgba(217,231,247,.95);box-shadow:var(--shadow)}
+    .year-row{gap:10px;flex-wrap:wrap;margin-bottom:26px}.year-btn{min-width:52px;min-height:32px;padding:0 14px;border-radius:999px;border:1px solid rgba(188,208,233,.96);background:#f3f7fc;color:#6f819b;font-size:12px;font-weight:700;cursor:pointer}.year-btn.active{background:linear-gradient(180deg,#164a92,#0e356d);border-color:transparent;color:#fff;box-shadow:0 14px 24px rgba(16,63,130,.24)}.year-btn:hover,.store-badge:hover,.social-pill:hover{transform:translateY(-3px);filter:brightness(1.05)}
+    .news-list{display:grid}.news-item{padding:0 0 22px;margin-bottom:18px;border-bottom:1px solid rgba(214,228,245,.96);cursor:pointer}.news-item:last-child{margin-bottom:0}.news-item:hover{transform:translateX(6px)}.news-item h3{margin:0 0 12px;font-size:24px;font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.03em}.news-item p{margin:0;color:var(--muted);font-size:14px}
+    .footer{margin-top:0;padding:30px 30px 24px;background:linear-gradient(180deg,#081d3b 0%,#0a2346 100%);color:rgba(255,255,255,.9)}.footer-top{align-items:flex-start;justify-content:space-between;gap:28px;flex-wrap:wrap}.footer-col{min-width:210px;flex:1}.footer strong{color:#2fd2ef;font-size:28px;line-height:1.1}.footer p,.footer a{margin:0;color:rgba(230,238,252,.82);font-size:14px;line-height:1.65}
+    .store-row,.social-row{gap:10px;flex-wrap:wrap;margin-top:12px}.store-badge,.social-pill{min-width:90px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;cursor:pointer}.social-pill{min-width:40px;padding:0;border-radius:50%}
+    .footer-bottom{justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.09);font-size:13px;color:rgba(226,236,255,.64)}
+    .reveal{opacity:0;transform:translateY(24px)}.reveal.visible{opacity:1;transform:none;transition:opacity .65s ease,transform .65s ease}
+    .toast{position:fixed;right:20px;bottom:20px;background:rgba(21,39,69,.94);color:#fff;padding:12px 16px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s ease,transform .2s ease;z-index:1000}.toast.show{opacity:1;transform:translateY(0)}
+    @media (max-width:860px){.page{width:calc(100% - 16px)}.shell{border-radius:24px}.header-top,.sub-nav,.section,.footer{padding-left:18px;padding-right:18px}.header-top{display:block}.header-main{display:block}.logo{justify-content:center}.main-nav{margin-top:10px;gap:22px;overflow-x:auto;justify-content:flex-start}.sub-nav{justify-content:flex-start}.page-title{font-size:34px}.news-panel{padding:22px 18px 18px}.news-item h3{font-size:21px}}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <header>
+        <div class="header-top">
+          <div class="header-main">
+            <a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#356dff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#356dff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#356dff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a>
+            <nav class="main-nav" aria-label="Главное меню"><a href="index.html">Частным лицам</a><a href="business.html">Бизнесу</a><a class="active" href="somonibank.html">Сомонибонк</a><a href="addresses.html">Адреса и банкоматы</a></nav>
+          </div>
+        </div>
+        <nav class="sub-nav" aria-label="Разделы Сомонибонк"><a href="somonibank.html#history">О нас</a><a class="active-sub" href="news.html">Новости</a><a href="addresses.html">Адреса</a><a href="documents.html">Документы</a><a href="delivery.html">Доставка</a><a href="contact.html">Связь с нами</a></nav>
+      </header>
+      <main>
+        <section class="section reveal">
+          <h1 class="page-title">Все новости</h1>
+          <div class="tabs">
+            <button class="tab-btn active" type="button" data-tab="bank">Банк</button>
+            <button class="tab-btn" type="button" data-tab="important">Важно</button>
+            <button class="tab-btn" type="button" data-tab="tender">Тендер</button>
+          </div>
+          <div class="news-panel">
+            <div class="year-row">
+              <button class="year-btn active" type="button" data-year="2026">2026</button>
+              <button class="year-btn" type="button" data-year="2025">2025</button>
+              <button class="year-btn" type="button" data-year="2024">2024</button>
+              <button class="year-btn" type="button" data-year="2023">2023</button>
+            </div>
+            <div class="news-list" id="newsList">
+              <article class="news-item"><h3>Рабочие часы с 21 по 25 марта</h3><p>19 марта 2026</p></article>
+              <article class="news-item"><h3>День защиты прав потребителей</h3><p>11 марта 2026</p></article>
+              <article class="news-item"><h3>Кэшбэк 10% с Mastercard</h3><p>18 февраля 2026</p></article>
+              <article class="news-item"><h3>Акция на покупку авто началась</h3><p>09 февраля 2026</p></article>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="footer reveal">
+        <div class="footer-top">
+          <div class="footer-col"><a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#35d2ff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#35d2ff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#35d2ff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a><p style="margin-top:12px;">ул. Баягузиева, 9,<br>Ориентир: ресторан «Канда»</p><a href="#" data-toast="Филиалы и точки обслуживания будут открыты позже." style="display:inline-block;margin-top:12px;">Филиалы и точки обслуживания</a></div>
+          <div class="footer-col"><p><strong>900</strong><br>Для звонков с мобильных в Таджикистане</p><p style="margin-top:14px;"><strong>+992 48 888 1111</strong><br>Для звонков из любой точки мира</p><p style="margin-top:14px;"><strong>+992 44 600 1520</strong><br>Телефон доверия Национального банка Таджикистана для жалоб</p><p style="margin-top:14px;"><strong>support@somoni.tj</strong><br>Для онлайн-обращений</p></div>
+          <div class="footer-col"><p>Приложения</p><div class="store-row"><button class="store-badge" type="button" data-toast="Открытие Google Play.">Google Play</button><button class="store-badge" type="button" data-toast="Открытие App Store.">App Store</button></div><p style="margin-top:18px;">Социальные сети</p><div class="social-row"><button class="social-pill" type="button" data-toast="Переход в Telegram.">tg</button><button class="social-pill" type="button" data-toast="Переход в Facebook.">f</button><button class="social-pill" type="button" data-toast="Переход в LinkedIn.">in</button><button class="social-pill" type="button" data-toast="Переход в Одноклассники.">ok</button><button class="social-pill" type="button" data-toast="Переход в Instagram.">ig</button><button class="social-pill" type="button" data-toast="Переход в YouTube.">▶</button><button class="social-pill" type="button" data-toast="Переход во VK.">vk</button><button class="social-pill" type="button" data-toast="Переход в TikTok.">♪</button></div></div>
+        </div>
+        <div class="footer-bottom"><span>О нас</span><span>Адреса</span><span>Документы и тарифы</span><span>Вакансии</span><span>Связь с нами</span></div>
+      </footer>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script type="module" src="scripts/news-page.js"></script>
+</body>
+</html>
