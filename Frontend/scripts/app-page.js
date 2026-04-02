@@ -1,169 +1,163 @@
-﻿import {
-  apiRequest,
-  formatDate,
-  formatMoney,
-  messageBox,
-  mountHeaderAuth,
-  openAuthModal,
-  requireAuth,
-  showToast
-} from "./common.js";
+import { apiRequest, clearSession, formatMoney, getSession, showToast } from "./common.js";
 
-mountHeaderAuth();
+const userName = document.getElementById("userName");
+const userAvatar = document.getElementById("userAvatar");
+const totalBalance = document.getElementById("totalBalance");
+const bonusLabel = document.getElementById("bonusLabel");
+const accountPanel = document.getElementById("accountPanel");
+const operationsList = document.getElementById("operationsList");
+const logoutButton = document.getElementById("logoutButton");
+const addCardButton = document.getElementById("addCardButton");
+const verifyButton = document.getElementById("verifyButton");
 
-document.querySelectorAll("[data-toast]").forEach((element) => {
-  element.addEventListener("click", (event) => {
-    if (element.getAttribute("href") === "#") {
-      event.preventDefault();
-    }
-    showToast(element.dataset.toast);
-  });
+const session = getSession();
+
+if (!session?.token) {
+  window.location.href = "login.html";
+}
+
+userName.textContent = session?.fullName || "Клиент";
+userAvatar.textContent = (session?.fullName || "К").trim().charAt(0).toUpperCase();
+
+logoutButton?.addEventListener("click", () => {
+  clearSession();
+  window.location.href = "login.html";
 });
 
-const guideTabs = document.querySelectorAll(".guide-tab");
-const guideCards = document.querySelectorAll(".guide-mini-card");
-
-guideTabs.forEach((tab) => {
-  tab.addEventListener("click", () => {
-    guideTabs.forEach((item) => item.classList.toggle("active", item === tab));
-    if (tab.dataset.guide === "security") {
-      guideCards[0]?.classList.add("primary");
-      guideCards[1]?.classList.remove("primary");
-      guideCards[2]?.classList.remove("primary");
-      showToast("Открыт раздел: Настройки и безопасность.");
-    } else {
-      guideCards[0]?.classList.remove("primary");
-      guideCards[1]?.classList.add("primary");
-      guideCards[2]?.classList.remove("primary");
-      showToast("Открыт раздел: Карты.");
-    }
-  });
+addCardButton?.addEventListener("click", () => {
+  showToast("Сначала откройте карту через backend API, затем она появится здесь.");
 });
 
-const hero = document.querySelector(".hero");
-const dashboard = document.createElement("section");
-dashboard.className = "sb-dashboard";
-dashboard.id = "sb-dashboard";
-dashboard.innerHTML = `
-  <div class="sb-dashboard-head">
-    <div>
-      <h2 class="sb-dashboard-title">Личный кабинет</h2>
-      <p class="sb-dashboard-copy">Здесь мы показываем краткую информацию из backend: счета, карты, последние операции и уведомления.</p>
-    </div>
-    <div class="sb-cta">
-      <button class="sb-ghost-btn" type="button" data-dashboard-action="refresh">Обновить</button>
-      <button class="sb-btn" type="button" data-dashboard-action="auth">Войти</button>
-    </div>
-  </div>
-  <div data-dashboard-content></div>
-`;
+verifyButton?.addEventListener("click", () => {
+  showToast("Верификация уже отправлена после регистрации.");
+});
 
-hero.insertAdjacentElement("afterend", dashboard);
+function getItems(payload) {
+  return payload?.items || payload?.Items || [];
+}
 
-dashboard.querySelector('[data-dashboard-action="auth"]').addEventListener("click", () => openAuthModal("login", loadDashboard));
-dashboard.querySelector('[data-dashboard-action="refresh"]').addEventListener("click", () => void loadDashboard());
+function renderAccount(accounts, cards) {
+  const account = accounts[0];
+  const card = cards[0];
 
-async function loadDashboard() {
-  const content = dashboard.querySelector("[data-dashboard-content]");
-
-  if (!localStorage.getItem("sbank-session")) {
-    content.innerHTML = `
-      ${messageBox("info", "Войдите в аккаунт, чтобы открыть данные backend API.")}
-      <div class="sb-cta" style="margin-top:12px;">
-        <button class="sb-btn" type="button" data-dashboard-login>Войти</button>
-        <button class="sb-ghost-btn" type="button" data-dashboard-register>Регистрация</button>
-      </div>
-    `;
-    content.querySelector("[data-dashboard-login]")?.addEventListener("click", () => openAuthModal("login", loadDashboard));
-    content.querySelector("[data-dashboard-register]")?.addEventListener("click", () => openAuthModal("register", loadDashboard));
+  if (!account) {
+    accountPanel.innerHTML = `<div class="empty-note"><strong>Счёт пока не создан.</strong><br>После регистрации он появится автоматически.</div>`;
     return;
   }
 
-  content.innerHTML = messageBox("info", "Загружаем данные пользователя...");
-
-  try {
-    const [accountsPayload, cardsPayload, transactionsPayload, notificationsPayload] = await Promise.all([
-      apiRequest("/api/accounts/my?page=1&pageSize=10", { auth: true }),
-      apiRequest("/api/cards/my?page=1&pageSize=10", { auth: true }),
-      apiRequest("/api/transactions/recent", { auth: true }),
-      apiRequest("/api/notifications/my?page=1&pageSize=10", { auth: true })
-    ]);
-
-    const accounts = accountsPayload.items || accountsPayload.Items || [];
-    const cards = cardsPayload.items || cardsPayload.Items || [];
-    const transactions = transactionsPayload.items || transactionsPayload.Items || [];
-    const notifications = notificationsPayload.items || notificationsPayload.Items || [];
-    const totalBalance = accounts.reduce((sum, account) => sum + Number(account.balance || account.Balance || 0), 0);
-
-    content.innerHTML = `
-      <div class="sb-grid">
-        <article class="sb-card span-4"><div class="sb-kpi"><strong>${accounts.length}</strong><span>Счетов</span></div></article>
-        <article class="sb-card span-4"><div class="sb-kpi"><strong>${formatMoney(totalBalance)}</strong><span>Общий баланс</span></div></article>
-        <article class="sb-card span-4"><div class="sb-kpi"><strong>${cards.length}</strong><span>Карт</span></div></article>
-
-        <article class="sb-card span-6" id="sb-transfer-form">
-          <h3>Быстрые действия</h3>
-          <div class="sb-cta">
-            <button class="sb-btn" type="button" data-quick-action="cards">Мои карты</button>
-            <button class="sb-ghost-btn" type="button" data-quick-action="transfers">Переводы</button>
-          </div>
-          <div style="margin-top:14px;">${messageBox("info", "Для расширенных операций используйте API-панели на этой и соседних страницах.")}</div>
-        </article>
-
-        <article class="sb-card span-6">
-          <h3>Счета</h3>
-          ${accounts.length === 0 ? `<div class="sb-empty">Счетов пока нет.</div>` : `<div class="sb-list">${accounts.map((account) => `
-            <div class="sb-list-item">
-              <div class="sb-list-main">
-                <div class="sb-list-title">${account.accountNumber || account.AccountNumber}</div>
-                <div class="sb-list-subtitle">${account.type || account.Type} · ${account.currency || account.Currency}</div>
-                <div class="sb-list-meta">${formatMoney(account.balance || account.Balance, account.currency || account.Currency)}</div>
-              </div>
-            </div>`).join("")}</div>`}
-        </article>
-
-        <article class="sb-card span-6">
-          <h3>Последние операции</h3>
-          ${transactions.length === 0 ? `<div class="sb-empty">Операций пока нет.</div>` : `<div class="sb-list">${transactions.slice(0, 5).map((transaction) => `
-            <div class="sb-list-item">
-              <div class="sb-list-main">
-                <div class="sb-list-title">${transaction.type || transaction.Type}</div>
-                <div class="sb-list-subtitle">${transaction.description || transaction.Description || "Без описания"}</div>
-                <div class="sb-list-meta">${formatMoney(transaction.amount || transaction.Amount, transaction.currency || transaction.Currency)} · ${formatDate(transaction.createdAt || transaction.CreatedAt)}</div>
-              </div>
-            </div>`).join("")}</div>`}
-        </article>
-
-        <article class="sb-card span-6">
-          <h3>Уведомления</h3>
-          ${notifications.length === 0 ? `<div class="sb-empty">Уведомлений пока нет.</div>` : `<div class="sb-list">${notifications.slice(0, 5).map((notification) => `
-            <div class="sb-list-item">
-              <div class="sb-list-main">
-                <div class="sb-list-title">${notification.title || notification.Title}</div>
-                <div class="sb-list-subtitle">${notification.message || notification.Message}</div>
-                <div class="sb-list-meta">${formatDate(notification.createdAt || notification.CreatedAt)}</div>
-              </div>
-            </div>`).join("")}</div>`}
-        </article>
+  if (!card) {
+    accountPanel.innerHTML = `
+      <div class="account-wrap">
+        <div class="bank-card-visual">
+          <div class="chip"></div>
+          <div class="num">0000 0000 0000 0000</div>
+          <div class="holder">КАРТА ЕЩЁ НЕ ВЫПУЩЕНА</div>
+        </div>
+        <div class="account-main">
+          <strong>${account.type} счёт • ${account.accountNumber.slice(-4)}</strong>
+          <div class="account-sub">Основной счёт</div>
+          <div class="account-balance">${formatMoney(account.balance, account.currency)}</div>
+          <div class="account-delta">+0.00 c. • Сегодня</div>
+        </div>
+        <div class="account-actions">
+          <button type="button">Пополнить</button>
+          <button type="button">Перевести</button>
+        </div>
       </div>
     `;
-
-    content.querySelector('[data-quick-action="cards"]')?.addEventListener("click", () => {
-      window.location.href = "cards.html#sb-cards-panel";
-    });
-
-    content.querySelector('[data-quick-action="transfers"]')?.addEventListener("click", () => {
-      window.location.href = "transfers.html";
-    });
-  } catch (error) {
-    content.innerHTML = messageBox("error", error.message);
+    return;
   }
+
+  accountPanel.innerHTML = `
+    <div class="account-wrap">
+      <div class="bank-card-visual">
+        <div class="chip"></div>
+        <div class="num">${card.cardNumber}</div>
+        <div class="holder">${card.cardHolderName || "SOMONIBANK CLIENT"}</div>
+      </div>
+      <div class="account-main">
+        <strong>${card.type} • ${String(card.cardNumber || "").slice(-4)}</strong>
+        <div class="account-sub">Основная карта</div>
+        <div class="account-balance">${formatMoney(account.balance, account.currency)}</div>
+        <div class="account-delta">+0.00 c. • Сегодня</div>
+      </div>
+      <div class="account-actions">
+        <button type="button">Пополнить</button>
+        <button type="button">Перевести</button>
+        <button type="button">Ещё</button>
+      </div>
+    </div>
+  `;
 }
 
-document.querySelector(".download-btn")?.addEventListener("click", () => {
-  requireAuth(() => {
-    document.getElementById("sb-dashboard")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
-});
+function renderOperations(transactions) {
+  if (!transactions.length) {
+    operationsList.innerHTML = `
+      <div class="empty-note">
+        <strong>Операций пока нет.</strong><br>
+        История останется пустой, пока вы не сделаете первую транзакцию.
+      </div>
+    `;
+    return;
+  }
+
+  operationsList.innerHTML = transactions.slice(0, 5).map((transaction, index) => {
+    const amount = Number(transaction.amount || transaction.Amount || 0);
+    const title = transaction.description || transaction.Description || transaction.type || transaction.Type || "Операция";
+    const createdAt = transaction.createdAt || transaction.CreatedAt;
+    const amountClass = amount >= 0 ? "income" : "";
+    const iconClass = index % 3 === 0 ? "blue" : index % 3 === 1 ? "green" : "cyan";
+
+    return `
+      <div class="op-item">
+        <div class="op-icon ${iconClass}">${amount >= 0 ? "+" : "−"}</div>
+        <div>
+          <div class="op-title">${title}</div>
+          <div class="op-sub">${createdAt ? new Date(createdAt).toLocaleString("ru-RU", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "Без даты"}</div>
+        </div>
+        <div class="op-amount ${amountClass}">${amount >= 0 ? "+" : ""}${formatMoney(amount, transaction.currency || transaction.Currency || "TJS")}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function loadDashboard() {
+  try {
+    const [accountsPayload, cardsPayload, transactionsPayload] = await Promise.all([
+      apiRequest("/api/accounts/my?page=1&pageSize=10", { auth: true }),
+      apiRequest("/api/cards/my?page=1&pageSize=10", { auth: true }),
+      apiRequest("/api/transactions/recent", { auth: true })
+    ]);
+
+    const accounts = getItems(accountsPayload);
+    const cards = getItems(cardsPayload);
+    const transactions = getItems(transactionsPayload);
+    const sum = accounts.reduce((acc, item) => acc + Number(item.balance || item.Balance || 0), 0);
+
+    totalBalance.textContent = `${sum.toFixed(2)} c.`;
+    bonusLabel.textContent = `${(sum * 0.0288).toFixed(2)} бонусов`;
+
+    renderAccount(
+      accounts.map((item) => ({
+        accountNumber: item.accountNumber || item.AccountNumber,
+        type: item.type || item.Type,
+        currency: item.currency || item.Currency,
+        balance: Number(item.balance || item.Balance || 0)
+      })),
+      cards.map((item) => ({
+        cardNumber: item.cardNumber || item.CardNumber || item.maskedNumber || item.MaskedNumber,
+        cardHolderName: item.cardHolderName || item.CardHolderName,
+        type: item.type || item.Type
+      }))
+    );
+
+    renderOperations(transactions);
+  } catch (error) {
+    totalBalance.textContent = "0.00 c.";
+    bonusLabel.textContent = "0.00 бонусов";
+    accountPanel.innerHTML = `<div class="empty-note"><strong>Не удалось загрузить кабинет.</strong><br>${error.message || "Попробуйте войти ещё раз."}</div>`;
+    operationsList.innerHTML = "";
+  }
+}
 
 void loadDashboard();

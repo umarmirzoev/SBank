@@ -267,11 +267,19 @@ export async function apiRequest(path, options = {}) {
 }
 
 export function unwrapResponse(payload) {
-  if (payload && typeof payload === "object" && "StatusCode" in payload) {
+  if (payload && typeof payload === "object" && ("StatusCode" in payload || "statusCode" in payload)) {
+    const data = payload.Data ?? payload.data;
+    const messages = Array.isArray(payload.Description)
+      ? payload.Description
+      : Array.isArray(payload.description)
+        ? payload.description
+        : [];
+    const statusCode = payload.StatusCode ?? payload.statusCode ?? 200;
+
     return {
-      data: payload.Data,
-      messages: Array.isArray(payload.Description) ? payload.Description : [],
-      statusCode: payload.StatusCode
+      data,
+      messages,
+      statusCode
     };
   }
 

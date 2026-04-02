@@ -3,1506 +3,287 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Приложение Сомонибонк — Мобильный банк</title>
+  <title>Кабинет SomoniBank</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --secondary: #10b981;
-      --text: #1e293b;
-      --text-muted: #64748b;
-      --bg: #f1f5f9;
-      --card-bg: #ffffff;
-      --border: #e2e8f0;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    }
-
-    body {
-      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
-
-    /* Header */
-    .sb-header {
-      background: #ffffff;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .sb-header-top {
-      border-bottom: 1px solid var(--border);
-      padding: 12px 48px;
-    }
-
-    .sb-header-bottom {
-      border-bottom: 1px solid var(--border);
-      padding: 0 48px;
-    }
-
-    .sb-header-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .sb-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--text);
-      text-decoration: none;
-    }
-
-    .sb-nav-top {
-      display: flex;
-      gap: 40px;
-    }
-
-    .sb-nav-top a {
-      color: #4b5563;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 15px;
-      padding: 8px 0;
-      position: relative;
-      transition: color 0.2s ease;
-    }
-
-    .sb-nav-top a.active {
-      color: var(--text);
-    }
-
-    .sb-nav-top a.active::after {
-      content: '';
-      position: absolute;
-      bottom: -12px;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--secondary);
-      border-radius: 2px;
-    }
-
-    .sb-nav-bottom {
-      display: flex;
-      gap: 32px;
-      padding: 12px 0;
-    }
-
-    .sb-nav-bottom a {
-      color: #4b5563;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 14px;
-      transition: color 0.2s ease;
-    }
-
-    .sb-nav-bottom a.active {
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    .sb-header-actions {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .sb-location-link {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #4b5563;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    .sb-lang-btn {
-      background: transparent;
-      border: none;
-      font-size: 14px;
-      color: #4b5563;
-      cursor: pointer;
-    }
-
-    /* Main */
-    .sb-main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 40px 24px;
-    }
-
-    /* Hero Section */
-    .hero-section {
-      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #dbeafe 100%);
-      border-radius: 24px;
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      margin-bottom: 64px;
-      animation: fadeInUp 0.8s ease;
-      position: relative;
-    }
-
-    .hero-section::before {
-      content: '';
-      position: absolute;
-      top: -80px;
-      right: -80px;
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(37, 99, 235, 0.08), transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .hero-content {
-      padding: 72px 48px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(37, 99, 235, 0.1);
-      color: var(--primary);
-      font-size: 13px;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: 20px;
-      width: fit-content;
-      margin-bottom: 24px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .hero-title {
-      font-size: 44px;
-      font-weight: 800;
-      line-height: 1.15;
-      margin-bottom: 20px;
-      color: var(--text);
-      font-family: Georgia, serif;
-    }
-
-    .hero-title span {
-      color: var(--primary);
-    }
-
-    .hero-desc {
-      font-size: 17px;
-      color: var(--text-muted);
-      margin-bottom: 36px;
-      max-width: 420px;
-      line-height: 1.7;
-    }
-
-    .hero-btns {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .hero-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 32px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
-      text-decoration: none;
-    }
-
-    .hero-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 28px rgba(37, 99, 235, 0.4);
-    }
-
-    .hero-btn-outline {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 32px;
-      background: transparent;
-      color: var(--primary);
-      border: 2px solid var(--primary);
-      border-radius: 14px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-    }
-
-    .hero-btn-outline:hover {
-      background: var(--primary);
-      color: white;
-      transform: translateY(-3px);
-    }
-
-    .hero-visual {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 48px;
-    }
-
-    .hero-phone {
-      width: 100%;
-      max-width: 440px;
-      border-radius: 24px;
-      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15);
-      object-fit: cover;
-      aspect-ratio: 3 / 4;
-      animation: float 4s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-12px); }
-    }
-
-    .hero-stats {
-      position: absolute;
-      bottom: 32px;
-      left: 32px;
-      right: 32px;
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-    }
-
-    .hero-stat {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-radius: 14px;
-      padding: 14px 20px;
-      text-align: center;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-      flex: 1;
-    }
-
-    .hero-stat-value {
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--primary);
-    }
-
-    .hero-stat-label {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    /* Section titles */
-    .section-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--primary);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: 36px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      font-family: Georgia, serif;
-      color: #1e3a5f;
-    }
-
-    .section-desc {
-      font-size: 16px;
-      color: var(--text-muted);
-      max-width: 560px;
-      line-height: 1.7;
-      margin-bottom: 40px;
-    }
-
-    /* Features Section */
-    .features-section {
-      margin-bottom: 80px;
-      animation: fadeInUp 0.8s ease backwards;
-      animation-delay: 0.2s;
-    }
-
-    .features-header {
-      text-align: center;
-      margin-bottom: 48px;
-    }
-
-    .features-header .section-desc {
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
-    }
-
-    .feature-card {
-      background: var(--card-bg);
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      transition: all 0.35s ease;
-      animation: fadeInUp 0.6s ease backwards;
-    }
-
-    .feature-card:nth-child(1) { animation-delay: 0.1s; }
-    .feature-card:nth-child(2) { animation-delay: 0.2s; }
-    .feature-card:nth-child(3) { animation-delay: 0.3s; }
-
-    .feature-card:hover {
-      transform: translateY(-10px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .feature-card-image {
-      width: 100%;
-      height: 200px;
-      overflow: hidden;
-    }
-
-    .feature-card-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-
-    .feature-card:hover .feature-card-image img {
-      transform: scale(1.08);
-    }
-
-    .feature-card-body {
-      padding: 28px 24px;
-    }
-
-    .feature-card-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-    }
-
-    .feature-card-icon svg {
-      width: 24px;
-      height: 24px;
-      color: var(--primary);
-    }
-
-    .feature-card-title {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      color: var(--text);
-    }
-
-    .feature-card-desc {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.7;
-    }
-
-    /* Benefits Section (6 reasons) */
-    .benefits-section {
-      margin-bottom: 80px;
-    }
-
-    .benefits-header {
-      text-align: center;
-      margin-bottom: 48px;
-    }
-
-    .benefits-header .section-desc {
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .benefits-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-
-    .benefit-card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 32px 28px;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      transition: all 0.3s ease;
-      animation: fadeInUp 0.6s ease backwards;
-    }
-
-    .benefit-card:nth-child(1) { animation-delay: 0.05s; }
-    .benefit-card:nth-child(2) { animation-delay: 0.1s; }
-    .benefit-card:nth-child(3) { animation-delay: 0.15s; }
-    .benefit-card:nth-child(4) { animation-delay: 0.2s; }
-    .benefit-card:nth-child(5) { animation-delay: 0.25s; }
-    .benefit-card:nth-child(6) { animation-delay: 0.3s; }
-
-    .benefit-card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .benefit-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-
-    .benefit-icon svg {
-      width: 28px;
-      height: 28px;
-      color: var(--primary);
-    }
-
-    .benefit-card h4 {
-      font-size: 17px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      color: var(--text);
-    }
-
-    .benefit-card p {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    /* Guide Section */
-    .guide-section {
-      background: var(--card-bg);
-      border-radius: 24px;
-      padding: 60px 48px;
-      margin-bottom: 80px;
-      box-shadow: var(--shadow);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: center;
-      animation: fadeInUp 0.8s ease backwards;
-      animation-delay: 0.3s;
-    }
-
-    .guide-content .section-title {
-      text-align: left;
-    }
-
-    .guide-steps {
-      list-style: none;
-      counter-reset: guide-step;
-      margin-top: 24px;
-    }
-
-    .guide-steps li {
-      counter-increment: guide-step;
-      display: flex;
-      gap: 16px;
-      margin-bottom: 20px;
-      align-items: flex-start;
-    }
-
-    .guide-steps li::before {
-      content: counter(guide-step);
-      flex-shrink: 0;
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .guide-step-text h5 {
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .guide-step-text p {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    .guide-video {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      border-radius: 20px;
-      aspect-ratio: 16 / 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .guide-video:hover {
-      transform: scale(1.02);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    }
-
-    .guide-video::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at center, rgba(37, 99, 235, 0.15), transparent 70%);
-    }
-
-    .play-btn {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-      transition: all 0.3s ease;
-      position: relative;
-      z-index: 1;
-    }
-
-    .play-btn svg {
-      width: 28px;
-      height: 28px;
-      color: white;
-      margin-left: 4px;
-    }
-
-    .guide-video:hover .play-btn {
-      background: rgba(37, 99, 235, 0.6);
-      transform: scale(1.1);
-    }
-
-    .guide-video-label {
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 14px;
-      font-weight: 500;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Documents Section */
-    .documents-section {
-      background: white;
-      border-radius: 24px;
-      padding: 56px 48px;
-      margin-bottom: 80px;
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 48px;
-      align-items: center;
-      box-shadow: var(--shadow);
-      animation: fadeInUp 0.8s ease backwards;
-      animation-delay: 0.4s;
-    }
-
-    .documents-content h2 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      color: #1e3a5f;
-      font-family: Georgia, serif;
-    }
-
-    .documents-content > p {
-      color: var(--text-muted);
-      margin-bottom: 28px;
-      line-height: 1.7;
-    }
-
-    .doc-list {
-      list-style: none;
-    }
-
-    .doc-list li {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 14px;
-      color: var(--text);
-    }
-
-    .doc-list li:last-child {
-      border-bottom: none;
-    }
-
-    .doc-list li svg {
-      width: 20px;
-      height: 20px;
-      color: var(--secondary);
-      flex-shrink: 0;
-    }
-
-    .documents-visual {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .doc-phone-mockup {
-      width: 180px;
-      height: 280px;
-      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-      border-radius: 28px;
-      position: relative;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      border: 3px solid #cbd5e1;
-      overflow: hidden;
-    }
-
-    .doc-phone-mockup::before {
-      content: '';
-      position: absolute;
-      top: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 6px;
-      background: #cbd5e1;
-      border-radius: 3px;
-      z-index: 2;
-    }
-
-    .doc-phone-screen {
-      position: absolute;
-      top: 28px;
-      left: 10px;
-      right: 10px;
-      bottom: 10px;
-      background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .doc-phone-screen svg {
-      width: 40px;
-      height: 40px;
-      color: white;
-      opacity: 0.9;
-    }
-
-    .doc-phone-screen span {
-      color: white;
-      font-size: 12px;
-      font-weight: 600;
-      opacity: 0.8;
-    }
-
-    /* Download CTA Section */
-    .cta-section {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      border-radius: 24px;
-      padding: 64px 48px;
-      margin-bottom: 80px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      animation: fadeInUp 0.8s ease backwards;
-      animation-delay: 0.5s;
-    }
-
-    .cta-section::before,
-    .cta-section::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .cta-section::before {
-      width: 400px;
-      height: 400px;
-      top: -200px;
-      right: -100px;
-    }
-
-    .cta-section::after {
-      width: 300px;
-      height: 300px;
-      bottom: -150px;
-      left: -80px;
-    }
-
-    .cta-content {
-      position: relative;
-      z-index: 1;
-    }
-
-    .cta-content h2 {
-      font-size: 34px;
-      font-weight: 700;
-      color: white;
-      margin-bottom: 16px;
-      font-family: Georgia, serif;
-    }
-
-    .cta-content p {
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 17px;
-      margin-bottom: 36px;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    .cta-buttons {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .cta-app-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 28px;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      border-radius: 14px;
-      color: white;
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .cta-app-btn:hover {
-      background: rgba(255, 255, 255, 0.25);
-      transform: translateY(-3px);
-    }
-
-    .cta-app-btn svg {
-      width: 28px;
-      height: 28px;
-    }
-
-    .cta-app-btn-text {
-      text-align: left;
-    }
-
-    .cta-app-btn-label {
-      font-size: 11px;
-      opacity: 0.8;
-      font-weight: 400;
-    }
-
-    .cta-app-btn-store {
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    /* Footer */
-    .sb-footer {
-      background: #0f172a;
-      color: #e2e8f0;
-      padding: 60px 48px 30px;
-    }
-
-    .sb-footer-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .sb-footer-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.5fr 1fr;
-      gap: 60px;
-      margin-bottom: 50px;
-    }
-
-    .sb-footer-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-
-    .sb-footer-address {
-      color: #94a3b8;
-      font-size: 14px;
-      line-height: 1.6;
-      margin-bottom: 16px;
-    }
-
-    .sb-footer-link {
-      color: #60a5fa;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    .sb-contact-item {
-      margin-bottom: 24px;
-    }
-
-    .sb-contact-number {
-      font-size: 24px;
-      font-weight: 600;
-      color: #fbbf24;
-      margin-bottom: 4px;
-    }
-
-    .sb-contact-email {
-      font-size: 18px;
-      font-weight: 500;
-      color: #e2e8f0;
-    }
-
-    .sb-contact-label {
-      color: #94a3b8;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .sb-footer-section h4 {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 16px;
-    }
-
-    .sb-app-buttons {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 30px;
-    }
-
-    .sb-app-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      color: #e2e8f0;
-      text-decoration: none;
-      font-size: 13px;
-      transition: all 0.2s ease;
-    }
-
-    .sb-app-btn:hover {
-      background: #334155;
-    }
-
-    .sb-social-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-    }
-
-    .sb-social-icon {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #1e293b;
-      border-radius: 50%;
-      color: #94a3b8;
-      transition: all 0.2s ease;
-    }
-
-    .sb-social-icon:hover {
-      background: #334155;
-      color: #e2e8f0;
-    }
-
-    .sb-footer-bottom {
-      border-top: 1px solid #1e293b;
-      padding: 24px 0;
-      margin-bottom: 24px;
-    }
-
-    .sb-footer-links {
-      display: flex;
-      gap: 32px;
-    }
-
-    .sb-footer-links a {
-      color: #94a3b8;
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.2s ease;
-    }
-
-    .sb-footer-links a:hover {
-      color: #e2e8f0;
-    }
-
-    .sb-footer-copyright {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 24px;
-      border-top: 1px solid #1e293b;
-      color: #64748b;
-      font-size: 12px;
-    }
-
-    /* Responsive */
-    @media (max-width: 1024px) {
-      .hero-section,
-      .guide-section,
-      .documents-section {
-        grid-template-columns: 1fr;
-      }
-
-      .features-grid,
-      .benefits-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .sb-footer-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .hero-stats {
-        position: relative;
-        bottom: auto;
-        left: auto;
-        right: auto;
-        padding: 0 32px 32px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .sb-header-top,
-      .sb-header-bottom {
-        padding: 12px 20px;
-      }
-
-      .sb-nav-top,
-      .sb-nav-bottom {
-        display: none;
-      }
-
-      .hero-title {
-        font-size: 32px;
-      }
-
-      .hero-section {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-visual {
-        order: -1;
-      }
-
-      .features-grid,
-      .benefits-grid,
-      .sb-footer-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .sb-main {
-        padding: 20px 16px;
-      }
-
-      .section-title {
-        font-size: 28px;
-      }
-
-      .cta-content h2 {
-        font-size: 26px;
-      }
-
-      .sb-footer-copyright {
-        flex-direction: column;
-        gap: 8px;
-        text-align: center;
-      }
+    *{box-sizing:border-box}
+    :root{
+      --bg:#edf4ff;
+      --panel:#ffffff;
+      --panel-soft:#f8fbff;
+      --border:#dde8fb;
+      --text:#183153;
+      --muted:#7b8da8;
+      --blue:#2f6df6;
+      --blue-2:#6cb8ff;
+      --green:#1eb35d;
+      --danger:#21405f;
+      --shadow:0 14px 40px rgba(53,91,163,.12);
+    }
+    body{margin:0;background:linear-gradient(180deg,#eef5ff 0%,#edf4ff 100%);font-family:"Segoe UI",Arial,sans-serif;color:var(--text)}
+    button,input{font:inherit}
+    .layout{display:grid;grid-template-columns:126px 1fr;gap:18px;min-height:100vh;padding:12px}
+    .sidebar{background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:16px 12px;display:flex;flex-direction:column}
+    .brand{display:flex;align-items:center;gap:10px;padding:6px 6px 18px 6px}
+    .brand-logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(180deg,#1d63f1,#3a88ff);display:grid;place-items:center;color:#fff;font-weight:800}
+    .brand-title{font-size:13px;font-weight:800}
+    .side-nav{display:grid;gap:6px}
+    .nav-item{display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:10px;color:#6b7e97;font-size:12px;font-weight:600}
+    .nav-item svg{width:16px;height:16px;flex:0 0 16px}
+    .nav-item.active{background:#eef4ff;color:var(--blue)}
+    .side-footer{margin-top:auto;display:grid;gap:6px;padding-top:16px}
+    .main{display:grid;grid-template-rows:auto 1fr;gap:12px}
+    .topbar{background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:10px 20px;display:flex;align-items:center;gap:16px}
+    .search{flex:1;display:flex;align-items:center;gap:10px;height:38px;padding:0 14px;border-radius:12px;background:linear-gradient(180deg,#f8fbff,#eef4ff);border:1px solid #e6eefb;color:#90a0b8}
+    .search svg,.top-icons svg{width:17px;height:17px}
+    .search input{border:none;background:transparent;outline:none;width:100%;color:#5f748f;font-size:13px}
+    .top-icons{display:flex;align-items:center;gap:14px;color:#5f6f88}
+    .top-user{display:flex;align-items:center;gap:10px;padding-left:8px;border-left:1px solid #e6eef9}
+    .avatar{width:34px;height:34px;border-radius:12px;background:linear-gradient(180deg,#d1d9e6,#b7c6dc);display:grid;place-items:center;font-weight:700}
+    .user-copy strong{display:block;font-size:13px}
+    .user-copy span{display:block;color:#7b8da8;font-size:11px}
+    .content{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px}
+    .column{display:grid;gap:14px;align-content:start}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}
+    .hero{padding:18px;background:radial-gradient(circle at 78% 22%,rgba(255,255,255,.55),transparent 20%),linear-gradient(110deg,#2a64ed 0%,#5caeff 55%,#8fd0ff 100%);color:#fff;min-height:170px;display:grid;grid-template-columns:1.1fr .9fr;overflow:hidden}
+    .hero h2{margin:0 0 4px;font-size:14px;font-weight:500;color:rgba(255,255,255,.9)}
+    .balance-row{display:flex;align-items:center;gap:10px;margin:6px 0 2px}
+    .balance-row strong{font-size:42px;line-height:1;font-weight:800}
+    .plus-btn{width:32px;height:32px;border:none;border-radius:50%;background:#fff;color:var(--blue);font-size:26px;display:grid;place-items:center}
+    .hero-meta{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.88);font-size:13px}
+    .premium{padding:2px 8px;border-radius:999px;background:rgba(255,215,94,.2);border:1px solid rgba(255,255,255,.18);font-size:11px}
+    .hero-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
+    .hero-action{height:42px;border:none;border-radius:12px;background:rgba(255,255,255,.92);color:#2b5fd9;font-size:12px;font-weight:700}
+    .hero-art{position:relative}
+    .shield{position:absolute;right:110px;top:34px;width:88px;height:100px;background:linear-gradient(180deg,#88d0ff,#2f6df6);clip-path:polygon(50% 0,100% 16%,100% 56%,50% 100%,0 56%,0 16%);box-shadow:0 18px 30px rgba(0,0,0,.14)}
+    .shield::after{content:"";position:absolute;left:23px;top:34px;width:34px;height:18px;border-left:5px solid #fff;border-bottom:5px solid #fff;transform:rotate(-45deg)}
+    .hero-card{position:absolute;right:12px;top:22px;width:180px;height:112px;border-radius:18px;background:linear-gradient(135deg,#3f7dff,#2563eb);box-shadow:0 18px 34px rgba(14,50,121,.24);padding:16px;color:#fff}
+    .hero-card small{display:block;font-size:10px;opacity:.72}
+    .hero-card .digits{margin-top:32px;font-size:11px;letter-spacing:.15em;opacity:.92}
+    .hero-card .circles{position:absolute;right:16px;bottom:14px;width:34px;height:18px}
+    .hero-card .circles::before,.hero-card .circles::after{content:"";position:absolute;width:18px;height:18px;border-radius:50%;background:rgba(255,200,80,.95)}
+    .hero-card .circles::after{right:0;background:rgba(255,255,255,.55)}
+    .hero-coins{position:absolute;right:165px;top:74px;width:56px;height:56px}
+    .hero-coins::before,.hero-coins::after{content:"";position:absolute;border-radius:50%;background:linear-gradient(180deg,#ffe28d,#d5a333);box-shadow:0 12px 18px rgba(61,47,12,.16)}
+    .hero-coins::before{width:28px;height:28px;left:0;bottom:0}
+    .hero-coins::after{width:34px;height:34px;right:0;top:0}
+    .section-card{padding:14px}
+    .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .section-head h3{margin:0;font-size:15px}
+    .section-head a,.section-head button{border:none;background:none;color:var(--blue);font-size:12px;font-weight:700}
+    .popular-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+    .popular-item{background:linear-gradient(180deg,#ffffff,#f7faff);border:1px solid #e4ecfb;border-radius:16px;padding:14px 12px;min-height:90px}
+    .popular-item .icon{width:34px;height:34px;border-radius:12px;background:#eef4ff;color:#2d67ef;display:grid;place-items:center;margin-bottom:10px}
+    .popular-item .icon svg{width:18px;height:18px}
+    .popular-item strong{display:block;font-size:12px}
+    .popular-item span{display:block;margin-top:4px;color:#97a5ba;font-size:10px}
+    .account-card{padding:14px 16px}
+    .account-wrap{display:flex;align-items:center;gap:14px}
+    .bank-card-visual{width:142px;height:88px;border-radius:16px;background:linear-gradient(135deg,#1657ea,#428fff);color:#fff;padding:12px;box-shadow:0 16px 26px rgba(41,89,188,.22)}
+    .chip{width:18px;height:14px;border-radius:4px;background:linear-gradient(180deg,#f6dda6,#c79828)}
+    .bank-card-visual .num{margin-top:18px;font-size:12px;letter-spacing:.14em}
+    .bank-card-visual .holder{margin-top:16px;font-size:10px;opacity:.86}
+    .account-main{flex:1;display:grid;gap:4px}
+    .account-main strong{font-size:13px}
+    .account-sub{color:#91a0b6;font-size:11px}
+    .account-balance{font-size:34px;line-height:1;font-weight:800}
+    .account-delta{color:#20a55a;font-size:11px}
+    .account-actions{display:flex;gap:10px}
+    .account-actions button{height:34px;padding:0 16px;border:none;border-radius:999px;background:#edf4ff;color:#2d67ef;font-size:12px;font-weight:700}
+    .services-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+    .service-box{min-height:104px;border-radius:16px;padding:16px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+    .service-box strong{font-size:13px}
+    .service-box span{font-size:11px;opacity:.84}
+    .service-box.shop{background:linear-gradient(145deg,#2f9cf4,#3460ec)}
+    .service-box.fly{background:linear-gradient(145deg,#3872ff,#4f55db)}
+    .service-box.fx{background:linear-gradient(145deg,#18b4c6,#27c36a)}
+    .service-box.pay{background:linear-gradient(145deg,#5b57e9,#874de3)}
+    .service-box.more{background:linear-gradient(145deg,#f8fbff,#eff5ff);color:#24415c;border:1px solid #e4ecfb}
+    .service-icon{width:50px;height:50px;border-radius:16px;background:rgba(255,255,255,.18);display:grid;place-items:center}
+    .service-box.more .service-icon{background:#eaf1ff}
+    .service-icon svg{width:24px;height:24px}
+    .operations{padding:16px}
+    .ops-list{display:grid}
+    .op-item{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #edf2fc}
+    .op-item:last-child{border-bottom:none}
+    .op-icon{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:700}
+    .op-icon.blue{background:#edf4ff;color:#2d67ef}
+    .op-icon.green{background:#eafaf0;color:#1ea85c}
+    .op-icon.cyan{background:#eefcff;color:#1c95c9}
+    .op-title{font-size:12px;font-weight:700}
+    .op-sub{font-size:11px;color:#99a8bc;margin-top:2px}
+    .op-amount{font-size:13px;font-weight:700;white-space:nowrap}
+    .op-amount.income{color:#1ea85c}
+    .promo{padding:18px;background:linear-gradient(130deg,#2f6df6,#7bc0ff);color:#fff;display:grid;grid-template-columns:1fr 110px;gap:10px;align-items:center}
+    .promo h3{margin:0 0 10px;font-size:20px}
+    .promo p{margin:0;font-size:12px;line-height:1.5;opacity:.92}
+    .promo button{margin-top:14px;height:34px;padding:0 18px;border:none;border-radius:999px;background:#fff;color:#2f6df6;font-size:12px;font-weight:700}
+    .promo-visual{position:relative;height:100px}
+    .promo-box,.promo-card{position:absolute;border-radius:16px}
+    .promo-box{right:0;bottom:0;width:58px;height:58px;background:linear-gradient(180deg,#f9d453,#ef9e19)}
+    .promo-card{right:14px;top:10px;width:88px;height:54px;background:linear-gradient(145deg,#2f6df6,#1c4fdb);transform:rotate(-10deg)}
+    .secure{padding:18px}
+    .secure-inner{display:grid;grid-template-columns:58px 1fr;gap:14px;align-items:center}
+    .secure-badge{width:58px;height:58px;border-radius:18px;background:linear-gradient(180deg,#eaf2ff,#d9e7ff);display:grid;place-items:center;color:#2f6df6}
+    .secure-badge svg{width:28px;height:28px}
+    .secure h3{margin:0 0 6px;font-size:18px}
+    .secure p{margin:0 0 14px;color:#7c8da8;font-size:12px;line-height:1.5}
+    .secure button{height:36px;padding:0 18px;border:none;border-radius:999px;background:linear-gradient(90deg,#2f6df6,#3d7eff);color:#fff;font-size:12px;font-weight:700}
+    .empty-note{padding:10px 0 2px;color:#95a3b7;font-size:12px}
+    .empty-note strong{color:#24415c}
+    .toast-status{position:fixed;right:20px;bottom:20px;background:#1f2f49;color:#fff;padding:12px 14px;border-radius:14px;opacity:0;transform:translateY(8px);transition:.2s ease;pointer-events:none}
+    .toast-status.show{opacity:1;transform:translateY(0)}
+    @media (max-width:1100px){
+      .content{grid-template-columns:1fr}
+      .popular-grid{grid-template-columns:repeat(3,1fr)}
+      .services-grid{grid-template-columns:repeat(3,1fr)}
+    }
+    @media (max-width:860px){
+      .layout{grid-template-columns:1fr}
+      .sidebar{display:none}
+      .hero{grid-template-columns:1fr;gap:18px}
+      .hero-actions{grid-template-columns:repeat(2,1fr)}
+      .popular-grid,.services-grid{grid-template-columns:repeat(2,1fr)}
+      .topbar{flex-wrap:wrap}
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="sb-header">
-    <div class="sb-header-top">
-      <div class="sb-header-inner">
-        <a href="index.html" class="sb-logo">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="3"/>
-            <circle cx="22" cy="10" r="4" fill="#2563eb"/>
-          </svg>
-          <span>Сомонибонк</span>
-        </a>
-        <nav class="sb-nav-top">
-          <a href="index.html" class="active">Частным лицам</a>
-          <a href="business.html">Бизнесу</a>
-          <a href="#">Сомонибонк</a>
-        </nav>
-        <div class="sb-header-actions">
-          <a href="#" class="sb-location-link">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
-            Адреса и банкоматы
-          </a>
-          <button class="sb-lang-btn">Рус ▾</button>
-        </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">C</div>
+        <div class="brand-title">Сомонибанк</div>
       </div>
+      <nav class="side-nav">
+        <div class="nav-item active"><svg viewBox="0 0 24 24" fill="none"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1v-8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Главная</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/></svg>Платежи</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none"><path d="M7 7h11M7 7l3-3M7 7l3 3M17 17H6m11 0-3-3m3 3-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Переводы</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M4 10h16" stroke="currentColor" stroke-width="2"/></svg>Счета</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 14h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Карты</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M6 9h9a3 3 0 0 0 0-6H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Кредиты</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none"><path d="M5 20h14M7 20V7l5-3 5 3v13" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Депозиты</div>
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>История</div>
+      </nav>
+      <div class="side-footer">
+        <div class="nav-item"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Настройки</div>
+        <div class="nav-item" id="logoutButton"><svg viewBox="0 0 24 24" fill="none"><path d="M10 17l5-5-5-5M15 12H3M21 3v18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Выход</div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <label class="search">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="search" placeholder="Поиск по операциям, услугам и контактам...">
+        </label>
+        <div class="top-icons">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3a5 5 0 0 0-5 5v2l-2 3h14l-2-3V8a5 5 0 0 0-5-5Z" stroke="currentColor" stroke-width="2"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16v12H4z" stroke="currentColor" stroke-width="2"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="2"/></svg>
+        </div>
+        <div class="top-user">
+          <div class="avatar" id="userAvatar">A</div>
+          <div class="user-copy">
+            <strong id="userName">Клиент</strong>
+            <span>Клиент SomoniBank</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="column">
+          <section class="card hero">
+            <div>
+              <h2>Общий баланс</h2>
+              <div class="balance-row">
+                <strong id="totalBalance">0.00 c.</strong>
+                <button class="plus-btn" type="button">+</button>
+              </div>
+              <div class="hero-meta">
+                <span id="bonusLabel">0.00 бонусов</span>
+                <span class="premium">Premium</span>
+              </div>
+              <div class="hero-actions">
+                <button class="hero-action" type="button">Оплатить</button>
+                <button class="hero-action" type="button">Перевести</button>
+                <button class="hero-action" type="button">Между счетами</button>
+                <button class="hero-action" type="button">QR-сканер</button>
+              </div>
+            </div>
+            <div class="hero-art" aria-hidden="true">
+              <div class="shield"></div>
+              <div class="hero-coins"></div>
+              <div class="hero-card">
+                <small>SomoniBank</small>
+                <div class="digits">1234 5678 9876 3450</div>
+                <div class="circles"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card section-card">
+            <div class="section-head"><h3>Популярное</h3></div>
+            <div class="popular-grid">
+              <div class="popular-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/><path d="M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><strong>На Somoni</strong><span>Мгновенный перевод</span></div>
+              <div class="popular-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="2"/></svg></div><strong>На карту</strong><span>По номеру карты</span></div>
+              <div class="popular-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M6 12h12M12 6v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><strong>Услуги банка</strong><span>Коммунальные и др.</span></div>
+              <div class="popular-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M8 7h8v10H8z" stroke="currentColor" stroke-width="2"/><path d="M10 4h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><strong>Кошельки</strong><span>Пополнение</span></div>
+              <div class="popular-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor" stroke-width="2"/></svg></div><strong>Мобильная связь</strong><span>Оплата операторов</span></div>
+              <div class="popular-item"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 9a8 8 0 0 1 16 0M7 13a5 5 0 0 1 10 0M10 17a2 2 0 0 1 4 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><strong>Интернет</strong><span>Оплата интернета</span></div>
+            </div>
+          </section>
+
+          <section class="card account-card">
+            <div class="section-head">
+              <h3>Карты</h3>
+              <button type="button" id="addCardButton">Добавить карту</button>
+            </div>
+            <div id="accountPanel"></div>
+          </section>
+
+          <section class="card section-card">
+            <div class="section-head"><h3>Сервисы</h3></div>
+            <div class="services-grid">
+              <div class="service-box shop"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M6 7h12l-1 12H7L6 7Z" stroke="currentColor" stroke-width="2"/><path d="M9 9V7a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="2"/></svg></div><div><strong>Somoni Shop</strong><span>Маркетплейс</span></div></div>
+              <div class="service-box fly"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none"><path d="m2 19 20-7-20-7 5 7-5 7Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div><div><strong>Авиа-билеты</strong><span>Путешествия</span></div></div>
+              <div class="service-box fx"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M8 7h7a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><div><strong>Обменник валют</strong><span>Выгодный курс</span></div></div>
+              <div class="service-box pay"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></div><div><strong>Somoni Pay</strong><span>Быстрые платежи</span></div></div>
+              <div class="service-box more"><div class="service-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M7 7h4v4H7zM13 7h4v4h-4zM7 13h4v4H7zM13 13h4v4h-4z" stroke="currentColor" stroke-width="2"/></svg></div><div><strong>Все сервисы</strong><span>Смотреть все</span></div></div>
+            </div>
+          </section>
+        </section>
+
+        <aside class="column">
+          <section class="card operations">
+            <div class="section-head"><h3>Последние операции</h3><a href="#">Все</a></div>
+            <div class="ops-list" id="operationsList"></div>
+          </section>
+          <section class="card promo">
+            <div>
+              <h3>Кешбэк до 10%</h3>
+              <p>Оплачивайте услуги и покупки картой SomoniBank и получайте кешбэк до 10%.</p>
+              <button type="button">Подробнее</button>
+            </div>
+            <div class="promo-visual" aria-hidden="true">
+              <div class="promo-card"></div>
+              <div class="promo-box"></div>
+            </div>
+          </section>
+          <section class="card secure">
+            <div class="secure-inner">
+              <div class="secure-badge"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.5-2.7 7.7-7 9-4.3-1.3-7-4.5-7-9V6l7-3Z" stroke="currentColor" stroke-width="2"/><path d="m8.8 11.7 2 2 4.4-4.9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <div>
+                <h3>Ваш аккаунт защищён</h3>
+                <p>Пройдите верификацию личности для расширения возможностей.</p>
+                <button type="button" id="verifyButton">Пройти верификацию</button>
+              </div>
+            </div>
+          </section>
+        </aside>
+      </main>
     </div>
-    <div class="sb-header-bottom">
-      <div class="sb-header-inner">
-        <nav class="sb-nav-bottom">
-          <a href="somonibank-app.html" class="active">Приложение Somoni</a>
-          <a href="cards.html">Карты</a>
-          <a href="#">Салом</a>
-          <a href="auto.html">Покупка авто</a>
-          <a href="#">Somoni Shop</a>
-          <a href="transfers.html">Переводы</a>
-          <a href="#">Депозиты</a>
-          <a href="#">Авиабилеты</a>
-          <a href="#">Ещё ▾</a>
-        </nav>
-      </div>
-    </div>
-  </header>
-
-  <main class="sb-main">
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="hero-content">
-        <div class="hero-badge">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-          Мобильный банк
-        </div>
-        <h1 class="hero-title">Мобильный банк<br>в <span>вашем телефоне</span></h1>
-        <p class="hero-desc">Управляйте финансами в любое время и в любом месте. Переводы, оплата, карты и аналитика — всё в одном приложении.</p>
-        <div class="hero-btns">
-          <a href="#" class="hero-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>
-            Google Play
-          </a>
-          <a href="#" class="hero-btn-outline">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.37 12.36,4.26 13,3.5Z"/></svg>
-            App Store
-          </a>
-        </div>
-      </div>
-      <div class="hero-visual">
-        <img
-          class="hero-phone"
-          alt="Приложение Сомонибонк"
-          src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=1200&q=80"
-          loading="lazy"
-          referrerpolicy="no-referrer"
-        />
-      </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features-section">
-      <div class="features-header">
-        <div class="section-label">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          Возможности
-        </div>
-        <h2 class="section-title">Всё для ваших финансов</h2>
-        <p class="section-desc">Приложение Сомонибонк объединяет все банковские услуги в удобном мобильном интерфейсе с современным дизайном.</p>
-      </div>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-card-image">
-            <img
-              alt="QR оплата"
-              src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-            />
-          </div>
-          <div class="feature-card-body">
-            <div class="feature-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="14" y1="21" x2="21" y2="21"/></svg>
-            </div>
-            <h3 class="feature-card-title">QR-оплата</h3>
-            <p class="feature-card-desc">Оплачивайте покупки мгновенно, наведя камеру на QR-код. Без комиссии и без ожидания — просто сканируйте и подтверждайте.</p>
-          </div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-card-image">
-            <img
-              alt="Мультивалютные карты"
-              src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=600&q=80"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-            />
-          </div>
-          <div class="feature-card-body">
-            <div class="feature-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-            </div>
-            <h3 class="feature-card-title">Мультивалютные карты</h3>
-            <p class="feature-card-desc">Выпускайте виртуальные и пластиковые карты в сомони, долларах и евро. Управляйте валютами и конвертируйте по лучшему курсу.</p>
-          </div>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-card-image">
-            <img
-              alt="Международные переводы"
-              src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=600&q=80"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-            />
-          </div>
-          <div class="feature-card-body">
-            <div class="feature-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            </div>
-            <h3 class="feature-card-title">Переводы в 190+ стран</h3>
-            <p class="feature-card-desc">Отправляйте деньги по всему миру за секунды. Выгодные тарифы и мгновенное зачисление на счета получателей.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Benefits Section (6 reasons) -->
-    <section class="benefits-section">
-      <div class="benefits-header">
-        <div class="section-label">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
-          Преимущества
-        </div>
-        <h2 class="section-title">6 причин выбрать приложение</h2>
-        <p class="section-desc">Сомонибонк — это современный мобильный банк, созданный для вашего удобства и безопасности.</p>
-      </div>
-      <div class="benefits-grid">
-        <div class="benefit-card">
-          <div class="benefit-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <h4>Надёжная защита</h4>
-          <p>Биометрическая аутентификация, PIN-код и шифрование ваших данных по международным стандартам безопасности.</p>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          </div>
-          <h4>Мгновенные переводы</h4>
-          <p>Переводы между счетами Сомонибонк и в другие банки Таджикистана за секунды, круглосуточно и без выходных.</p>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-          </div>
-          <h4>Умная аналитика</h4>
-          <p>Автоматическая категоризация расходов, графики и отчёты помогут вам лучше управлять бюджетом.</p>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-          <h4>24/7 доступ</h4>
-          <p>Приложение работает круглосуточно. Управляйте финансами в любое время из любой точки мира.</p>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-          </div>
-          <h4>Виртуальные карты</h4>
-          <p>Выпустите виртуальную карту за минуту для безопасных онлайн-покупок с отдельным лимитом.</p>
-        </div>
-
-        <div class="benefit-card">
-          <div class="benefit-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          </div>
-          <h4>Бесплатно</h4>
-          <p>Скачайте приложение бесплатно. Без скрытых комиссий за обслуживание и базовые операции.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Guide Section -->
-    <section class="guide-section">
-      <div class="guide-content">
-        <div class="section-label">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-          Инструкция
-        </div>
-        <h2 class="section-title">Как начать пользоваться</h2>
-        <p class="section-desc">Три простых шага, чтобы установить приложение и начать управлять финансами.</p>
-        <ol class="guide-steps">
-          <li>
-            <div class="guide-step-text">
-              <h5>Скачайте приложение</h5>
-              <p>Установите «Сомонибонк» из Google Play или App Store на ваш смартфон.</p>
-            </div>
-          </li>
-          <li>
-            <div class="guide-step-text">
-              <h5>Зарегистрируйтесь</h5>
-              <p>Введите номер телефона и подтвердите кодом из SMS. Создайте надёжный PIN-код.</p>
-            </div>
-          </li>
-          <li>
-            <div class="guide-step-text">
-              <h5>Начните использовать</h5>
-              <p>Привяжите карту, откройте счёт и пользуйтесь всеми возможностями мобильного банка.</p>
-            </div>
-          </li>
-        </ol>
-      </div>
-      <div class="guide-video">
-        <div class="play-btn">
-          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
-        </div>
-        <span class="guide-video-label">Смотреть видеоинструкцию</span>
-      </div>
-    </section>
-
-    <!-- Documents Section -->
-    <section class="documents-section">
-      <div class="documents-content">
-        <div class="section-label">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Документы
-        </div>
-        <h2>Что нужно для регистрации</h2>
-        <p>Для открытия счёта и полноценного использования приложения вам понадобится минимум документов.</p>
-        <ul class="doc-list">
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            Паспорт гражданина Республики Таджикистан
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            Действующий номер мобильного телефона
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            Смартфон с iOS 12+ или Android 6+
-          </li>
-          <li>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            Селфи для верификации личности
-          </li>
-        </ul>
-      </div>
-      <div class="documents-visual">
-        <div class="doc-phone-mockup">
-          <div class="doc-phone-screen">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="2" y="5" width="20" height="14" rx="2"/>
-              <line x1="2" y1="10" x2="22" y2="10"/>
-            </svg>
-            <span>Somonibank</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta-section">
-      <div class="cta-content">
-        <h2>Скачайте приложение бесплатно</h2>
-        <p>Присоединяйтесь к миллионам пользователей, которые уже управляют финансами с Сомонибонк.</p>
-        <div class="cta-buttons">
-          <a href="#" class="cta-app-btn">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-              <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
-            </svg>
-            <div class="cta-app-btn-text">
-              <div class="cta-app-btn-label">Загрузите в</div>
-              <div class="cta-app-btn-store">Google Play</div>
-            </div>
-          </a>
-          <a href="#" class="cta-app-btn">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-              <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.37 12.36,4.26 13,3.5Z"/>
-            </svg>
-            <div class="cta-app-btn-text">
-              <div class="cta-app-btn-label">Загрузите в</div>
-              <div class="cta-app-btn-store">App Store</div>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="sb-footer">
-    <div class="sb-footer-inner">
-      <div class="sb-footer-grid">
-        <div class="sb-footer-col">
-          <div class="sb-footer-logo">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="#fbbf24" stroke-width="2" fill="none"/>
-              <path d="M16 6L24 10V22L16 26L8 22V10L16 6Z" fill="#fbbf24"/>
-            </svg>
-            <span>Сомонибонк</span>
-          </div>
-          <p class="sb-footer-address">
-            ул. Рудаки, 48<br>
-            Душанбе, Таджикистан
-          </p>
-          <a href="#" class="sb-footer-link">Филиалы и точки обслуживания</a>
-        </div>
-
-        <div class="sb-footer-col">
-          <div class="sb-contact-item">
-            <div class="sb-contact-number">900</div>
-            <div class="sb-contact-label">Для звонков с мобильных<br>в Таджикистане</div>
-          </div>
-          <div class="sb-contact-item">
-            <div class="sb-contact-number">+992 44 600 1111</div>
-            <div class="sb-contact-label">Для звонков из любой<br>точки мира</div>
-          </div>
-          <div class="sb-contact-item">
-            <div class="sb-contact-number">+992 44 600 1520</div>
-            <div class="sb-contact-label">Телефон доверия<br>Наблюдательный Совет<br>Безопасность и Compliance<br>Жалобы и обращения</div>
-          </div>
-          <div class="sb-contact-item">
-            <div class="sb-contact-email">support@somoni.tj</div>
-            <div class="sb-contact-label">Для онлайн-обращений</div>
-          </div>
-        </div>
-
-        <div class="sb-footer-col">
-          <div class="sb-footer-section">
-            <h4>Приложения</h4>
-            <div class="sb-app-buttons">
-              <a href="#" class="sb-app-btn">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
-                </svg>
-                Google Play
-              </a>
-              <a href="#" class="sb-app-btn">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.37 12.36,4.26 13,3.5Z"/>
-                </svg>
-                App Store
-              </a>
-            </div>
-          </div>
-          <div class="sb-footer-section">
-            <h4>Социальные сети</h4>
-            <div class="sb-social-grid">
-              <a href="#" class="sb-social-icon">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.04C20.54,3.74 21.21,4.22 20.94,5.32L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.66,16.27L10.65,18.23C10.43,18.45 10.25,18.65 9.78,18.65Z"/>
-                </svg>
-              </a>
-              <a href="#" class="sb-social-icon">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M12,2C6.48,2 2,6.48 2,12C2,16.84 5.44,20.87 10,21.8V15H8V12H10V9.5C10,7.57 11.57,6 13.5,6H16V9H14C13.45,9 13,9.45 13,10V12H16L15.5,15H13V21.8C18.56,20.87 22,16.84 22,12C22,6.48 17.52,2 12,2Z"/>
-                </svg>
-              </a>
-              <a href="#" class="sb-social-icon">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19M18.5,18.5V13.2A3.26,3.26 0 0,0 15.24,9.94C14.39,9.94 13.4,10.46 12.92,11.24V10.13H10.13V18.5H12.92V13.57C12.92,12.8 13.54,12.17 14.31,12.17A1.4,1.4 0 0,1 15.71,13.57V18.5H18.5M6.88,8.56A1.68,1.68 0 0,0 8.56,6.88C8.56,5.95 7.81,5.19 6.88,5.19A1.69,1.69 0 0,0 5.19,6.88C5.19,7.81 5.95,8.56 6.88,8.56M8.27,18.5V10.13H5.5V18.5H8.27Z"/>
-                </svg>
-              </a>
-              <a href="#" class="sb-social-icon">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="sb-footer-bottom">
-        <div class="sb-footer-links">
-          <a href="#">О нас</a>
-          <a href="#">Адреса</a>
-          <a href="#">Документы и тарифы</a>
-          <a href="#">Вакансии</a>
-          <a href="#">Связь с нами</a>
-        </div>
-      </div>
-
-      <div class="sb-footer-copyright">
-        <p>© 2024 ПАО Сомонибонк</p>
-        <p>Лицензия НБТ №0000114 от 3 января 2020 года</p>
-        <p>ПАО Сомонибонк является участником Фонда страхования вкладов и Объединения Таджикистана</p>
-      </div>
-    </div>
-  </footer>
+  </div>
+  <div class="toast-status" id="toastStatus"></div>
+  <script type="module" src="scripts/app-page.js"></script>
 </body>
 </html>

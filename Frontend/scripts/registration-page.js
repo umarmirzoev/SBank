@@ -1,4 +1,4 @@
-import { apiRequest, showToast, unwrapResponse } from "./common.js";
+import { API_BASE_URL, showToast, unwrapResponse } from "./common.js";
 
 const form = document.getElementById("registrationForm");
 const status = document.getElementById("registrationStatus");
@@ -63,7 +63,9 @@ function updateSummary() {
     renderSummaryItem("Имя", form.firstName.value.trim()),
     renderSummaryItem("Отчество", form.middleName.value.trim()),
     renderSummaryItem("Пол", form.gender.value),
-    renderSummaryItem("Дата рождения", form.birthDate.value.trim())
+    renderSummaryItem("Дата рождения", form.birthDate.value.trim()),
+    renderSummaryItem("Паспорт", form.passportNumber.value.trim()),
+    renderSummaryItem("Адрес", form.address.value.trim())
   ].join("");
 
   summaryDocuments.innerHTML = [
@@ -100,7 +102,7 @@ function goToStep(step) {
 
 function validateStep(step) {
   if (step === 1) {
-    const required = [form.phone, form.firstName, form.middleName, form.gender, form.birthDate];
+    const required = [form.phone, form.firstName, form.middleName, form.gender, form.birthDate, form.passportNumber, form.address];
     const firstInvalid = required.find((field) => !field.value.trim());
     if (firstInvalid) {
       firstInvalid.focus();
@@ -152,16 +154,22 @@ function validateStep(step) {
 
 function buildRegisterPayload() {
   const phoneDigits = form.phone.value.replace(/\D/g, "");
-  const timestampPart = Date.now().toString().slice(-8);
-  return {
-    firstName: form.firstName.value.trim(),
-    lastName: form.middleName.value.trim() || form.firstName.value.trim(),
-    email: form.email.value.trim(),
-    password: form.password.value,
-    phone: form.phone.value.trim(),
-    address: `Пол: ${form.gender.value}. Дата рождения: ${form.birthDate.value.trim()}. Заявка создана через веб-регистрацию.`,
-    passportNumber: `PS-${phoneDigits.slice(-4) || "0000"}-${timestampPart}`
-  };
+  const payload = new FormData();
+  payload.append("firstName", form.firstName.value.trim());
+  payload.append("lastName", form.middleName.value.trim() || form.firstName.value.trim());
+  payload.append("middleName", form.middleName.value.trim());
+  payload.append("email", `${phoneDigits}@sbank.local`);
+  payload.append("password", form.password.value);
+  payload.append("phone", form.phone.value.trim());
+  payload.append("address", form.address.value.trim());
+  payload.append("passportNumber", form.passportNumber.value.trim());
+  payload.append("gender", form.gender.value);
+  payload.append("birthDate", form.birthDate.value.trim());
+  payload.append("nationalIdNumber", form.passportNumber.value.trim());
+  payload.append("passportFront", form.passportFront.files[0]);
+  payload.append("passportBack", form.passportBack.files[0]);
+  payload.append("selfieWithPassport", form.selfieWithPassport.files[0]);
+  return payload;
 }
 
 form.birthDate?.addEventListener("input", (event) => {
@@ -200,12 +208,20 @@ form.addEventListener("submit", async (event) => {
   submitButton.disabled = true;
   setStatus("Создаём аккаунт...");
   try {
-    const response = unwrapResponse(await apiRequest("/api/auth/register", { method: "POST", body: payload }));
-    setStatus(response.messages[0] || "Аккаунт успешно создан. Теперь войдите в систему.", "success");
+    const response = await fetch(`${String(API_BASE_URL).replace(/\/$/, "")}/api/auth/register-with-kyc`, {
+      method: "POST",
+      body: payload
+    });
+    const raw = await response.json();
+    if (!response.ok) {
+      throw new Error(Array.isArray(raw?.Description) ? raw.Description.join(" ") : "Не удалось завершить регистрацию.");
+    }
+    const result = unwrapResponse(raw);
+    setStatus(result.messages[0] || "Аккаунт успешно создан. Теперь войдите в систему.", "success");
     showToast("Регистрация завершена");
     setTimeout(() => {
-      const email = encodeURIComponent(payload.email);
-      window.location.href = `login.html?email=${email}&registered=1`;
+      const phone = encodeURIComponent(form.phone.value.trim());
+      window.location.href = `login.html?email=${phone}&registered=1`;
     }, 700);
   } catch (error) {
     setStatus(error.message || "Не удалось завершить регистрацию.", "error");

@@ -38,6 +38,14 @@ public class KycService : IKycService
             if (validationError != null)
                 return new Response<KycProfileGetDto>(HttpStatusCode.BadRequest, validationError);
 
+            var user = await _db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null)
+                return new Response<KycProfileGetDto>(HttpStatusCode.NotFound, "User not found");
+
+            var profileConsistencyError = ValidateAgainstUserProfile(user, dto);
+            if (profileConsistencyError != null)
+                return new Response<KycProfileGetDto>(HttpStatusCode.BadRequest, profileConsistencyError);
+
             var existing = await _db.KycProfiles
                 .Include(x => x.Documents)
                 .FirstOrDefaultAsync(x => x.UserId == userId);
@@ -311,6 +319,27 @@ public class KycService : IKycService
 
         if (dto.DateOfBirth > DateTime.UtcNow.AddYears(-18))
             return "User must be at least 18 years old";
+
+        return null;
+    }
+
+    private static string? ValidateAgainstUserProfile(User user, KycSubmitDto dto)
+    {
+        var expectedFullNameParts = new[] { user.LastName, user.FirstName }
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Select(x => x.Trim());
+
+        foreach (var part in expectedFullNameParts)
+        {
+            if (!dto.FullName.Contains(part, StringComparison.OrdinalIgnoreCase))
+                return "Profile data does not match registration data";
+        }
+
+        if (!string.Equals(user.PassportNumber?.Trim(), dto.PassportNumber?.Trim(), StringComparison.OrdinalIgnoreCase))
+            return "Passport number does not match registration data";
+
+        if (!string.Equals(user.Address?.Trim(), dto.Address?.Trim(), StringComparison.OrdinalIgnoreCase))
+            return "Address does not match registration data";
 
         return null;
     }

@@ -124,6 +124,7 @@ app.UseMiddleware<RequestTimeMiddleware>();
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseCors();
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
