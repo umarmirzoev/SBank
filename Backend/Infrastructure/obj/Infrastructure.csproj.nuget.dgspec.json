@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\HP\\Desktop\\SBSF\\SBank\\Backend\\Infrastructure\\Infrastructure.csproj": {}
+    "C:\\Users\\HP\\Desktop\\Новая папка\\SBank\\backend\\Infrastructure\\Infrastructure.csproj": {}
   },
   "projects": {
-    "c:\\Users\\HP\\Desktop\\SBSF\\SBank\\Backend\\Domain\\Domain.csproj": {
+    "C:\\Users\\HP\\Desktop\\Новая папка\\SBank\\backend\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\HP\\Desktop\\SBSF\\SBank\\Backend\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\HP\\Desktop\\Новая папка\\SBank\\backend\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "c:\\Users\\HP\\Desktop\\SBSF\\SBank\\Backend\\Domain\\Domain.csproj",
+        "projectPath": "C:\\Users\\HP\\Desktop\\Новая папка\\SBank\\backend\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\HP\\Desktop\\SBSF\\SBank\\Backend\\Domain\\obj\\",
+        "outputPath": "C:\\Users\\HP\\Desktop\\Новая папка\\SBank\\backend\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -69,14 +69,14 @@
         }
       }
     },
-    "c:\\Users\\HP\\Desktop\\SBSF\\SBank\\Backend\\Infrastructure\\Infrastructure.csproj": {
+    "C:\\Users\\HP\\Desktop\\Новая папка\\SBank\\backend\\Infrastructure\\Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\HP\\Desktop\\SBSF\\SBank\\Backend\\Infrastructure\\Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\HP\\Desktop\\Новая папка\\SBank\\backend\\Infrastructure\\Infrastructure.csproj",
         "projectName": "Infrastructure",
-        "projectPath": "c:\\Users\\HP\\Desktop\\SBSF\\SBank\\Backend\\Infrastructure\\Infrastructure.csproj",
+        "projectPath": "C:\\Users\\HP\\Desktop\\Новая папка\\SBank\\backend\\Infrastructure\\Infrastructure.csproj",
         "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\HP\\Desktop\\SBSF\\SBank\\Backend\\Infrastructure\\obj\\",
+        "outputPath": "C:\\Users\\HP\\Desktop\\Новая папка\\SBank\\backend\\Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -91,8 +91,8 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "c:\\Users\\HP\\Desktop\\SBSF\\SBank\\Backend\\Domain\\Domain.csproj": {
-                "projectPath": "c:\\Users\\HP\\Desktop\\SBSF\\SBank\\Backend\\Domain\\Domain.csproj"
+              "C:\\Users\\HP\\Desktop\\Новая папка\\SBank\\backend\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\HP\\Desktop\\Новая папка\\SBank\\backend\\Domain\\Domain.csproj"
               }
             }
           }

@@ -37,7 +37,9 @@ export default defineConfig({
         app: resolve(__dirname, "somonibank-app.html"),
         cards: resolve(__dirname, "cards.html"),
         auto: resolve(__dirname, "auto.html"),
-        transfers: resolve(__dirname, "transfers.html")
+        transfers: resolve(__dirname, "transfers.html"),
+        deposits: resolve(__dirname, "deposits.html"),
+        visaBusiness: resolve(__dirname, "visa-business.html")
       }
     }
   }
