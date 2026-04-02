@@ -9,8 +9,8 @@ public class AccountInsertDto
 
     [Required]
     public string Currency { get; set; } = null!;
-}
-
+ }
+//eeeeev
 public class AccountGetDto
 {
     public Guid Id { get; set; }

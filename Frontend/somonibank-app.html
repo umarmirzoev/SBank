@@ -21,7 +21,7 @@
     }
     body{margin:0;background:linear-gradient(180deg,#eef5ff 0%,#edf4ff 100%);font-family:"Segoe UI",Arial,sans-serif;color:var(--text)}
     button,input{font:inherit}
-    .layout{display:grid;grid-template-columns:126px 1fr;gap:18px;min-height:100vh;padding:12px}
+    .layout{display:grid;grid-template-columns:minmax(220px,240px) 1fr;gap:18px;min-height:100vh;padding:12px}
     .sidebar{background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:16px 12px;display:flex;flex-direction:column}
     .brand{display:flex;align-items:center;gap:10px;padding:6px 6px 18px 6px}
     .brand-logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(180deg,#1d63f1,#3a88ff);display:grid;place-items:center;color:#fff;font-weight:800}
@@ -44,10 +44,10 @@
     .content{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px}
     .column{display:grid;gap:14px;align-content:start}
     .card{background:var(--panel);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}
-    .hero{padding:18px;background:radial-gradient(circle at 78% 22%,rgba(255,255,255,.55),transparent 20%),linear-gradient(110deg,#2a64ed 0%,#5caeff 55%,#8fd0ff 100%);color:#fff;min-height:170px;display:grid;grid-template-columns:1.1fr .9fr;overflow:hidden}
-    .hero h2{margin:0 0 4px;font-size:14px;font-weight:500;color:rgba(255,255,255,.9)}
-    .balance-row{display:flex;align-items:center;gap:10px;margin:6px 0 2px}
-    .balance-row strong{font-size:42px;line-height:1;font-weight:800}
+    .hero{padding:24px 28px; background:linear-gradient(135deg,#2976ff,#52b4ff 45%,#bceaff); color:#fff; min-height:220px; display:grid;grid-template-columns:1.1fr .9fr; border-radius:20px; overflow:hidden; box-shadow:0 20px 40px rgba(30,71,145,.2); border:1px solid rgba(255,255,255,.24)}
+    .hero h2{margin:0 0 10px;font-size:22px;font-weight:700;color:#f9fdff;letter-spacing:0.02em}
+    .balance-row{display:flex;align-items:center;gap:12px;margin:8px 0 4px}
+    .balance-row strong{font-size:72px;line-height:1;font-weight:900;letter-spacing:0.01em}
     .plus-btn{width:32px;height:32px;border:none;border-radius:50%;background:#fff;color:var(--blue);font-size:26px;display:grid;place-items:center}
     .hero-meta{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.88);font-size:13px}
     .premium{padding:2px 8px;border-radius:999px;background:rgba(255,215,94,.2);border:1px solid rgba(255,255,255,.18);font-size:11px}
@@ -196,11 +196,11 @@
             <div>
               <h2>Общий баланс</h2>
               <div class="balance-row">
-                <strong id="totalBalance">0.00 c.</strong>
+                <strong id="totalBalance">0.05 c.</strong>
                 <button class="plus-btn" type="button">+</button>
               </div>
               <div class="hero-meta">
-                <span id="bonusLabel">0.00 бонусов</span>
+                <span id="bonusLabel">1.44 бонусов</span>
                 <span class="premium">Premium</span>
               </div>
               <div class="hero-actions">
@@ -215,7 +215,7 @@
               <div class="hero-coins"></div>
               <div class="hero-card">
                 <small>SomoniBank</small>
-                <div class="digits">1234 5678 9876 3450</div>
+                <div class="digits">0000 0000 0000 0000</div>
                 <div class="circles"></div>
               </div>
             </div>

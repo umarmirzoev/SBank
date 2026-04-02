@@ -38,8 +38,8 @@ form?.addEventListener("submit", async (event) => {
 
     setSession(response.data);
     status.className = "status success";
-    status.textContent = response.messages[0] || "Вход выполнен успешно.";
-    showToast("Вход выполнен.");
+    status.textContent = response.messages[0] || "Вход успешен.";
+    showToast("Вход успешен.");
     setTimeout(() => {
       window.location.href = "somonibank-app.html";
     }, 450);

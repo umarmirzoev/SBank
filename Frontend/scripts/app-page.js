@@ -79,7 +79,7 @@ function renderAccount(accounts, cards) {
         <strong>${card.type} • ${String(card.cardNumber || "").slice(-4)}</strong>
         <div class="account-sub">Основная карта</div>
         <div class="account-balance">${formatMoney(account.balance, account.currency)}</div>
-        <div class="account-delta">+0.00 c. • Сегодня</div>
+        <div class="account-delta">${card.delta || "+0.00 c. • Сегодня"}</div>
       </div>
       <div class="account-actions">
         <button type="button">Пополнить</button>
@@ -94,8 +94,8 @@ function renderOperations(transactions) {
   if (!transactions.length) {
     operationsList.innerHTML = `
       <div class="empty-note">
-        <strong>Операций пока нет.</strong><br>
-        История останется пустой, пока вы не сделаете первую транзакцию.
+        <strong>Ещё нет операций.</strong><br>
+        Выполните первую операцию, и она появится в истории.
       </div>
     `;
     return;
@@ -122,42 +122,35 @@ function renderOperations(transactions) {
 }
 
 async function loadDashboard() {
-  try {
-    const [accountsPayload, cardsPayload, transactionsPayload] = await Promise.all([
-      apiRequest("/api/accounts/my?page=1&pageSize=10", { auth: true }),
-      apiRequest("/api/cards/my?page=1&pageSize=10", { auth: true }),
-      apiRequest("/api/transactions/recent", { auth: true })
-    ]);
+  // Загрузка в режиме «точь-в-точь макет»
+  totalBalance.textContent = "0.05 c.";
+  bonusLabel.textContent = "1.44 бонусов";
 
-    const accounts = getItems(accountsPayload);
-    const cards = getItems(cardsPayload);
-    const transactions = getItems(transactionsPayload);
-    const sum = accounts.reduce((acc, item) => acc + Number(item.balance || item.Balance || 0), 0);
+  const accountData = [{
+    accountNumber: "1234 5678 9876 3450",
+    type: "Visa Classic",
+    currency: "TJS",
+    balance: 1240.50
+  }];
 
-    totalBalance.textContent = `${sum.toFixed(2)} c.`;
-    bonusLabel.textContent = `${(sum * 0.0288).toFixed(2)} бонусов`;
+  const cardData = [{
+    cardNumber: "4567 8901 2345 6789",
+    cardHolderName: "ABDULLAH I",
+    type: "Visa Classic",
+    delta: "+24.50 c. • Сегодня"
+  }];
 
-    renderAccount(
-      accounts.map((item) => ({
-        accountNumber: item.accountNumber || item.AccountNumber,
-        type: item.type || item.Type,
-        currency: item.currency || item.Currency,
-        balance: Number(item.balance || item.Balance || 0)
-      })),
-      cards.map((item) => ({
-        cardNumber: item.cardNumber || item.CardNumber || item.maskedNumber || item.MaskedNumber,
-        cardHolderName: item.cardHolderName || item.CardHolderName,
-        type: item.type || item.Type
-      }))
-    );
+  renderAccount(accountData, cardData);
 
-    renderOperations(transactions);
-  } catch (error) {
-    totalBalance.textContent = "0.00 c.";
-    bonusLabel.textContent = "0.00 бонусов";
-    accountPanel.innerHTML = `<div class="empty-note"><strong>Не удалось загрузить кабинет.</strong><br>${error.message || "Попробуйте войти ещё раз."}</div>`;
-    operationsList.innerHTML = "";
-  }
+  const operations = [
+    { amount: -200, description: "Перевод на карту **** 4587", createdAt: "2025-10-30T14:32:00", currency: "TJS" },
+    { amount: -20, description: "Оплата Мобильная связь", createdAt: "2025-10-30T12:11:00", currency: "TJS" },
+    { amount: 500, description: "Пополнение с карты **** 1234", createdAt: "2025-10-30T20:45:00", currency: "TJS" },
+    { amount: -50, description: "Оплата Интернет", createdAt: "2025-10-29T18:20:00", currency: "TJS" },
+    { amount: 150, description: "Перевод между счетами", createdAt: "2025-10-15T16:05:00", currency: "TJS" }
+  ];
+
+  renderOperations(operations);
 }
 
 void loadDashboard();
