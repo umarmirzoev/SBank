@@ -22,9 +22,11 @@
     .sb-nav-bottom{display:flex;gap:32px;padding:12px 0}
     .sb-nav-bottom a{color:#4b5563;text-decoration:none;font-weight:500;font-size:14px;transition:color .2s ease}
     .sb-nav-bottom a.active{color:var(--text);font-weight:600}
-    .sb-header-actions{display:flex;align-items:center;gap:24px}
-    .sb-location-link{display:flex;align-items:center;gap:8px;color:#4b5563;text-decoration:none;font-size:14px}
-    .sb-lang-btn{background:transparent;border:none;font-size:14px;color:#4b5563;cursor:pointer}
+    .sb-header-actions{display:flex;align-items:center;gap:14px}
+    .sb-location-link,.sb-lang-btn{display:none}
+    .sb-lang-select{min-height:40px;padding:0 14px;border:1px solid var(--border);border-radius:12px;background:#fff;color:#334155;font-size:14px;font-weight:600;cursor:pointer}
+    .sb-login-btn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 8px 18px rgba(37,99,235,.2)}
+    .sb-login-btn svg{width:16px;height:16px}
 
     .sb-main{max-width:1200px;margin:0 auto;padding:40px 24px}
     @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
