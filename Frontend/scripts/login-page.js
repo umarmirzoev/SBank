@@ -4,6 +4,16 @@ const form = document.getElementById("loginForm");
 const status = document.getElementById("loginStatus");
 const registerLink = document.getElementById("registerLink");
 const forgotLink = document.getElementById("forgotLink");
+const params = new URLSearchParams(window.location.search);
+
+if (params.get("email")) {
+  form.phone.value = params.get("email");
+}
+
+if (params.get("registered") === "1") {
+  status.className = "status success";
+  status.textContent = "Регистрация завершена. Теперь войдите в систему.";
+}
 
 form?.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -43,7 +53,7 @@ form?.addEventListener("submit", async (event) => {
 
 registerLink?.addEventListener("click", (event) => {
   event.preventDefault();
-  window.location.href = "somonibank-app.html";
+  window.location.href = "registration.html";
 });
 
 forgotLink?.addEventListener("click", (event) => {

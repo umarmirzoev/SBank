@@ -22,6 +22,7 @@ const PAGE_TITLES = {
   "salary-project.html": { ru: "Зарплатный проект — Сомонибанк", en: "Payroll Project — Somonibank", tj: "Лоиҳаи музд — Сомонибонк" },
   "settlement-account.html": { ru: "Расчётный счёт — Сомонибанк", en: "Settlement Account — Somonibank", tj: "Ҳисоби ҷорӣ — Сомонибонк" },
   "login.html": { ru: "Вход в Сомонибанк", en: "Login to Somonibank", tj: "Вуруд ба Сомонибонк" },
+  "registration.html": { ru: "Регистрация в Сомонибанк", en: "Register in Somonibank", tj: "Бақайдгирӣ дар Сомонибонк" },
   "somonibank-app.html": { ru: "Приложение Somoni — Сомонибанк", en: "Somoni App — Somonibank", tj: "Барномаи Somoni — Сомонибонк" },
   "somonibank.html": { ru: "Сомонибанк", en: "Somonibank", tj: "Сомонибонк" },
   "transfers.html": { ru: "Переводы — Сомонибанк", en: "Transfers — Somonibank", tj: "Интиқолҳо — Сомонибонк" },
