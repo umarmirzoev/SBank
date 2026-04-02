@@ -1236,6 +1236,255 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
+
+    /* Hero Visual CSS Art */
+    .hero-visual-inner {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #10b981 100%);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .hero-visual-inner::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
+      top: -50px;
+      right: -50px;
+    }
+    .hero-card-mockup {
+      position: absolute;
+      left: 40px;
+      top: 50%;
+      transform: translateY(-50%) rotate(-8deg);
+      width: 240px;
+      height: 150px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f6e4a0 0%, #d1a02d 100%);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      padding: 20px;
+      z-index: 2;
+    }
+    .mockup-chip {
+      width: 36px;
+      height: 28px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #f8f0d2 0%, #c9b57f 100%);
+      margin-bottom: 16px;
+    }
+    .mockup-brand {
+      color: rgba(255,255,255,0.9);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .mockup-number {
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+    .mockup-circles {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      display: flex;
+    }
+    .mc-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+    .mc-red { background: #eb001b; margin-right: -10px; }
+    .mc-orange { background: #f79e1b; }
+    .hero-phone-mockup {
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%) rotate(5deg);
+      width: 120px;
+      height: 200px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      border: 3px solid #334155;
+      z-index: 3;
+      animation: float 3s ease-in-out infinite;
+    }
+    .phone-notch {
+      width: 50px;
+      height: 8px;
+      background: #475569;
+      border-radius: 0 0 8px 8px;
+      margin: 0 auto;
+    }
+    .phone-screen {
+      margin: 12px 8px;
+      background: linear-gradient(180deg, #1e40af 0%, #3b82f6 100%);
+      border-radius: 12px;
+      height: calc(100% - 32px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .phone-balance {
+      font-size: 36px;
+      font-weight: 800;
+      color: #10b981;
+    }
+    .phone-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+      margin-top: 4px;
+    }
+    .hero-float-ball {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #67f0ff 0%, #2563eb 100%);
+      box-shadow: 0 10px 20px rgba(37,99,235,0.4);
+      animation: float 4s ease-in-out infinite 0.5s;
+      z-index: 1;
+    }
+
+    /* Feature Card CSS Visuals */
+    .feature-card-image.css-terminal {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .terminal-device {
+      width: 100px;
+      height: 130px;
+      background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .terminal-screen {
+      background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+      border-radius: 8px;
+      height: 100%;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .terminal-line {
+      height: 4px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 2px;
+    }
+    .terminal-line.short { width: 60%; }
+    .terminal-btn-visual {
+      margin-top: auto;
+      height: 14px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 4px;
+    }
+    .terminal-pin {
+      position: absolute;
+      bottom: 20px;
+      right: 30px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fbbf24 0%, #d97706 100%);
+      box-shadow: 0 8px 16px rgba(217,119,6,0.4);
+    }
+
+    .feature-card-image.css-education {
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .edu-cap {
+      width: 80px;
+      height: 50px;
+      background: linear-gradient(180deg, #1e3a5f 0%, #0f172a 100%);
+      clip-path: polygon(50% 0%, 100% 40%, 50% 60%, 0% 40%);
+    }
+    .edu-diploma {
+      position: absolute;
+      bottom: 24px;
+      width: 70px;
+      height: 50px;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-radius: 4px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      border: 2px solid #d97706;
+    }
+    .edu-star {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 28px;
+      color: #fbbf24;
+      text-shadow: 0 4px 8px rgba(251,191,36,0.4);
+    }
+
+    .feature-card-image.css-gpay {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      gap: 16px;
+    }
+    .gpay-phone {
+      width: 70px;
+      height: 120px;
+      background: linear-gradient(180deg, #475569 0%, #1e293b 100%);
+      border-radius: 14px;
+      padding: 8px;
+      border: 2px solid #64748b;
+    }
+    .gpay-screen {
+      background: #fff;
+      border-radius: 8px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .gpay-logo {
+      font-size: 14px;
+      font-weight: 700;
+      color: #3b82f6;
+    }
+    .gpay-wave {
+      margin-top: 8px;
+      width: 30px;
+      height: 30px;
+      border: 3px solid #10b981;
+      border-radius: 50%;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+    }
+    .gpay-terminal {
+      width: 80px;
+      height: 60px;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
   </style>
 </head>
 <body>
@@ -1294,12 +1543,25 @@
         <button class="hero-btn" type="button">Подробнее</button>
       </div>
       <div class="hero-visual">
-        <img
-          alt="Кешбэк Mastercard"
-          src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80"
-          loading="lazy"
-          referrerpolicy="no-referrer"
-        />
+        <div class="hero-visual-inner">
+          <div class="hero-card-mockup">
+            <div class="mockup-chip"></div>
+            <div class="mockup-brand">Сомонибонк</div>
+            <div class="mockup-number">•••• •••• •••• 4521</div>
+            <div class="mockup-circles">
+              <div class="mc-circle mc-red"></div>
+              <div class="mc-circle mc-orange"></div>
+            </div>
+          </div>
+          <div class="hero-phone-mockup">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="phone-balance">10%</div>
+              <div class="phone-label">Кэшбэк</div>
+            </div>
+          </div>
+          <div class="hero-float-ball"></div>
+        </div>
       </div>
     </section>
 
@@ -1307,13 +1569,15 @@
     <section class="feature-cards-section">
       <div class="feature-cards-grid">
         <article class="feature-card" data-toast="Раздел терминалов будет доступен на отдельной карте.">
-          <div class="feature-card-image">
-            <img
-              alt="Адреса терминалов"
-              src="https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&w=600&q=80"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-            />
+          <div class="feature-card-image css-terminal">
+            <div class="terminal-device">
+              <div class="terminal-screen">
+                <div class="terminal-line"></div>
+                <div class="terminal-line short"></div>
+                <div class="terminal-btn-visual"></div>
+              </div>
+            </div>
+            <div class="terminal-pin"></div>
           </div>
           <div class="feature-card-body">
             <h3 class="feature-card-title">Адреса наших терминалов</h3>
@@ -1322,13 +1586,10 @@
         </article>
 
         <article class="feature-card" data-toast="Условия рассрочки на образование скоро откроются.">
-          <div class="feature-card-image">
-            <img
-              alt="Образование"
-              src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=600&q=80"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-            />
+          <div class="feature-card-image css-education">
+            <div class="edu-cap"></div>
+            <div class="edu-diploma"></div>
+            <div class="edu-star">★</div>
           </div>
           <div class="feature-card-body">
             <h3 class="feature-card-title">Образование доступно</h3>
@@ -1337,13 +1598,14 @@
         </article>
 
         <article class="feature-card" data-toast="Google Pay можно подключить в приложении Сомонибонк.">
-          <div class="feature-card-image">
-            <img
-              alt="Google Pay"
-              src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-            />
+          <div class="feature-card-image css-gpay">
+            <div class="gpay-phone">
+              <div class="gpay-screen">
+                <div class="gpay-logo">G Pay</div>
+                <div class="gpay-wave"></div>
+              </div>
+            </div>
+            <div class="gpay-terminal"></div>
           </div>
           <div class="feature-card-body">
             <h3 class="feature-card-title">Оплата с Google Pay</h3>
