@@ -5,164 +5,1274 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Доставка — Сомонибонк</title>
   <style>
-    :root{--bg:#eef5ff;--surface:#fff;--text:#163560;--muted:#627b9b;--line:#d9e7f8;--blue:#2f6ef2;--blue-deep:#174fb8;--dark:#072247;--shadow:0 28px 72px rgba(23,67,128,.16)}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at top,#fbfdff 0%,#eef5ff 55%,#e6f0ff 100%);color:var(--text);font-family:"Segoe UI",Arial,Helvetica,sans-serif}
-    a{color:inherit;text-decoration:none}button{font:inherit}
-    .page{width:min(1180px,calc(100% - 24px));margin:0 auto;padding:14px 0 34px}.shell{overflow:hidden;border-radius:30px;border:1px solid rgba(216,231,248,.94);background:rgba(255,255,255,.92);box-shadow:0 28px 90px rgba(24,63,122,.14)}
-    .header-top,.header-main,.logo,.main-nav,.sub-nav,.hero-panel,.section-top,.table-head,.table-row,.question-card,.footer-top,.footer-bottom,.store-row,.social-row,.city-switch,.hero-actions{display:flex;align-items:center}
-    .header-top{justify-content:center;padding:14px 20px 18px;border-bottom:1px solid var(--line)}.header-main{gap:34px;justify-content:center}.logo{gap:10px}.logo svg{width:34px;height:34px}.logo span{font-size:24px;font-weight:700;letter-spacing:-.03em}
-    .main-nav{gap:34px;font-size:15px;font-weight:500}.main-nav a,.sub-nav a,.city-pill,.hero-btn,.question-btn,.table-link,.store-badge,.social-pill,.contact-link{transition:transform .22s ease,box-shadow .22s ease,color .22s ease,background .22s ease,border-color .22s ease,filter .22s ease}
-    .main-nav a,.sub-nav a{position:relative;padding:12px 0 15px}.main-nav a:hover,.sub-nav a:hover,.table-link:hover,.contact-link:hover{color:#145eb4}.main-nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-18px;height:5px;border-radius:999px;background:#3474ff}
-    .sub-nav{gap:34px;padding:22px 20px 26px;font-size:16px;white-space:nowrap;overflow-x:auto;justify-content:center;border-bottom:1px solid var(--line)}.sub-nav a{padding-bottom:10px;color:#3f5270}.sub-nav a.active-sub{color:#2e6df1;font-weight:600}.sub-nav a.active-sub::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:999px;background:#3474ff}
-    .section{padding:26px 30px 0}.hero-panel{justify-content:space-between;gap:26px;padding:24px 38px 0;border-radius:28px;background:linear-gradient(120deg,#f8fbff 0%,#f0f6ff 45%,#ffffff 100%);border:1px solid rgba(220,232,248,.96);box-shadow:var(--shadow);overflow:hidden;position:relative}
-    .hero-panel::after{content:"";position:absolute;right:-60px;top:-70px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(67,138,255,.18),rgba(67,138,255,0))}
-    .hero-copy{position:relative;z-index:1;max-width:420px;padding:42px 0 42px}.hero-copy h1,.section-title{margin:0;font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.04em;color:#193e72}
-    .hero-copy h1{font-size:54px;line-height:.98}.hero-copy p{margin:20px 0 0;color:var(--muted);font-size:18px;line-height:1.6}.hero-actions{gap:14px;margin-top:26px;flex-wrap:wrap}
-    .hero-btn,.question-btn{min-height:48px;padding:0 22px;border-radius:14px;border:1px solid transparent;font-weight:700;cursor:pointer}.hero-btn.primary,.question-btn{background:linear-gradient(180deg,#3d82ff 0%,#2b68ec 100%);color:#fff;box-shadow:0 16px 28px rgba(43,104,236,.24)}.hero-btn.secondary{border-color:rgba(47,110,242,.22);background:#fff;color:#2458be}
-    .hero-btn:hover,.question-btn:hover,.store-badge:hover,.social-pill:hover{transform:translateY(-3px);filter:brightness(1.04)}.hero-btn.secondary:hover,.city-pill:hover{box-shadow:0 14px 28px rgba(56,111,197,.14)}
-    .hero-visual{position:relative;align-self:stretch;min-height:360px;flex:1;min-width:300px}.delivery-figure{position:absolute;right:28px;bottom:0;width:min(100%,420px);height:100%}
-    .delivery-figure::before{content:"";position:absolute;right:10px;bottom:-4px;width:230px;height:310px;border-radius:28px 28px 0 0;background:linear-gradient(180deg,#ffffff 0%,#f5f8ff 100%);box-shadow:0 24px 48px rgba(34,81,153,.16)}
-    .delivery-figure::after{content:"";position:absolute;right:82px;bottom:72px;width:120px;height:210px;border-radius:18px;background:linear-gradient(180deg,#3adb95 0%,#52c879 100%);transform:rotate(12deg);box-shadow:0 16px 32px rgba(62,181,126,.28)}
-    .delivery-avatar{position:absolute;right:52px;bottom:0;width:255px;height:330px}
-    .delivery-avatar .head{position:absolute;left:108px;top:28px;width:82px;height:82px;border-radius:50%;background:radial-gradient(circle at 36% 34%,#f7d4bc 0%,#e9b791 70%,#d89f7b 100%);box-shadow:0 8px 18px rgba(44,68,112,.16)}
-    .delivery-avatar .hair{position:absolute;left:94px;top:6px;width:112px;height:86px;border-radius:48px 48px 38px 44px;background:#52342a;transform:rotate(4deg)}
-    .delivery-avatar .body{position:absolute;left:58px;top:92px;width:190px;height:214px;border-radius:34px 34px 0 0;background:linear-gradient(180deg,#ffffff 0%,#f4f8ff 100%);box-shadow:0 18px 36px rgba(40,82,140,.15)}
-    .delivery-avatar .arm{position:absolute;left:88px;top:166px;width:64px;height:128px;border-radius:30px;background:linear-gradient(180deg,#f3cfb8 0%,#ddb08b 100%);transform:rotate(8deg)}
-    .delivery-avatar .logo-mark{position:absolute;left:146px;top:154px;color:#2d6df0;font-size:13px;font-weight:700}
-    .section-top{justify-content:space-between;gap:18px;margin-bottom:26px;flex-wrap:wrap}.section-title{font-size:46px}.city-switch{gap:12px;flex-wrap:wrap}
-    .city-pill{min-height:42px;padding:0 18px;border-radius:999px;border:1px solid #8cb5ff;background:#fff;color:#2760d1;font-weight:600;cursor:pointer}.city-pill.active{background:linear-gradient(180deg,#3e82ff 0%,#2d67ea 100%);border-color:transparent;color:#fff;box-shadow:0 14px 24px rgba(43,104,236,.22)}
-    .tariff-card{padding:26px 12px 12px;border-radius:26px;background:linear-gradient(180deg,#ffffff 0%,#fbfdff 100%);border:1px solid rgba(220,233,248,.96);box-shadow:var(--shadow)}
-    .table-head,.table-row{padding:0 22px}.table-head{min-height:50px;color:#77a0dd;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.table-head span:nth-child(1),.table-row span:nth-child(1){flex:1.35}.table-head span:nth-child(2),.table-row span:nth-child(2){flex:.95}.table-head span:nth-child(3),.table-row span:nth-child(3){flex:.8}
-    .table-row{min-height:82px;border-top:1px solid rgba(217,231,248,.96);background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(247,251,255,.5));border-radius:16px}.table-row:hover{transform:translateY(-2px);box-shadow:0 16px 26px rgba(43,104,236,.08)}.table-row strong{display:block;font-size:18px;font-weight:600;letter-spacing:-.02em}.table-row small{display:block;margin-top:6px;color:var(--muted);font-size:13px;line-height:1.5}
-    .table-row span{padding:18px 0}.table-row .price{font-size:18px;font-weight:700;color:#173b6d}.table-row .term{font-size:16px;font-weight:600;color:#2457b7}
-    .table-footer{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:18px 22px 12px;flex-wrap:wrap}.table-link{display:inline-flex;align-items:center;gap:8px;color:#2a69ee;font-weight:700}.table-link:hover{transform:translateX(4px)}.city-note{color:var(--muted);font-size:14px}
-    .question-card{justify-content:space-between;gap:24px;margin-top:32px;padding:28px 30px;border-radius:24px;background:linear-gradient(115deg,#f8fbff 0%,#eef5ff 100%);border:1px solid rgba(219,232,247,.96);box-shadow:0 22px 44px rgba(43,104,236,.1)}
-    .question-copy{max-width:430px}.question-copy h3{margin:0 0 10px;font-size:36px;font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.04em;color:#1b3f74}.question-copy p{margin:0 0 18px;color:var(--muted);font-size:16px;line-height:1.6}
-    .question-visual{position:relative;width:210px;height:130px;flex:none}.question-visual::before{content:"";position:absolute;right:0;bottom:0;width:124px;height:74px;border-radius:18px;background:linear-gradient(180deg,#ffffff 0%,#edf3ff 100%);box-shadow:0 18px 34px rgba(72,112,176,.18)}
-    .question-visual::after{content:"";position:absolute;right:62px;top:18px;width:56px;height:56px;border-radius:50%;background:#62c7a5;box-shadow:0 12px 24px rgba(98,199,165,.28)}
-    .phone-illustration{position:absolute;left:22px;top:10px;width:90px;height:90px;border-radius:36px 36px 40px 18px;background:linear-gradient(180deg,#4f5662 0%,#262c35 100%);transform:rotate(28deg);box-shadow:0 18px 26px rgba(46,58,79,.28)}
-    .phone-illustration::after{content:"";position:absolute;left:18px;top:18px;width:54px;height:54px;border-radius:28px;background:linear-gradient(180deg,#171b20 0%,#353c47 100%)}
-    .footer{margin-top:32px;padding:30px 30px 24px;background:linear-gradient(180deg,#081d3b 0%,#0a2346 100%);color:rgba(255,255,255,.9)}.footer-top{align-items:flex-start;justify-content:space-between;gap:28px;flex-wrap:wrap}.footer-col{min-width:210px;flex:1}.footer strong{color:#fff;font-size:28px;line-height:1.1}.footer p,.footer a{margin:0;color:rgba(230,238,252,.82);font-size:14px;line-height:1.65}
-    .contact-link{display:inline-block;margin-top:10px;color:#d6f0ff;text-decoration:underline;text-underline-offset:4px}.store-row,.social-row{gap:10px;flex-wrap:wrap;margin-top:12px}.store-badge,.social-pill{min-width:90px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;cursor:pointer}.social-pill{min-width:40px;padding:0;border-radius:50%}
-    .footer-bottom{justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.09);font-size:13px;color:rgba(226,236,255,.64)}
-    .reveal{opacity:0;transform:translateY(26px)}.reveal.visible{opacity:1;transform:none;transition:opacity .65s ease,transform .65s ease}
-    @media (max-width:980px){.hero-panel{display:block;padding:26px 24px 0}.hero-copy{max-width:none;padding-top:16px}.hero-copy h1{font-size:44px}.hero-visual{min-height:310px}.delivery-figure{right:0;left:0;margin:0 auto}.section-title{font-size:38px}.question-card{display:block}.question-visual{margin:22px auto 0}}
-    @media (max-width:760px){.page{width:calc(100% - 16px)}.shell{border-radius:24px}.header-top,.sub-nav,.section,.footer{padding-left:18px;padding-right:18px}.header-top{display:block}.header-main{display:block}.logo{justify-content:center}.main-nav{margin-top:10px;gap:22px;overflow-x:auto;justify-content:flex-start}.sub-nav{justify-content:flex-start}.hero-copy h1,.section-title,.question-copy h3{font-size:34px}.hero-copy p{font-size:16px}.table-head{display:none}.table-row{display:grid;grid-template-columns:1fr;gap:2px;padding:16px 18px;min-height:0}.table-row span{padding:0}.table-row span+span{margin-top:10px}.question-card{padding:24px 18px}.footer{padding-left:18px;padding-right:18px}}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #10b981;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .sb-header {
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .sb-header-top {
+      border-bottom: 1px solid var(--border);
+      padding: 12px 48px;
+    }
+
+    .sb-header-bottom {
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px;
+    }
+
+    .sb-header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .sb-nav-top {
+      display: flex;
+      gap: 40px;
+    }
+
+    .sb-nav-top a {
+      color: #4b5563;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      padding: 8px 0;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    .sb-nav-top a.active {
+      color: var(--text);
+    }
+
+    .sb-nav-top a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--secondary);
+      border-radius: 2px;
+    }
+
+    .sb-nav-bottom {
+      display: flex;
+      gap: 32px;
+      padding: 12px 0;
+    }
+
+    .sb-nav-bottom a {
+      color: #4b5563;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .sb-nav-bottom a.active {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .sb-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .sb-location-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #4b5563;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sb-lang-btn {
+      background: transparent;
+      border: none;
+      font-size: 14px;
+      color: #4b5563;
+      cursor: pointer;
+    }
+
+    /* Main */
+    .sb-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 48px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-content {
+      padding: 60px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-title {
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      max-width: 420px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      width: fit-content;
+    }
+
+    .hero-btn.primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+    }
+
+    .hero-btn.primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(37, 99, 235, 0.4);
+    }
+
+    .hero-btn.secondary {
+      background: var(--card-bg);
+      color: var(--primary);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-btn.secondary:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .hero-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Section Titles */
+    .section-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      text-align: center;
+      font-family: Georgia, serif;
+      color: #1e3a5f;
+    }
+
+    /* Tariff Section */
+    .tariff-section {
+      margin-bottom: 64px;
+    }
+
+    .tariff-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .tariff-header .section-title {
+      margin-bottom: 0;
+      text-align: left;
+    }
+
+    .city-switch {
+      display: flex;
+      gap: 12px;
+    }
+
+    .city-pill {
+      padding: 10px 22px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .city-pill.active {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+    }
+
+    .city-pill:hover:not(.active) {
+      box-shadow: var(--shadow);
+      transform: translateY(-2px);
+    }
+
+    .tariff-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      animation: fadeInUp 0.6s ease;
+    }
+
+    .table-head {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      padding: 18px 28px;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      padding: 22px 28px;
+      border-top: 1px solid var(--border);
+      transition: all 0.3s ease;
+      align-items: center;
+    }
+
+    .table-row:hover {
+      background: linear-gradient(135deg, rgba(248,250,252,0.8), rgba(241,245,249,0.5));
+      transform: translateX(4px);
+    }
+
+    .table-row .service-name {
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .table-row .service-desc {
+      display: block;
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .table-row .price {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .table-row .term {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .table-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 28px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .table-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .table-link:hover {
+      transform: translateX(4px);
+    }
+
+    .city-note {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* Steps Section */
+    .steps-section {
+      margin-bottom: 64px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 36px 28px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease backwards;
+    }
+
+    .step-card:nth-child(1) { animation-delay: 0.1s; }
+    .step-card:nth-child(2) { animation-delay: 0.2s; }
+    .step-card:nth-child(3) { animation-delay: 0.3s; }
+
+    .step-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .step-number {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .step-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 20px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--primary);
+    }
+
+    .step-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .step-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      margin-bottom: 64px;
+    }
+
+    .faq-list {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 8px 32px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 22px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: none;
+      border: none;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      color: var(--text);
+      transition: color 0.2s ease;
+      gap: 16px;
+    }
+
+    .faq-question:hover {
+      color: var(--primary);
+    }
+
+    .faq-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--secondary);
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 200px;
+    }
+
+    .faq-answer p {
+      padding-bottom: 22px;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* Contact CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 24px;
+      padding: 60px 40px;
+      margin-bottom: 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before,
+    .cta-section::after {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), transparent);
+      border-radius: 50%;
+    }
+
+    .cta-section::before {
+      top: -100px;
+      right: -50px;
+    }
+
+    .cta-section::after {
+      bottom: -100px;
+      left: -50px;
+    }
+
+    .cta-section h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-section p {
+      color: var(--text-muted);
+      font-size: 16px;
+      margin-bottom: 28px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      border: none;
+    }
+
+    .cta-btn.primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+    }
+
+    .cta-btn.primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(37, 99, 235, 0.4);
+    }
+
+    .cta-btn.secondary {
+      background: var(--card-bg);
+      color: var(--primary);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .cta-btn.secondary:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Footer */
+    .sb-footer {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 60px 48px 30px;
+    }
+
+    .sb-footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .sb-footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1fr;
+      gap: 60px;
+      margin-bottom: 50px;
+    }
+
+    .sb-footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .sb-footer-address {
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .sb-footer-link {
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sb-contact-item {
+      margin-bottom: 24px;
+    }
+
+    .sb-contact-number {
+      font-size: 24px;
+      font-weight: 600;
+      color: #fbbf24;
+      margin-bottom: 4px;
+    }
+
+    .sb-contact-email {
+      font-size: 18px;
+      font-weight: 500;
+      color: #e2e8f0;
+    }
+
+    .sb-contact-label {
+      color: #94a3b8;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .sb-footer-section h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .sb-app-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .sb-app-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #e2e8f0;
+      text-decoration: none;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+
+    .sb-app-btn:hover {
+      background: #334155;
+    }
+
+    .sb-social-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .sb-social-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e293b;
+      border-radius: 50%;
+      color: #94a3b8;
+      transition: all 0.2s ease;
+    }
+
+    .sb-social-icon:hover {
+      background: #334155;
+      color: #e2e8f0;
+    }
+
+    .sb-footer-bottom {
+      border-top: 1px solid #1e293b;
+      padding: 24px 0;
+      margin-bottom: 24px;
+    }
+
+    .sb-footer-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .sb-footer-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .sb-footer-links a:hover {
+      color: #e2e8f0;
+    }
+
+    .sb-footer-copyright {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid #1e293b;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-section {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        order: -1;
+        min-height: 300px;
+      }
+
+      .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .sb-footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sb-header-top,
+      .sb-header-bottom {
+        padding: 12px 20px;
+      }
+
+      .sb-nav-top,
+      .sb-nav-bottom {
+        display: none;
+      }
+
+      .hero-title {
+        font-size: 32px;
+      }
+
+      .hero-content {
+        padding: 32px 24px;
+      }
+
+      .hero-visual {
+        min-height: 240px;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sb-footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sb-main {
+        padding: 20px 16px;
+      }
+
+      .table-head {
+        display: none;
+      }
+
+      .table-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 18px 20px;
+      }
+
+      .tariff-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .tariff-header .section-title {
+        text-align: left;
+      }
+
+      .faq-list {
+        padding: 8px 20px;
+      }
+
+      .cta-section {
+        padding: 40px 24px;
+      }
+    }
   </style>
-  <script type="module" crossorigin src="/assets/delivery-BtSkOrX5.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/common-Cwdypr2M.js">
-  <link rel="stylesheet" crossorigin href="/assets/integration-DHZQThhm.css">
 </head>
 <body>
-  <div class="page">
-    <div class="shell">
-      <header>
-        <div class="header-top">
-          <div class="header-main">
-            <a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#356dff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#356dff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#356dff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a>
-            <nav class="main-nav" aria-label="Главное меню"><a href="index.html">Частным лицам</a><a href="business.html">Бизнесу</a><a class="active" href="somonibank.html">Сомонибонк</a><a href="addresses.html">Адреса и банкоматы</a></nav>
-          </div>
+  <!-- Header -->
+  <header class="sb-header">
+    <div class="sb-header-top">
+      <div class="sb-header-inner">
+        <a href="index.html" class="sb-logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="3"/>
+            <circle cx="22" cy="10" r="4" fill="#2563eb"/>
+          </svg>
+          <span>Сомонибонк</span>
+        </a>
+        <nav class="sb-nav-top">
+          <a href="index.html">Частным лицам</a>
+          <a href="business.html">Бизнесу</a>
+          <a href="somonibank.html" class="active">Сомонибонк</a>
+        </nav>
+        <div class="sb-header-actions">
+          <a href="addresses.html" class="sb-location-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Адреса и банкоматы
+          </a>
+          <button class="sb-lang-btn">Рус ▾</button>
         </div>
-        <nav class="sub-nav" aria-label="Разделы Сомонибонк"><a href="somonibank.html#history">О нас</a><a href="news.html">Новости</a><a href="addresses.html">Адреса</a><a href="documents.html">Документы</a><a class="active-sub" href="delivery.html">Доставка</a><a href="contact.html">Связь с нами</a></nav>
-      </header>
-
-      <main>
-        <section class="section reveal">
-          <div class="hero-panel">
-            <div class="hero-copy">
-              <h1>Доставим всё до вашей двери</h1>
-              <p>Закажите доставку онлайн и приобретайте карты, документы и другие услуги в два счёта.</p>
-              <div class="hero-actions">
-                <a class="hero-btn primary" href="contact.html">Оставить заявку</a>
-                <button class="hero-btn secondary" type="button" data-toast="Курьер свяжется с вами после оформления заявки.">Как это работает</button>
-              </div>
-            </div>
-            <div class="hero-visual" aria-hidden="true">
-              <div class="delivery-figure">
-                <div class="delivery-avatar">
-                  <div class="hair"></div>
-                  <div class="head"></div>
-                  <div class="body"></div>
-                  <div class="arm"></div>
-                  <div class="logo-mark">Сомонибанк</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section reveal">
-          <div class="section-top">
-            <h2 class="section-title">Тарифы и условия</h2>
-            <div class="city-switch" role="tablist" aria-label="Город доставки">
-              <button class="city-pill active" type="button" data-city="dushanbe">Душанбе</button>
-              <button class="city-pill" type="button" data-city="khujand">Худжанд</button>
-            </div>
-          </div>
-
-          <div class="tariff-card">
-            <div class="table-head">
-              <span>Услуги</span>
-              <span>Стоимость</span>
-              <span>Срок</span>
-            </div>
-            <div id="tariffRows"></div>
-            <div class="table-footer">
-              <button class="table-link" type="button" data-toast="Подробные тарифы будут доступны в PDF немного позже.">Тарифы доставки →</button>
-              <span class="city-note" id="cityNote">Доставка по Душанбе каждый день с 09:00 до 20:00.</span>
-            </div>
-          </div>
-
-          <div class="question-card reveal">
-            <div class="question-copy">
-              <h3>Остались вопросы?</h3>
-              <p>Позвоните нам по номеру 48 888 1818 или оставьте заявку, и мы расскажем, как работает доставка и какие документы нужны.</p>
-              <a class="question-btn" href="contact.html">Связаться с нами</a>
-            </div>
-            <div class="question-visual" aria-hidden="true">
-              <div class="phone-illustration"></div>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer class="footer reveal">
-        <div class="footer-top">
-          <div class="footer-col">
-            <a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#35d2ff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#35d2ff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#35d2ff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a>
-            <p style="margin-top:12px;">ул. Бухаризода, 9<br>Ориентир: ресторан «Канд»</p>
-            <a class="contact-link" href="addresses.html">Филиалы и точки обслуживания</a>
-          </div>
-          <div class="footer-col">
-            <p><strong>900</strong><br>Для звонков с мобильных в Таджикистане</p>
-            <p style="margin-top:14px;"><strong>+992 48 888 1818</strong><br>Для звонков из любой точки мира</p>
-            <p style="margin-top:14px;"><strong>+992 44 600 2520</strong><br>Телефон доверия Национального банка Таджикистана</p>
-            <p style="margin-top:14px;"><strong>support@somoni.tj</strong><br>Для онлайн-обращений</p>
-          </div>
-          <div class="footer-col">
-            <p>Приложения</p>
-            <div class="store-row">
-              <button class="store-badge" type="button" data-toast="Открытие Google Play.">Google Play</button>
-              <button class="store-badge" type="button" data-toast="Открытие App Store.">App Store</button>
-            </div>
-            <p style="margin-top:18px;">Соцмедиа</p>
-            <div class="social-row">
-              <button class="social-pill" type="button" data-toast="Переход в Telegram.">tg</button>
-              <button class="social-pill" type="button" data-toast="Переход в Facebook.">f</button>
-              <button class="social-pill" type="button" data-toast="Переход в LinkedIn.">in</button>
-              <button class="social-pill" type="button" data-toast="Переход в Одноклассники.">ok</button>
-              <button class="social-pill" type="button" data-toast="Переход в Instagram.">ig</button>
-              <button class="social-pill" type="button" data-toast="Переход в YouTube.">▶</button>
-              <button class="social-pill" type="button" data-toast="Переход во VK.">vk</button>
-              <button class="social-pill" type="button" data-toast="Переход в TikTok.">♪</button>
-            </div>
-          </div>
-        </div>
-        <div class="footer-bottom"><span>О нас</span><span>Адреса</span><span>Документы и тарифы</span><span>Вакансии</span><span>Связь с нами</span></div>
-      </footer>
+      </div>
     </div>
-  </div>
+    <div class="sb-header-bottom">
+      <div class="sb-header-inner">
+        <nav class="sb-nav-bottom">
+          <a href="index.html">Приложение Somoni</a>
+          <a href="cards.html">Карты</a>
+          <a href="#">Салом</a>
+          <a href="auto.html">Покупка авто</a>
+          <a href="#">Somoni Shop</a>
+          <a href="transfers.html">Переводы</a>
+          <a href="#">Депозиты</a>
+          <a href="delivery.html" class="active">Доставка</a>
+        </nav>
+      </div>
+    </div>
+  </header>
 
-  <div class="toast" id="toast"></div>
+  <main class="sb-main">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Доставим всё до вашей двери</h1>
+        <p class="hero-desc">Закажите доставку банковских карт, документов и других услуг онлайн — быстро и удобно, без визита в отделение.</p>
+        <div class="hero-actions">
+          <a class="hero-btn primary" href="contact.html">Оставить заявку</a>
+          <button class="hero-btn secondary" type="button" onclick="document.querySelector('.steps-section').scrollIntoView({behavior:'smooth'})">Как это работает</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img
+          class="hero-photo"
+          alt="Доставка"
+          src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=1200&q=80"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        />
+      </div>
+    </section>
+
+    <!-- Tariff Section -->
+    <section class="tariff-section">
+      <div class="tariff-header">
+        <h2 class="section-title">Тарифы и условия</h2>
+        <div class="city-switch" role="tablist" aria-label="Город доставки">
+          <button class="city-pill active" type="button" data-city="dushanbe" onclick="switchCity('dushanbe')">Душанбе</button>
+          <button class="city-pill" type="button" data-city="khujand" onclick="switchCity('khujand')">Худжанд</button>
+        </div>
+      </div>
+
+      <div class="tariff-card">
+        <div class="table-head">
+          <span>Услуга</span>
+          <span>Стоимость</span>
+          <span>Срок</span>
+        </div>
+        <div id="tariffRows">
+          <div class="table-row">
+            <span>
+              <span class="service-name">Доставка карты</span>
+              <span class="service-desc">Доставка дебетовой или кредитной карты курьером</span>
+            </span>
+            <span class="price">Бесплатно</span>
+            <span class="term">1–2 дня</span>
+          </div>
+          <div class="table-row">
+            <span>
+              <span class="service-name">Доставка документов</span>
+              <span class="service-desc">Договоры, выписки и другие банковские документы</span>
+            </span>
+            <span class="price">15 сомони</span>
+            <span class="term">1–3 дня</span>
+          </div>
+          <div class="table-row">
+            <span>
+              <span class="service-name">Курьерская доставка</span>
+              <span class="service-desc">Экспресс-доставка по любому адресу в городе</span>
+            </span>
+            <span class="price">25 сомони</span>
+            <span class="term">До 4 часов</span>
+          </div>
+        </div>
+        <div class="table-footer">
+          <span class="city-note" id="cityNote">Доставка по Душанбе каждый день с 09:00 до 20:00.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Steps Section -->
+    <section class="steps-section">
+      <h2 class="section-title">Как это работает</h2>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+          </div>
+          <h3>Оформите заявку</h3>
+          <p>Заполните форму на сайте или позвоните нам по номеру 900. Укажите адрес и удобное время доставки.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12,6 12,12 16,14"/>
+            </svg>
+          </div>
+          <h3>Дождитесь курьера</h3>
+          <p>Наш курьер свяжется с вами и доставит заказ в выбранное время. Среднее время доставки — 1–2 дня.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22,4 12,14.01 9,11.01"/>
+            </svg>
+          </div>
+          <h3>Получите заказ</h3>
+          <p>Проверьте документы, подпишите при необходимости и наслаждайтесь удобством без похода в банк.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2 class="section-title">Часто задаваемые вопросы</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Какие услуги можно заказать с доставкой?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Вы можете заказать доставку банковских карт (дебетовых и кредитных), документов (договоры, выписки), а также воспользоваться курьерской доставкой для любых банковских операций.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Сколько стоит доставка?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Доставка карт бесплатна. Доставка документов стоит 15 сомони, а экспресс-курьерская доставка — 25 сомони. Тарифы зависят от города.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>В каких городах доступна доставка?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>В настоящее время доставка доступна в Душанбе и Худжанде. Мы планируем расширить географию в ближайшее время.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Как отследить статус доставки?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>После оформления заявки курьер свяжется с вами по указанному номеру телефона. Также вы можете позвонить на 900 для уточнения статуса.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)">
+            <span>Можно ли изменить адрес или время доставки?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Да, вы можете изменить адрес или время доставки, связавшись с нами по телефону 900 или через мобильное приложение не менее чем за 2 часа до доставки.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact CTA Section -->
+    <section class="cta-section">
+      <h2>Остались вопросы?</h2>
+      <p>Позвоните нам по номеру 900 или оставьте заявку, и мы расскажем, как работает доставка и какие документы нужны.</p>
+      <div class="cta-actions">
+        <a class="cta-btn primary" href="contact.html">Связаться с нами</a>
+        <a class="cta-btn secondary" href="tel:900">Позвонить 900</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="sb-footer">
+    <div class="sb-footer-inner">
+      <div class="sb-footer-grid">
+        <div class="sb-footer-col">
+          <div class="sb-footer-logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="#fbbf24" stroke-width="2" fill="none"/>
+              <path d="M16 6L24 10V22L16 26L8 22V10L16 6Z" fill="#fbbf24"/>
+            </svg>
+            <span>Сомонибонк</span>
+          </div>
+          <p class="sb-footer-address">
+            ул. Рудаки, 48<br>
+            Душанбе, Таджикистан
+          </p>
+          <a href="addresses.html" class="sb-footer-link">Филиалы и точки обслуживания</a>
+        </div>
+
+        <div class="sb-footer-col">
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">900</div>
+            <div class="sb-contact-label">Для звонков с мобильных<br>в Таджикистане</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">+992 44 600 1111</div>
+            <div class="sb-contact-label">Для звонков из любой<br>точки мира</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">+992 44 600 1520</div>
+            <div class="sb-contact-label">Телефон доверия<br>Наблюдательный Совет<br>Безопасность и Compliance<br>Жалобы и обращения</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-email">support@somoni.tj</div>
+            <div class="sb-contact-label">Для онлайн-обращений</div>
+          </div>
+        </div>
+
+        <div class="sb-footer-col">
+          <div class="sb-footer-section">
+            <h4>Приложения</h4>
+            <div class="sb-app-buttons">
+              <a href="#" class="sb-app-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                </svg>
+                Google Play
+              </a>
+              <a href="#" class="sb-app-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.37 12.36,4.26 13,3.5Z"/>
+                </svg>
+                App Store
+              </a>
+            </div>
+          </div>
+          <div class="sb-footer-section">
+            <h4>Социальные сети</h4>
+            <div class="sb-social-grid">
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.04C20.54,3.74 21.21,4.22 20.94,5.32L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.66,16.27L10.65,18.23C10.43,18.45 10.25,18.65 9.78,18.65Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M12,2C6.48,2 2,6.48 2,12C2,16.84 5.44,20.87 10,21.8V15H8V12H10V9.5C10,7.57 11.57,6 13.5,6H16V9H14C13.45,9 13,9.45 13,10V12H16L15.5,15H13V21.8C18.56,20.87 22,16.84 22,12C22,6.48 17.52,2 12,2Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19M18.5,18.5V13.2A3.26,3.26 0 0,0 15.24,9.94C14.39,9.94 13.4,10.46 12.92,11.24V10.13H10.13V18.5H12.92V13.57C12.92,12.8 13.54,12.17 14.31,12.17A1.4,1.4 0 0,1 15.71,13.57V18.5H18.5M6.88,8.56A1.68,1.68 0 0,0 8.56,6.88C8.56,5.95 7.81,5.19 6.88,5.19A1.69,1.69 0 0,0 5.19,6.88C5.19,7.81 5.95,8.56 6.88,8.56M8.27,18.5V10.13H5.5V18.5H8.27Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M15.07,2H8.93C3.33,2 2,3.33 2,8.93V15.07C2,20.67 3.33,22 8.93,22H15.07C20.67,22 22,20.67 22,15.07V8.93C22,3.33 20.67,2 15.07,2M12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4M12,7C10.5,7 9.15,7.6 8.19,8.57C7.22,9.53 6.62,10.88 6.62,12.38C6.62,13.88 7.22,15.22 8.19,16.19L9.61,14.77C9.06,14.22 8.74,13.53 8.74,12.76C8.74,12 9.06,11.31 9.61,10.76C10.16,10.21 10.85,9.89 11.61,9.89C12.38,9.89 13.07,10.21 13.62,10.76C14.17,11.31 14.49,12 14.49,12.76C14.49,13.53 14.17,14.22 13.62,14.77L15.04,16.19C16.01,15.22 16.61,13.88 16.61,12.38C16.61,10.88 16.01,9.53 15.04,8.57C14.08,7.6 12.73,7 12,7M12,13.5C11.17,13.5 10.5,14.17 10.5,15C10.5,15.83 11.17,16.5 12,16.5C12.83,16.5 13.5,15.83 13.5,15C13.5,14.17 12.83,13.5 12,13.5Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M19.59,6.69A4.83,4.83 0 0,1 21.5,9.5C21.5,11.99 19.49,14 17,14V11A2,2 0 0,0 15,9H14V16.5A3.5,3.5 0 0,1 10.5,20A3.5,3.5 0 0,1 7,16.5A3.5,3.5 0 0,1 10.5,13C10.8,13 11.09,13.04 11.37,13.11V10.35C11.05,10.27 10.71,10.23 10.36,10.23A6.36,6.36 0 0,0 4,16.59A6.36,6.36 0 0,0 10.36,22.95C14.31,22.95 17.5,19.76 17.5,15.81V9.5H19.59Z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sb-footer-bottom">
+        <div class="sb-footer-links">
+          <a href="#">О нас</a>
+          <a href="addresses.html">Адреса</a>
+          <a href="#">Документы и тарифы</a>
+          <a href="#">Вакансии</a>
+          <a href="contact.html">Связь с нами</a>
+        </div>
+      </div>
+
+      <div class="sb-footer-copyright">
+        <p>&copy; 2024 ПАО Сомонибонк</p>
+        <p>Лицензия НБТ №0000114 от 3 января 2020 года</p>
+        <p>ПАО Сомонибонк является участником Фонда страхования вкладов и Объединения Таджикистана</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const tariffData = {
+      dushanbe: [
+        { name: 'Доставка карты', desc: 'Доставка дебетовой или кредитной карты курьером', price: 'Бесплатно', term: '1–2 дня' },
+        { name: 'Доставка документов', desc: 'Договоры, выписки и другие банковские документы', price: '15 сомони', term: '1–3 дня' },
+        { name: 'Курьерская доставка', desc: 'Экспресс-доставка по любому адресу в городе', price: '25 сомони', term: 'До 4 часов' }
+      ],
+      khujand: [
+        { name: 'Доставка карты', desc: 'Доставка дебетовой или кредитной карты курьером', price: 'Бесплатно', term: '2–3 дня' },
+        { name: 'Доставка документов', desc: 'Договоры, выписки и другие банковские документы', price: '20 сомони', term: '2–4 дня' },
+        { name: 'Курьерская доставка', desc: 'Экспресс-доставка по любому адресу в городе', price: '30 сомони', term: 'До 6 часов' }
+      ]
+    };
+
+    const cityNotes = {
+      dushanbe: 'Доставка по Душанбе каждый день с 09:00 до 20:00.',
+      khujand: 'Доставка по Худжанду с Пн по Сб с 09:00 до 18:00.'
+    };
+
+    function switchCity(city) {
+      document.querySelectorAll('.city-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.city === city);
+      });
+
+      const rows = tariffData[city];
+      const container = document.getElementById('tariffRows');
+      container.innerHTML = rows.map(r => `
+        <div class="table-row">
+          <span>
+            <span class="service-name">${r.name}</span>
+            <span class="service-desc">${r.desc}</span>
+          </span>
+          <span class="price">${r.price}</span>
+          <span class="term">${r.term}</span>
+        </div>
+      `).join('');
+
+      document.getElementById('cityNote').textContent = cityNotes[city];
+    }
+
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      item.classList.toggle('active');
+    }
+  </script>
 </body>
 </html>

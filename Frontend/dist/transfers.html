@@ -3,1303 +3,212 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Денежные переводы — SomoniBank</title>
+  <title>Денежные переводы — Сомонибонк</title>
   <style>
-    :root {
-      --sb-primary: #1a6eff;
-      --sb-primary-dark: #0d5ce0;
-      --sb-bg: #edf4ff;
-      --sb-card-bg: #ffffff;
-      --sb-text: #1a2b4c;
-      --sb-text-muted: #6b7c9b;
-      --sb-border: #e1e9f5;
-      --sb-shadow: 0 8px 32px rgba(26, 110, 255, 0.12);
-      --sb-shadow-hover: 0 16px 48px rgba(26, 110, 255, 0.2);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
-      background: var(--sb-bg);
-      min-height: 100vh;
-      color: var(--sb-text);
-      line-height: 1.5;
-    }
-
-    /* Header - Two Row Design */
-    .sb-header {
-      background: #ffffff;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .sb-header-top {
-      border-bottom: 1px solid #e5e7eb;
-      padding: 12px 48px;
-    }
-
-    .sb-header-bottom {
-      border-bottom: 1px solid #e5e7eb;
-      padding: 0 48px;
-    }
-
-    .sb-header-inner {
-      max-width: 1136px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .sb-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: 700;
-      color: #1a2b4c;
-      text-decoration: none;
-    }
-
-    .sb-logo-icon-new {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .sb-logo-text {
-      font-weight: 700;
-      color: #1a2b4c;
-    }
-
-    /* Top Navigation */
-    .sb-nav-top {
-      display: flex;
-      gap: 40px;
-    }
-
-    .sb-nav-top a {
-      color: #4b5563;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 15px;
-      padding: 8px 0;
-      position: relative;
-      transition: color 0.2s ease;
-    }
-
-    .sb-nav-top a:hover {
-      color: #1a2b4c;
-    }
-
-    .sb-nav-top a.active {
-      color: #1a2b4c;
-    }
-
-    .sb-nav-top a.active::after {
-      content: '';
-      position: absolute;
-      bottom: -12px;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: #10b981;
-      border-radius: 2px;
-    }
-
-    /* Bottom Navigation */
-    .sb-nav-bottom {
-      display: flex;
-      gap: 32px;
-      padding: 12px 0;
-    }
-
-    .sb-nav-bottom a {
-      color: #4b5563;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 14px;
-      transition: color 0.2s ease;
-    }
-
-    .sb-nav-bottom a:hover {
-      color: #1a2b4c;
-    }
-
-    .sb-nav-bottom a.active {
-      color: #1a2b4c;
-      font-weight: 600;
-    }
-
-    .sb-header-actions {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .sb-location-link {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #4b5563;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .sb-location-link:hover {
-      color: #1a2b4c;
-    }
-
-    .sb-location-link svg {
-      flex-shrink: 0;
-    }
-
-    .sb-lang-btn {
-      background: transparent;
-      border: none;
-      padding: 8px 0;
-      font-size: 14px;
-      color: #4b5563;
-      cursor: pointer;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .sb-lang-btn:hover {
-      color: #1a2b4c;
-    }
-
-    /* Main Content */
-    .sb-main {
-      max-width: 1136px;
-      margin: 0 auto;
-      padding: 40px 24px 80px;
-    }
-
-    .sb-page-title {
-      font-size: 32px;
-      font-weight: 700;
-      color: var(--sb-text);
-      margin-bottom: 32px;
-      opacity: 0;
-      animation: fadeInDown 0.6s ease forwards;
-    }
-
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Transfer Cards */
-    .sb-transfers-list {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .sb-transfer-card {
-      background: var(--sb-card-bg);
-      border-radius: 20px;
-      padding: 28px 32px;
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      box-shadow: var(--sb-shadow);
-      border: 1px solid var(--sb-border);
-      cursor: pointer;
-      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-      opacity: 0;
-      animation: fadeInUp 0.6s ease forwards;
-    }
-
-    .sb-transfer-card:nth-child(1) { animation-delay: 0.1s; }
-    .sb-transfer-card:nth-child(2) { animation-delay: 0.2s; }
-    .sb-transfer-card:nth-child(3) { animation-delay: 0.3s; }
-    .sb-transfer-card:nth-child(4) { animation-delay: 0.4s; }
-    .sb-transfer-card:nth-child(5) { animation-delay: 0.5s; }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .sb-transfer-card:hover {
-      transform: translateY(-6px) scale(1.01);
-      box-shadow: var(--sb-shadow-hover);
-      border-color: rgba(26, 110, 255, 0.3);
-    }
-
-    .sb-transfer-card:active {
-      transform: translateY(-2px) scale(0.995);
-    }
-
-    /* Phone Mockup */
-    .sb-phone-mockup {
-      width: 140px;
-      height: 200px;
-      flex-shrink: 0;
-      position: relative;
-    }
-
-    .sb-phone-frame {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(145deg, #f0f4f9 0%, #e4ebf5 100%);
-      border-radius: 24px;
-      border: 3px solid #1a6eff;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .sb-transfer-card:hover .sb-phone-frame {
-      border-color: #0d5ce0;
-      transform: scale(1.02);
-    }
-
-    .sb-phone-notch {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 18px;
-      background: #1a6eff;
-      border-radius: 0 0 12px 12px;
-    }
-
-    .sb-phone-screen {
-      width: calc(100% - 12px);
-      height: calc(100% - 20px);
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Icons */
-    .sb-icon-circle {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 36px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-
-    .sb-transfer-card:hover .sb-icon-circle {
-      transform: scale(1.1) rotate(5deg);
-    }
-
-    .sb-icon-euro {
-      background: linear-gradient(135deg, #1a6eff 0%, #0d5ce0 100%);
-      color: white;
-    }
-
-    .sb-icon-dollar {
-      background: linear-gradient(135deg, #1a6eff 0%, #0d5ce0 100%);
-      color: white;
-    }
-
-    .sb-icon-china {
-      background: linear-gradient(135deg, #1a6eff 0%, #0d5ce0 100%);
-      position: relative;
-    }
-
-    .sb-icon-china::before {
-      content: '¥';
-      color: white;
-      font-size: 32px;
-      font-weight: bold;
-    }
-
-    .sb-icon-wechat {
-      position: absolute;
-      bottom: -10px;
-      right: -10px;
-      width: 36px;
-      height: 36px;
-      background: #07C160;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: white;
-      border: 3px solid white;
-      animation: pulse 2s infinite;
-    }
-
-    .sb-icon-visa {
-      background: linear-gradient(135deg, #1a1f71 0%, #151b5e 100%);
-      color: white;
-      font-size: 14px;
-      letter-spacing: 1px;
-    }
-
-    .sb-map-icon {
-      width: 80px;
-      height: 64px;
-    }
-
-    .sb-map-standalone {
-      width: 140px;
-      height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .sb-wu-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 4px;
-      width: 60px;
-      height: 60px;
-    }
-
-    .sb-wu-cell {
-      background: #3b82f6;
-      border-radius: 2px;
-    }
-
-    .sb-globe-container {
-      width: 100px;
-      height: 100px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .sb-globe {
-      width: 80px;
-      height: 80px;
-    }
-
-    .sb-plane-icon {
-      position: absolute;
-      font-size: 24px;
-      color: #10b981;
-      animation: fly 3s ease-in-out infinite;
-    }
-
-    @keyframes fly {
-      0%, 100% { transform: translate(0, 0) rotate(-45deg); }
-      50% { transform: translate(10px, -10px) rotate(-45deg); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
-
-    .sb-icon-unionpay {
-      background: linear-gradient(135deg, #1a6eff 0%, #0d5ce0 100%);
-      position: relative;
-    }
-
-    .sb-icon-unionpay::before {
-      content: 'UnionPay';
-      color: white;
-      font-size: 10px;
-      font-weight: bold;
-    }
-
-    .sb-card-mini {
-      position: absolute;
-      bottom: 10px;
-      right: -15px;
-      width: 60px;
-      height: 38px;
-      background: linear-gradient(135deg, #C41E3A 0%, #8B0000 100%);
-      border-radius: 6px;
-      border: 2px solid white;
-      display: flex;
-      flex-direction: column;
-      padding: 4px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .sb-card-mini-union {
-      background: linear-gradient(135deg, #1a6eff 0%, #0d5ce0 100%);
-    }
-
-    .sb-card-mini::before {
-      content: '';
-      display: block;
-      width: 20px;
-      height: 12px;
-      background: #FFD700;
-      border-radius: 2px;
-      margin-bottom: 4px;
-    }
-
-    .sb-card-strip {
-      height: 4px;
-      background: linear-gradient(90deg, #C0C0C0, #E8E8E8);
-      border-radius: 1px;
-    }
-
-    .sb-card-mini-mastercard {
-      background: linear-gradient(135deg, #EB001B 0%, #F79E1B 100%);
-    }
-
-    .sb-mastercard-circles {
-      position: absolute;
-      bottom: 20px;
-      right: -10px;
-      display: flex;
-    }
-
-    .sb-mc-circle {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      opacity: 0.9;
-    }
-
-    .sb-mc-circle.red {
-      background: #EB001B;
-      margin-right: -10px;
-    }
-
-    .sb-mc-circle.orange {
-      background: #F79E1B;
-    }
-
-    /* Card Content */
-    .sb-card-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .sb-card-title {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--sb-text);
-      margin: 0;
-      transition: color 0.2s ease;
-    }
-
-    .sb-transfer-card:hover .sb-card-title {
-      color: var(--sb-primary);
-    }
-
-    .sb-card-desc {
-      font-size: 14px;
-      color: var(--sb-text-muted);
-      line-height: 1.5;
-      max-width: 400px;
-    }
-
-    .sb-card-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #1a6eff 0%, #0d5ce0 100%);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 16px rgba(26, 110, 255, 0.35);
-      margin-top: 8px;
-      width: fit-content;
-    }
-
-    .sb-card-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(26, 110, 255, 0.45);
-      background: linear-gradient(135deg, #2a7eff 0%, #1d70f0 100%);
-    }
-
-    .sb-card-btn:active {
-      transform: translateY(0);
-    }
-
-    .sb-card-btn::after {
-      content: '→';
-      transition: transform 0.2s ease;
-    }
-
-    .sb-card-btn:hover::after {
-      transform: translateX(4px);
-    }
-
-    /* Modal */
-    .sb-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(26, 43, 76, 0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      z-index: 1000;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(4px);
-    }
-
-    .sb-modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .sb-modal {
-      background: white;
-      border-radius: 24px;
-      padding: 32px;
-      max-width: 480px;
-      width: 100%;
-      transform: scale(0.9) translateY(20px);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
-    }
-
-    .sb-modal-overlay.active .sb-modal {
-      transform: scale(1) translateY(0);
-    }
-
-    .sb-modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-
-    .sb-modal-title {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--sb-text);
-    }
-
-    .sb-modal-close {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: none;
-      background: #f0f4f9;
-      color: var(--sb-text-muted);
-      font-size: 20px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .sb-modal-close:hover {
-      background: #e4ebf5;
-      color: var(--sb-text);
-    }
-
-    .sb-modal-body {
-      color: var(--sb-text-muted);
-      line-height: 1.6;
-    }
-
-    .sb-modal-body p {
-      margin-bottom: 12px;
-    }
-
-    .sb-modal-btn {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #1a6eff 0%, #0d5ce0 100%);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 24px;
-      transition: all 0.2s ease;
-    }
-
-    .sb-modal-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(26, 110, 255, 0.35);
-    }
-
-    /* Loading State */
-    .sb-loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Footer */
-    .sb-footer {
-      background: #0f172a;
-      color: #e2e8f0;
-      padding: 60px 48px 30px;
-      margin-top: 80px;
-    }
-
-    .sb-footer-inner {
-      max-width: 1136px;
-      margin: 0 auto;
-    }
-
-    .sb-footer-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.5fr 1fr;
-      gap: 60px;
-      margin-bottom: 50px;
-    }
-
-    .sb-footer-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-
-    .sb-footer-address {
-      color: #94a3b8;
-      font-size: 14px;
-      line-height: 1.6;
-      margin-bottom: 16px;
-    }
-
-    .sb-footer-link {
-      color: #60a5fa;
-      text-decoration: none;
-      font-size: 14px;
-      border-bottom: 1px solid transparent;
-      transition: border-color 0.2s ease;
-    }
-
-    .sb-footer-link:hover {
-      border-bottom-color: #60a5fa;
-    }
-
-    .sb-contact-item {
-      margin-bottom: 24px;
-    }
-
-    .sb-contact-number {
-      font-size: 24px;
-      font-weight: 600;
-      color: #fbbf24;
-      margin-bottom: 4px;
-    }
-
-    .sb-contact-email {
-      font-size: 18px;
-      font-weight: 500;
-      color: #e2e8f0;
-      margin-bottom: 4px;
-    }
-
-    .sb-contact-label {
-      color: #94a3b8;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .sb-footer-section h4 {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 16px;
-      color: #e2e8f0;
-    }
-
-    .sb-app-buttons {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 30px;
-    }
-
-    .sb-app-btn {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 8px;
-      color: #e2e8f0;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 500;
-      transition: all 0.2s ease;
-    }
-
-    .sb-app-btn:hover {
-      background: #334155;
-    }
-
-    .sb-social-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-    }
-
-    .sb-social-icon {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #1e293b;
-      border-radius: 50%;
-      color: #94a3b8;
-      transition: all 0.2s ease;
-    }
-
-    .sb-social-icon:hover {
-      background: #334155;
-      color: #e2e8f0;
-    }
-
-    .sb-footer-bottom {
-      border-top: 1px solid #1e293b;
-      padding: 24px 0;
-      margin-bottom: 24px;
-    }
-
-    .sb-footer-links {
-      display: flex;
-      gap: 32px;
-    }
-
-    .sb-footer-links a {
-      color: #94a3b8;
-      text-decoration: none;
-      font-size: 14px;
-      transition: color 0.2s ease;
-    }
-
-    .sb-footer-links a:hover {
-      color: #e2e8f0;
-    }
-
-    .sb-footer-copyright {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 24px;
-      border-top: 1px solid #1e293b;
-      color: #64748b;
-      font-size: 12px;
-    }
-
-    .sb-footer-copyright p {
-      margin: 0;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .sb-header {
-        padding: 16px 20px;
-      }
-
-      .sb-nav {
-        display: none;
-      }
-
-      .sb-main {
-        padding: 24px 16px 60px;
-      }
-
-      .sb-page-title {
-        font-size: 24px;
-        margin-bottom: 24px;
-      }
-
-      .sb-transfer-card {
-        flex-direction: column;
-        text-align: center;
-        padding: 24px 20px;
-      }
-
-      .sb-phone-mockup {
-        width: 120px;
-        height: 170px;
-      }
-
-      .sb-card-content {
-        align-items: center;
-      }
-
-      .sb-card-desc {
-        max-width: 100%;
-      }
-    }
-
-    /* Shimmer effect for loading */
-    .sb-shimmer {
-      background: linear-gradient(90deg, #f0f4f9 25%, #e4ebf5 50%, #f0f4f9 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-
-    @keyframes shimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--primary:#2563eb;--primary-dark:#1d4ed8;--secondary:#10b981;--text:#1e293b;--text-muted:#64748b;--bg:#f1f5f9;--card-bg:#ffffff;--border:#e2e8f0;--shadow:0 4px 6px -1px rgba(0,0,0,.1);--shadow-lg:0 20px 25px -5px rgba(0,0,0,.1)}
+    body{font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    .sb-header{background:#fff;position:sticky;top:0;z-index:100}
+    .sb-header-top{border-bottom:1px solid var(--border);padding:12px 48px}
+    .sb-header-bottom{border-bottom:1px solid var(--border);padding:0 48px}
+    .sb-header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+    .sb-logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;color:var(--text);text-decoration:none}
+    .sb-nav-top{display:flex;gap:40px}
+    .sb-nav-top a{color:#4b5563;text-decoration:none;font-weight:500;font-size:15px;padding:8px 0;position:relative;transition:color .2s ease}
+    .sb-nav-top a.active{color:var(--text)}
+    .sb-nav-top a.active::after{content:'';position:absolute;bottom:-12px;left:0;right:0;height:3px;background:var(--secondary);border-radius:2px}
+    .sb-nav-bottom{display:flex;gap:32px;padding:12px 0}
+    .sb-nav-bottom a{color:#4b5563;text-decoration:none;font-weight:500;font-size:14px;transition:color .2s ease}
+    .sb-nav-bottom a.active{color:var(--text);font-weight:600}
+    .sb-header-actions{display:flex;align-items:center;gap:24px}
+    .sb-location-link{display:flex;align-items:center;gap:8px;color:#4b5563;text-decoration:none;font-size:14px}
+    .sb-lang-btn{background:transparent;border:none;font-size:14px;color:#4b5563;cursor:pointer}
+    .sb-main{max-width:1200px;margin:0 auto;padding:40px 24px}
+    .hero-section{background:linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%);border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;margin-bottom:48px;animation:fadeInUp .8s ease;min-height:400px}
+    .hero-content{padding:60px 48px;display:flex;flex-direction:column;justify-content:center}
+    .hero-title{font-size:42px;font-weight:700;line-height:1.2;margin-bottom:20px}
+    .hero-desc{font-size:16px;color:var(--text-muted);margin-bottom:32px;max-width:400px}
+    .hero-btn{display:inline-flex;align-items:center;gap:8px;padding:16px 32px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s ease;box-shadow:0 10px 20px rgba(37,99,235,.3);width:fit-content}
+    .hero-btn:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(37,99,235,.4)}
+    .hero-visual{position:relative;display:flex;align-items:center;justify-content:center;padding:40px;overflow:hidden}
+    .hero-visual img{width:100%;height:100%;object-fit:cover;border-radius:20px;box-shadow:0 18px 40px rgba(0,0,0,.12)}
+    .section-title{font-size:32px;font-weight:700;margin-bottom:40px;text-align:center;font-family:Georgia,serif;color:#1e3a5f}
+    .transfers-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-bottom:64px}
+    .transfer-card{background:var(--card-bg);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:200px 1fr;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .3s ease;animation:fadeInUp .6s ease backwards}
+    .transfer-card:nth-child(1){animation-delay:.1s}
+    .transfer-card:nth-child(2){animation-delay:.2s}
+    .transfer-card:nth-child(3){animation-delay:.3s}
+    .transfer-card:nth-child(4){animation-delay:.4s}
+    .transfer-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+    .transfer-card-img{overflow:hidden}
+    .transfer-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+    .transfer-card:hover .transfer-card-img img{transform:scale(1.05)}
+    .transfer-card-body{padding:28px;display:flex;flex-direction:column;justify-content:center}
+    .transfer-card-title{font-size:18px;font-weight:700;margin-bottom:8px}
+    .transfer-card-desc{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:16px}
+    .transfer-card-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .3s ease;width:fit-content}
+    .transfer-card-btn:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(37,99,235,.3)}
+    .transfer-badge{display:inline-block;padding:4px 12px;background:#ecfdf5;color:#065f46;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:12px}
+    .info-section{margin-bottom:64px}
+    .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .info-card{background:var(--card-bg);border-radius:20px;padding:32px 24px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .3s ease}
+    .info-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+    .info-icon{width:64px;height:64px;margin:0 auto 20px;border-radius:16px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);display:flex;align-items:center;justify-content:center}
+    .info-icon svg{width:28px;height:28px;color:var(--primary)}
+    .info-card h4{font-size:16px;font-weight:600;margin-bottom:8px}
+    .info-card p{font-size:13px;color:var(--text-muted);line-height:1.5}
+    .sb-footer{background:#0f172a;color:#e2e8f0;padding:60px 48px 30px}
+    .sb-footer-inner{max-width:1200px;margin:0 auto}
+    .sb-footer-grid{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:60px;margin-bottom:50px}
+    .sb-footer-logo{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:700;margin-bottom:20px}
+    .sb-footer-address{color:#94a3b8;font-size:14px;line-height:1.6;margin-bottom:16px}
+    .sb-footer-link{color:#60a5fa;text-decoration:none;font-size:14px}
+    .sb-contact-item{margin-bottom:24px}
+    .sb-contact-number{font-size:24px;font-weight:600;color:#fbbf24;margin-bottom:4px}
+    .sb-contact-email{font-size:18px;font-weight:500;color:#e2e8f0}
+    .sb-contact-label{color:#94a3b8;font-size:13px;line-height:1.5}
+    .sb-footer-section h4{font-size:16px;font-weight:600;margin-bottom:16px}
+    .sb-app-buttons{display:flex;gap:12px;margin-bottom:30px}
+    .sb-app-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#1e293b;border:1px solid #334155;border-radius:8px;color:#e2e8f0;text-decoration:none;font-size:13px;transition:all .2s ease}
+    .sb-app-btn:hover{background:#334155}
+    .sb-social-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .sb-social-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#1e293b;border-radius:50%;color:#94a3b8;transition:all .2s ease}
+    .sb-social-icon:hover{background:#334155;color:#e2e8f0}
+    .sb-footer-bottom{border-top:1px solid #1e293b;padding:24px 0;margin-bottom:24px}
+    .sb-footer-links{display:flex;gap:32px}
+    .sb-footer-links a{color:#94a3b8;text-decoration:none;font-size:14px;transition:color .2s ease}
+    .sb-footer-links a:hover{color:#e2e8f0}
+    .sb-footer-copyright{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid #1e293b;color:#64748b;font-size:12px}
+    @media(max-width:1024px){.hero-section{grid-template-columns:1fr}.transfers-grid{grid-template-columns:1fr}.transfer-card{grid-template-columns:1fr}.info-grid{grid-template-columns:repeat(2,1fr)}.sb-footer-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:768px){.sb-header-top,.sb-header-bottom{padding:12px 20px}.sb-nav-top,.sb-nav-bottom{display:none}.hero-title{font-size:32px}.hero-visual{order:-1}.info-grid,.sb-footer-grid{grid-template-columns:1fr}.sb-main{padding:20px 16px}}
   </style>
-  <script type="module" crossorigin src="/assets/transfers-De7awyr2.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/common-Cwdypr2M.js">
-  <link rel="stylesheet" crossorigin href="/assets/transfers-D9lV-fu_.css">
-  <link rel="stylesheet" crossorigin href="/assets/integration-DHZQThhm.css">
 </head>
 <body>
-  <!-- Header -->
   <header class="sb-header">
-    <!-- Top Row -->
-    <div class="sb-header-top">
-      <div class="sb-header-inner">
-        <a href="index.html" class="sb-logo">
-          <div class="sb-logo-icon-new">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <circle cx="16" cy="16" r="14" stroke="#2563EB" stroke-width="3"/>
-              <circle cx="22" cy="10" r="4" fill="#2563EB"/>
-            </svg>
-          </div>
-          <span class="sb-logo-text">Сомонибонк</span>
-        </a>
-        <nav class="sb-nav-top">
-          <a href="index.html" class="active">Частным лицам</a>
-          <a href="business.html">Бизнесу</a>
-          <a href="#">Сомонибонк</a>
-        </nav>
-        <div class="sb-header-actions">
-          <a href="#" class="sb-location-link">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
-            Адреса и банкоматы
-          </a>
-          <button class="sb-lang-btn">Рус ▾</button>
-        </div>
-      </div>
-    </div>
-    <!-- Bottom Row -->
-    <div class="sb-header-bottom">
-      <div class="sb-header-inner">
-        <nav class="sb-nav-bottom">
-          <a href="index.html">Приложение Somoni</a>
-          <a href="cards.html">Карты</a>
-          <a href="#">Салом</a>
-          <a href="auto.html">Покупка авто</a>
-          <a href="#">Somoni Shop</a>
-          <a href="transfers.html" class="active">Переводы</a>
-          <a href="#">Депозиты</a>
-          <a href="#">Авиабилеты</a>
-          <a href="#">Ещё ▾</a>
-        </nav>
-      </div>
-    </div>
+    <div class="sb-header-top"><div class="sb-header-inner">
+      <a href="index.html" class="sb-logo"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="3"/><circle cx="22" cy="10" r="4" fill="#2563eb"/></svg><span>Сомонибонк</span></a>
+      <nav class="sb-nav-top"><a href="index.html" class="active">Частным лицам</a><a href="business.html">Бизнесу</a><a href="somonibank.html">Сомонибонк</a></nav>
+      <div class="sb-header-actions"><a href="addresses.html" class="sb-location-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Адреса и банкоматы</a><button class="sb-lang-btn">Рус ▾</button></div>
+    </div></div>
+    <div class="sb-header-bottom"><div class="sb-header-inner">
+      <nav class="sb-nav-bottom"><a href="somonibank-app.html">Приложение Somoni</a><a href="cards.html">Карты</a><a href="#">Салом</a><a href="auto.html">Покупка авто</a><a href="#">Somoni Shop</a><a href="transfers.html" class="active">Переводы</a><a href="#">Депозиты</a><a href="#">Авиабилеты</a><a href="#">Ещё ▾</a></nav>
+    </div></div>
   </header>
 
-  <!-- Main Content -->
   <main class="sb-main">
-    <h1 class="sb-page-title">Денежные переводы</h1>
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Переводы по всему миру</h1>
+        <p class="hero-desc">Отправляйте деньги в 190+ стран мгновенно с минимальной комиссией через приложение Сомонибонк</p>
+        <button class="hero-btn">Начать перевод</button>
+      </div>
+      <div class="hero-visual">
+        <img alt="Международные переводы" src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80" loading="lazy"/>
+      </div>
+    </section>
 
-    <div class="sb-transfers-list" id="transfersList">
-      <!-- Europe -->
-      <div class="sb-transfer-card" data-type="europe">
-        <div class="sb-phone-mockup">
-          <div class="sb-phone-frame">
-            <div class="sb-phone-notch"></div>
-            <div class="sb-phone-screen">
-              <div class="sb-icon-circle sb-icon-euro">€</div>
-            </div>
-          </div>
+    <section class="transfers-grid">
+      <article class="transfer-card">
+        <div class="transfer-card-img"><img alt="Переводы в Европу" src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=600&q=80" loading="lazy"/></div>
+        <div class="transfer-card-body">
+          <span class="transfer-badge">0% комиссия</span>
+          <h3 class="transfer-card-title">Переводы в Европу</h3>
+          <p class="transfer-card-desc">35 стран Европы — переводите на карты и счета без комиссии через SEPA и Swift</p>
+          <button class="transfer-card-btn">Узнать больше →</button>
         </div>
-        <div class="sb-card-content">
-          <h3 class="sb-card-title">Переводы в Европу — 0%</h3>
-          <p class="sb-card-desc">Переводите деньги в 35 стран прямо на карты и счета в приложении СомониБанк</p>
-          <button class="sb-card-btn" data-action="open-modal" data-type="europe">Узнать больше</button>
+      </article>
+      <article class="transfer-card">
+        <div class="transfer-card-img"><img alt="Переводы в Китай" src="https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&w=600&q=80" loading="lazy"/></div>
+        <div class="transfer-card-body">
+          <span class="transfer-badge">0% комиссия</span>
+          <h3 class="transfer-card-title">Переводы в Китай</h3>
+          <p class="transfer-card-desc">Alipay и WeChat Pay — отправляйте деньги без комиссии напрямую в приложении</p>
+          <button class="transfer-card-btn">Узнать больше →</button>
+        </div>
+      </article>
+      <article class="transfer-card">
+        <div class="transfer-card-img"><img alt="Переводы в США" src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=600&q=80" loading="lazy"/></div>
+        <div class="transfer-card-body">
+          <h3 class="transfer-card-title">Переводы в США</h3>
+          <p class="transfer-card-desc">ACH и Wire Transfer — быстрые переводы на банковские счета в США</p>
+          <button class="transfer-card-btn">Узнать больше →</button>
+        </div>
+      </article>
+      <article class="transfer-card">
+        <div class="transfer-card-img"><img alt="Переводы по Таджикистану" src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80" loading="lazy"/></div>
+        <div class="transfer-card-body">
+          <h3 class="transfer-card-title">Переводы по стране</h3>
+          <p class="transfer-card-desc">Мгновенные переводы по Таджикистану на карты Visa, Mastercard и национальные банки</p>
+          <button class="transfer-card-btn">Узнать больше →</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="info-section">
+      <h2 class="section-title">Международные переводы</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <h4>190+ стран</h4>
+          <p>Visa Direct и Mastercard MoneySend — переводы по всему миру</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <h4>Мгновенно</h4>
+          <p>Деньги поступают на счёт получателя в течение нескольких минут</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <h4>Безопасно</h4>
+          <p>Все переводы защищены и соответствуют международным стандартам</p>
         </div>
       </div>
+    </section>
 
-      <!-- USA -->
-      <div class="sb-transfer-card" data-type="usa">
-        <div class="sb-phone-mockup">
-          <div class="sb-phone-frame">
-            <div class="sb-phone-notch"></div>
-            <div class="sb-phone-screen">
-              <div class="sb-icon-circle sb-icon-dollar">$</div>
-            </div>
-          </div>
+    <section class="info-section">
+      <h2 class="section-title">Western Union и Ватан</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <h4>Western Union</h4>
+          <p>Из любой точки мира — деньги на счёту мгновенно</p>
         </div>
-        <div class="sb-card-content">
-          <h3 class="sb-card-title">Переводы в США</h3>
-          <p class="sb-card-desc">Отправляйте деньги в банк напрямую на банковский счет в США прямо с приложением СомониБанк</p>
-          <button class="sb-card-btn" data-action="open-modal" data-type="usa">Узнать больше</button>
+        <div class="info-card">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+          <h4>Ватан</h4>
+          <p>Быстрая отправка денег по стране без открытия счёта</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <h4>SWIFT</h4>
+          <p>Международные переводы в любой уголок мира</p>
         </div>
       </div>
-
-      <!-- China -->
-      <div class="sb-transfer-card" data-type="china">
-        <div class="sb-phone-mockup">
-          <div class="sb-phone-frame">
-            <div class="sb-phone-notch"></div>
-            <div class="sb-phone-screen">
-              <div class="sb-icon-circle sb-icon-china">
-                <div class="sb-icon-wechat">💬</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="sb-card-content">
-          <h3 class="sb-card-title">Переводы в Китай — 0%</h3>
-          <p class="sb-card-desc">Отправляйте деньги без комиссии на Alipay и WeChat прямо в приложении СомониБанк</p>
-          <button class="sb-card-btn" data-action="open-modal" data-type="china">Узнать больше</button>
-        </div>
-      </div>
-
-      <!-- UnionPay -->
-      <div class="sb-transfer-card" data-type="unionpay">
-        <div class="sb-phone-mockup">
-          <div class="sb-phone-frame">
-            <div class="sb-phone-notch"></div>
-            <div class="sb-phone-screen">
-              <div class="sb-icon-circle sb-icon-unionpay"></div>
-              <div class="sb-card-mini sb-card-mini-union">
-                <div class="sb-card-strip"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="sb-card-content">
-          <h3 class="sb-card-title">Международные переводы на карты UnionPay</h3>
-          <p class="sb-card-desc">180+ стран мира доступны для выгодных переводов с приложением СомониБанк</p>
-          <button class="sb-card-btn" data-action="open-modal" data-type="unionpay">Узнать больше</button>
-        </div>
-      </div>
-
-      <!-- Mastercard -->
-      <div class="sb-transfer-card" data-type="mastercard">
-        <div class="sb-phone-mockup">
-          <div class="sb-phone-frame">
-            <div class="sb-phone-notch"></div>
-            <div class="sb-phone-screen">
-              <div style="width: 70px; height: 70px; position: relative;">
-                <div class="sb-mastercard-circles">
-                  <div class="sb-mc-circle red"></div>
-                  <div class="sb-mc-circle orange"></div>
-                </div>
-              </div>
-              <div class="sb-card-mini sb-card-mini-mastercard">
-                <div class="sb-card-strip"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="sb-card-content">
-          <h3 class="sb-card-title">Международные переводы на карты Mastercard</h3>
-          <p class="sb-card-desc">180+ стран мира доступны для выгодных переводов с приложением СомониБанк</p>
-          <button class="sb-card-btn" data-action="open-modal" data-type="mastercard">Узнать больше</button>
-        </div>
-      </div>
-
-      <!-- Visa -->
-      <div class="sb-transfer-card" data-type="visa">
-        <div class="sb-phone-mockup">
-          <div class="sb-phone-frame">
-            <div class="sb-phone-notch"></div>
-            <div class="sb-phone-screen">
-              <div class="sb-icon-circle sb-icon-visa">VISA</div>
-              <div class="sb-card-mini" style="background: linear-gradient(135deg, #1a1f71 0%, #151b5e 100%);">
-                <div class="sb-card-strip"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="sb-card-content">
-          <h3 class="sb-card-title">Международные переводы за рубеж на карты Visa</h3>
-          <p class="sb-card-desc">180+ стран мира доступны для выгодных переводов с приложением СомониБанк</p>
-          <button class="sb-card-btn" data-action="open-modal" data-type="visa">Узнать больше</button>
-        </div>
-      </div>
-
-      <!-- Domestic Transfers (Tajikistan map) -->
-      <div class="sb-transfer-card" data-type="domestic">
-        <div class="sb-phone-mockup">
-          <div class="sb-phone-frame" style="border-color: #3b82f6;">
-            <div class="sb-phone-notch"></div>
-            <div class="sb-phone-screen">
-              <svg class="sb-map-icon" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 15 L35 10 L50 12 L65 8 L80 15 L85 30 L80 50 L70 65 L55 70 L40 68 L25 60 L15 45 L12 30 Z" fill="#3b82f6"/>
-                <path d="M30 25 L45 22 L60 25 L70 35 L65 50 L50 55 L35 50 L25 40 Z" fill="#60a5fa"/>
-                <path d="M40 32 L55 30 L62 38 L58 48 L45 50 L38 42 Z" fill="#93c5fd"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-        <div class="sb-card-content">
-          <h3 class="sb-card-title">Переводы по стране с приложением Сомонибонк</h3>
-          <p class="sb-card-desc">Ваши близкие получат деньги на карту Visa, Mastercard и национальные банки Таджикистана в два счёта</p>
-          <button class="sb-card-btn" data-action="open-modal" data-type="domestic">Узнать больше</button>
-        </div>
-      </div>
-
-      <!-- Western Union -->
-      <div class="sb-transfer-card" data-type="westernunion">
-        <div class="sb-phone-mockup">
-          <div class="sb-phone-frame" style="border-color: #3b82f6;">
-            <div class="sb-phone-notch"></div>
-            <div class="sb-phone-screen">
-              <div class="sb-wu-grid">
-                <div class="sb-wu-cell"></div>
-                <div class="sb-wu-cell"></div>
-                <div class="sb-wu-cell"></div>
-                <div class="sb-wu-cell"></div>
-                <div class="sb-wu-cell"></div>
-                <div class="sb-wu-cell"></div>
-                <div class="sb-wu-cell"></div>
-                <div class="sb-wu-cell"></div>
-                <div class="sb-wu-cell"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="sb-card-content">
-          <h3 class="sb-card-title">Переводы через Western Union</h3>
-          <p class="sb-card-desc">Из любой точки мира в другую — деньги окажутся на счёту мгновенно</p>
-          <button class="sb-card-btn" data-action="open-modal" data-type="westernunion">Узнать больше</button>
-        </div>
-      </div>
-
-      <!-- Vatan -->
-      <div class="sb-transfer-card" data-type="vatan">
-        <div class="sb-phone-mockup">
-          <div class="sb-map-standalone">
-            <svg viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M30 20 L50 15 L75 18 L95 12 L110 25 L105 45 L95 70 L75 85 L50 88 L30 80 L15 60 L12 40 Z" fill="#1e40af" opacity="0.8"/>
-              <path d="M40 35 L60 30 L80 35 L90 50 L80 70 L60 75 L40 70 L30 52 Z" fill="#3b82f6"/>
-              <path d="M50 45 L70 42 L78 52 L72 65 L55 68 L48 55 Z" fill="#60a5fa"/>
-            </svg>
-          </div>
-        </div>
-        <div class="sb-card-content">
-          <h3 class="sb-card-title">Переводы через «Ватан»</h3>
-          <p class="sb-card-desc">Быстрая отправка денег по стране без открытия счёта</p>
-          <button class="sb-card-btn" data-action="open-modal" data-type="vatan">Узнать больше</button>
-        </div>
-      </div>
-
-      <!-- SWIFT -->
-      <div class="sb-transfer-card" data-type="swift">
-        <div class="sb-phone-mockup">
-          <div class="sb-globe-container">
-            <svg class="sb-globe" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="50" r="45" fill="url(#globeGradient)"/>
-              <ellipse cx="50" cy="50" rx="20" ry="45" fill="none" stroke="#1e3a8a" stroke-width="0.5" opacity="0.3"/>
-              <ellipse cx="50" cy="50" rx="35" ry="45" fill="none" stroke="#1e3a8a" stroke-width="0.5" opacity="0.3"/>
-              <ellipse cx="50" cy="50" rx="45" ry="20" fill="none" stroke="#1e3a8a" stroke-width="0.5" opacity="0.3"/>
-              <path d="M5 50 Q50 20 95 50" fill="none" stroke="#1e3a8a" stroke-width="0.5" opacity="0.3"/>
-              <path d="M5 50 Q50 80 95 50" fill="none" stroke="#1e3a8a" stroke-width="0.5" opacity="0.3"/>
-              <defs>
-                <radialGradient id="globeGradient" cx="30%" cy="30%">
-                  <stop offset="0%" stop-color="#60a5fa"/>
-                  <stop offset="100%" stop-color="#1e40af"/>
-                </radialGradient>
-              </defs>
-            </svg>
-            <div class="sb-plane-icon">✈</div>
-          </div>
-        </div>
-        <div class="sb-card-content">
-          <h3 class="sb-card-title">Переводы через SWIFT</h3>
-          <p class="sb-card-desc">Доступны все уголки мира. Деньги достанут получателя в целости и сохранности</p>
-          <button class="sb-card-btn" data-action="open-modal" data-type="swift">Узнать больше</button>
-        </div>
-      </div>
-    </div>
+    </section>
   </main>
 
-  <!-- Footer -->
   <footer class="sb-footer">
     <div class="sb-footer-inner">
       <div class="sb-footer-grid">
-        <!-- Logo & Address -->
         <div class="sb-footer-col">
-          <div class="sb-footer-logo">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="#fbbf24" stroke-width="2" fill="none"/>
-              <path d="M16 6L24 10V22L16 26L8 22V10L16 6Z" fill="#fbbf24"/>
-            </svg>
-            <span>Сомонибонк</span>
-          </div>
-          <p class="sb-footer-address">
-            ул. Рудаки, 48<br>
-            Душанбе, Таджикистан
-          </p>
-          <a href="#" class="sb-footer-link">Филиалы и точки обслуживания</a>
+          <div class="sb-footer-logo"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="#fbbf24" stroke-width="2" fill="none"/><path d="M16 6L24 10V22L16 26L8 22V10L16 6Z" fill="#fbbf24"/></svg><span>Сомонибонк</span></div>
+          <p class="sb-footer-address">ул. Рудаки, 48<br>Душанбе, Таджикистан</p>
+          <a href="addresses.html" class="sb-footer-link">Филиалы и точки обслуживания</a>
         </div>
-
-        <!-- Contact Info -->
         <div class="sb-footer-col">
-          <div class="sb-contact-item">
-            <div class="sb-contact-number">900</div>
-            <div class="sb-contact-label">Для звонков с мобильных<br>в Таджикистане</div>
-          </div>
-          <div class="sb-contact-item">
-            <div class="sb-contact-number">+992 44 600 1111</div>
-            <div class="sb-contact-label">Для звонков из любой<br>точки мира</div>
-          </div>
-          <div class="sb-contact-item">
-            <div class="sb-contact-number">+992 44 600 1520</div>
-            <div class="sb-contact-label">Телефон доверия<br>Наблюдательный Совет<br>Безопасность и Compliance<br>Жалобы и обращения</div>
-          </div>
-          <div class="sb-contact-item">
-            <div class="sb-contact-email">support@somoni.tj</div>
-            <div class="sb-contact-label">Для онлайн-обращений</div>
-          </div>
+          <div class="sb-contact-item"><div class="sb-contact-number">900</div><div class="sb-contact-label">Для звонков с мобильных в Таджикистане</div></div>
+          <div class="sb-contact-item"><div class="sb-contact-number">+992 44 600 1111</div><div class="sb-contact-label">Для звонков из любой точки мира</div></div>
+          <div class="sb-contact-item"><div class="sb-contact-email">support@somoni.tj</div><div class="sb-contact-label">Для онлайн-обращений</div></div>
         </div>
-
-        <!-- Apps & Social -->
         <div class="sb-footer-col">
-          <div class="sb-footer-section">
-            <h4>Приложения</h4>
-            <div class="sb-app-buttons">
-              <a href="#" class="sb-app-btn">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
-                </svg>
-                Google Play
-              </a>
-              <a href="#" class="sb-app-btn">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.37 12.36,4.26 13,3.5Z"/>
-                </svg>
-                App Store
-              </a>
-            </div>
-          </div>
-          <div class="sb-footer-section">
-            <h4>Социальные сети</h4>
-            <div class="sb-social-grid">
-              <a href="#" class="sb-social-icon" title="Telegram">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.04C20.54,3.74 21.21,4.22 20.94,5.32L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.66,16.27L10.65,18.23C10.43,18.45 10.25,18.65 9.78,18.65Z"/>
-                </svg>
-              </a>
-              <a href="#" class="sb-social-icon" title="Facebook">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M12,2C6.48,2 2,6.48 2,12C2,16.84 5.44,20.87 10,21.8V15H8V12H10V9.5C10,7.57 11.57,6 13.5,6H16V9H14C13.45,9 13,9.45 13,10V12H16L15.5,15H13V21.8C18.56,20.87 22,16.84 22,12C22,6.48 17.52,2 12,2Z"/>
-                </svg>
-              </a>
-              <a href="#" class="sb-social-icon" title="LinkedIn">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19M18.5,18.5V13.2A3.26,3.26 0 0,0 15.24,9.94C14.39,9.94 13.4,10.46 12.92,11.24V10.13H10.13V18.5H12.92V13.57C12.92,12.8 13.54,12.17 14.31,12.17A1.4,1.4 0 0,1 15.71,13.57V18.5H18.5M6.88,8.56A1.68,1.68 0 0,0 8.56,6.88C8.56,5.95 7.81,5.19 6.88,5.19A1.69,1.69 0 0,0 5.19,6.88C5.19,7.81 5.95,8.56 6.88,8.56M8.27,18.5V10.13H5.5V18.5H8.27Z"/>
-                </svg>
-              </a>
-              <a href="#" class="sb-social-icon" title="Odnoklassniki">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4M12,7C10.5,7 9.15,7.6 8.19,8.57C7.22,9.53 6.62,10.88 6.62,12.38C6.62,13.88 7.22,15.22 8.19,16.19L9.61,14.77C9.06,14.22 8.74,13.53 8.74,12.76C8.74,12 9.06,11.31 9.61,10.76C10.16,10.21 10.85,9.89 11.61,9.89C12.38,9.89 13.07,10.21 13.62,10.76C14.17,11.31 14.49,12 14.49,12.76C14.49,13.53 14.17,14.22 13.62,14.77L15.04,16.19C16.01,15.22 16.61,13.88 16.61,12.38C16.61,10.88 16.01,9.53 15.04,8.57C14.08,7.6 12.73,7 12,7M12,13.5C11.17,13.5 10.5,14.17 10.5,15C10.5,15.83 11.17,16.5 12,16.5C12.83,16.5 13.5,15.83 13.5,15C13.5,14.17 12.83,13.5 12,13.5Z"/>
-                </svg>
-              </a>
-              <a href="#" class="sb-social-icon" title="Instagram">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
-                </svg>
-              </a>
-              <a href="#" class="sb-social-icon" title="YouTube">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/>
-                </svg>
-              </a>
-              <a href="#" class="sb-social-icon" title="VK">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M15.07,2H8.93C3.33,2 2,3.33 2,8.93V15.07C2,20.67 3.33,22 8.93,22H15.07C20.67,22 22,20.67 22,15.07V8.93C22,3.33 20.67,2 15.07,2M18.15,16.27L16.57,16.27C16.09,16.28 15.61,16.08 15.27,15.74C14.96,15.42 14.69,15.06 14.46,14.68C13.94,13.9 13.5,13.17 12.78,13.07C12.04,12.96 11.38,13.54 10.66,14.12C10.12,14.56 9.54,15.04 8.91,15.04H8.68C7.54,15.04 5.92,14.9 4.68,13.62C3.29,12.18 2.19,9.52 2.19,9.52C2.19,9.52 4.42,9.3 5.87,10.7C6.4,11.21 6.74,11.87 7,12.44C7.35,13.18 7.62,13.82 8,13.82C8.36,13.82 8.5,13.43 8.68,12.9C8.78,12.57 8.96,11.88 9,11.72C9.04,11.5 8.86,11.31 8.64,11.24C8.09,11.06 7.4,10.81 6.86,10.56C5.75,10.07 4.77,9.38 4.77,7.74C4.77,5.62 6.8,4.67 8.68,4.67H10.19C11.94,4.67 13.5,5.82 14.46,7.29C15.42,8.76 16.57,10.23 18.15,10.23H18.36C18.79,10.23 19.17,10.5 19.32,10.91C19.47,11.32 19.36,11.78 19.05,12.09L17.5,13.64C17.18,13.96 17,14.38 17,14.82V15.15C17,15.6 17.22,16.03 17.58,16.31C18.1,16.72 18.61,16.96 18.96,17.12C19.44,17.34 19.73,17.82 19.63,18.34C19.53,18.86 19.08,19.24 18.54,19.24H18.15V19.24"/>
-                </svg>
-              </a>
-              <a href="#" class="sb-social-icon" title="TikTok">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                  <path d="M19.59,6.69A4.83,4.83 0 0,1 21.5,9.5C21.5,11.99 19.49,14 17,14V11A2,2 0 0,0 15,9H14V16.5A3.5,3.5 0 0,1 10.5,20A3.5,3.5 0 0,1 7,16.5A3.5,3.5 0 0,1 10.5,13C10.8,13 11.09,13.04 11.37,13.11V10.35C11.05,10.27 10.71,10.23 10.36,10.23A6.36,6.36 0 0,0 4,16.59A6.36,6.36 0 0,0 10.36,22.95C14.31,22.95 17.5,19.76 17.5,15.81V9.5H19.59Z"/>
-                </svg>
-              </a>
-            </div>
-          </div>
+          <div class="sb-footer-section"><h4>Приложения</h4><div class="sb-app-buttons"><a href="#" class="sb-app-btn">Google Play</a><a href="#" class="sb-app-btn">App Store</a></div></div>
+          <div class="sb-footer-section"><h4>Социальные сети</h4><div class="sb-social-grid"><a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.04C20.54,3.74 21.21,4.22 20.94,5.32L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.66,16.27L10.65,18.23C10.43,18.45 10.25,18.65 9.78,18.65Z"/></svg></a><a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12,2C6.48,2 2,6.48 2,12C2,16.84 5.44,20.87 10,21.8V15H8V12H10V9.5C10,7.57 11.57,6 13.5,6H16V9H14C13.45,9 13,9.45 13,10V12H16L15.5,15H13V21.8C18.56,20.87 22,16.84 22,12C22,6.48 17.52,2 12,2Z"/></svg></a><a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg></a><a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/></svg></a></div></div>
         </div>
       </div>
-
-      <!-- Bottom Links -->
-      <div class="sb-footer-bottom">
-        <div class="sb-footer-links">
-          <a href="#">О нас</a>
-          <a href="#">Адреса</a>
-          <a href="#">Документы и тарифы</a>
-          <a href="#">Вакансии</a>
-          <a href="#">Связь с нами</a>
-        </div>
-      </div>
-
-      <!-- Copyright -->
-      <div class="sb-footer-copyright">
-        <p>© 2024 ПАО Сомонибонк</p>
-        <p>Лицензия НБТ №0000114 от 3 января 2020 года</p>
-        <p>ПАО Сомонибонк является участником Фонда страхования вкладов и Объединения Таджикистана</p>
-      </div>
+      <div class="sb-footer-bottom"><div class="sb-footer-links"><a href="somonibank.html">О нас</a><a href="addresses.html">Адреса</a><a href="documents.html">Документы и тарифы</a><a href="#">Вакансии</a><a href="contact.html">Связь с нами</a></div></div>
+      <div class="sb-footer-copyright"><p>© 2024 ПАО Сомонибонк</p><p>Лицензия НБТ №0000114 от 3 января 2020 года</p><p>ПАО Сомонибонк является участником Фонда страхования вкладов</p></div>
     </div>
   </footer>
-
-  <!-- Modal -->
-  <div class="sb-modal-overlay" id="transferModal">
-    <div class="sb-modal">
-      <div class="sb-modal-header">
-        <h2 class="sb-modal-title" id="modalTitle">Перевод</h2>
-        <button class="sb-modal-close" onclick="closeTransferModal()">×</button>
-      </div>
-      <div class="sb-modal-body" id="modalBody">
-        <p>Загрузка информации...</p>
-      </div>
-      <button class="sb-modal-btn" id="modalActionBtn" onclick="startTransfer()">
-        Перейти к переводу
-      </button>
-    </div>
-  </div>
-
 </body>
 </html>

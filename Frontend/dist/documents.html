@@ -5,101 +5,1222 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Документы — Сомонибонк</title>
   <style>
-    :root{--bg:#eef5ff;--surface:#fff;--text:#16355e;--muted:#637a99;--line:#dbe9f8;--blue:#2d6df2;--dark:#082247;--shadow:0 24px 60px rgba(29,72,132,.16)}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(180deg,#f7fbff 0%,var(--bg) 100%);color:var(--text);font-family:"Segoe UI",Arial,Helvetica,sans-serif}
-    a{color:inherit;text-decoration:none}button{font:inherit}
-    .page{width:min(1180px,calc(100% - 24px));margin:0 auto;padding:14px 0 34px}.shell{overflow:hidden;border-radius:30px;border:1px solid rgba(216,231,248,.94);background:rgba(255,255,255,.9);box-shadow:0 28px 90px rgba(24,63,122,.14)}
-    .header-top,.header-main,.logo,.main-nav,.sub-nav,.doc-layout,.footer-top,.footer-bottom,.store-row,.social-row{display:flex;align-items:center}
-    .header-top{justify-content:center;padding:14px 20px 18px;border-bottom:1px solid var(--line)}.header-main{gap:34px;justify-content:center}.logo{gap:10px}.logo svg{width:34px;height:34px}.logo span{font-size:24px;font-weight:700;letter-spacing:-.03em}
-    .main-nav{gap:34px;font-size:15px;font-weight:500}.main-nav a,.sub-nav a,.doc-link,.side-link,.archive-toggle,.store-badge,.social-pill{transition:transform .22s ease,box-shadow .22s ease,color .22s ease,background .22s ease,border-color .22s ease,filter .22s ease}
-    .main-nav a,.sub-nav a{position:relative;padding:12px 0 15px}.main-nav a:hover,.sub-nav a:hover,.doc-link:hover,.side-link:hover{color:#145eb4}.main-nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-18px;height:5px;border-radius:999px;background:#3474ff}
-    .sub-nav{gap:34px;padding:22px 20px 26px;font-size:16px;white-space:nowrap;overflow-x:auto;justify-content:center;border-bottom:1px solid var(--line)}.sub-nav a{padding-bottom:10px;color:#3f5270}.sub-nav a.active-sub{color:#2e6df1;font-weight:600}.sub-nav a.active-sub::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:999px;background:#3474ff}
-    .section{padding:28px 40px 0}.section-title{margin:0 0 18px;font-family:Georgia,"Times New Roman",serif;font-size:42px;font-weight:400;letter-spacing:-.04em}
-    .docs-panel{padding:30px 34px 22px;border-radius:0;background:linear-gradient(180deg,#eef6ff,#edf5ff)}
-    .doc-layout{align-items:stretch;gap:34px}.doc-column{flex:1;min-width:0}.doc-column.left{padding-right:34px;border-right:1px solid rgba(196,215,238,.92)}.doc-column.right{max-width:300px}
-    .doc-link,.side-link{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;padding:14px 0;border:0;background:transparent;box-shadow:none;text-align:left;border-bottom:1px solid rgba(221,234,248,.84);color:#214062;cursor:pointer;appearance:none;-webkit-appearance:none}
-    .doc-link span,.side-link span{font-size:13px;line-height:1.45;letter-spacing:.04em;text-transform:uppercase}
-    .doc-link::after{content:"";flex:0 0 auto;width:0;height:3px;border-radius:999px;background:#3474ff;transition:width .22s ease}
-    .doc-link:hover,.doc-link.active{color:var(--blue);transform:translateX(6px)}
-    .doc-link:hover::after,.doc-link.active::after{width:34px}
-    .side-link{padding-left:14px;border-radius:14px;border:1px solid transparent}.side-link::before{content:"▣";color:#2bc0a1;font-size:14px}
-    .side-link:hover{transform:translateY(-2px);background:rgba(255,255,255,.65);border-color:rgba(194,216,241,.95);box-shadow:0 14px 26px rgba(95,138,198,.12)}
-    .archive-wrap{margin-top:22px;padding-top:22px}.archive-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:62px;padding:0 20px;border:1px solid rgba(205,223,244,.96);border-radius:18px;background:rgba(255,255,255,.78);color:#3c5778;cursor:pointer}
-    .archive-toggle:hover{transform:translateY(-3px);box-shadow:0 16px 28px rgba(97,145,209,.14)}.archive-toggle strong{font-size:12px;letter-spacing:.06em;text-transform:uppercase}.archive-toggle span:last-child{font-size:20px;transition:transform .22s ease}
-    .archive-toggle.open span:last-child{transform:rotate(180deg)}
-    .archive-list{display:grid;gap:10px;margin-top:14px}.archive-list[hidden]{display:none}.archive-item{padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.7);border:1px solid rgba(209,225,245,.94);color:#365273;transition:transform .22s ease,box-shadow .22s ease}.archive-item:hover{transform:translateX(6px);box-shadow:0 12px 24px rgba(88,132,194,.14)}
-    .footer{margin:0 0 0;padding:30px 30px 24px;background:linear-gradient(180deg,#081d3b 0%,#0a2346 100%);color:rgba(255,255,255,.9)}.footer-top{align-items:flex-start;justify-content:space-between;gap:28px;flex-wrap:wrap}.footer-col{min-width:210px;flex:1}.footer strong{color:#2fd2ef;font-size:28px;line-height:1.1}.footer p,.footer a{margin:0;color:rgba(230,238,252,.82);font-size:14px;line-height:1.65}
-    .store-row,.social-row{gap:10px;flex-wrap:wrap;margin-top:12px}.store-badge,.social-pill{min-width:90px;min-height:40px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;cursor:pointer}.store-badge:hover,.social-pill:hover{transform:translateY(-3px);filter:brightness(1.05)}.social-pill{min-width:40px;padding:0;border-radius:50%}
-    .footer-bottom{justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.09);font-size:13px;color:rgba(226,236,255,.64)}
-    .reveal{opacity:0;transform:translateY(24px)}.reveal.visible{opacity:1;transform:none;transition:opacity .65s ease,transform .65s ease}
-    .toast{position:fixed;right:20px;bottom:20px;background:rgba(21,39,69,.94);color:#fff;padding:12px 16px;border-radius:10px;font-size:13px;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s ease,transform .2s ease;z-index:1000}.toast.show{opacity:1;transform:translateY(0)}
-    @media (max-width:860px){.page{width:calc(100% - 16px)}.shell{border-radius:24px}.header-top,.sub-nav,.section,.footer{padding-left:18px;padding-right:18px}.header-top{display:block}.header-main{display:block}.logo{justify-content:center}.main-nav{margin-top:10px;gap:22px;overflow-x:auto;justify-content:flex-start}.sub-nav{justify-content:flex-start}.section-title{font-size:34px}.doc-layout{display:block}.doc-column.left{padding-right:0;border-right:0;padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid rgba(196,215,238,.92)}}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #10b981;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Header */
+    .sb-header {
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .sb-header-top {
+      border-bottom: 1px solid var(--border);
+      padding: 12px 48px;
+    }
+
+    .sb-header-bottom {
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px;
+    }
+
+    .sb-header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .sb-nav-top {
+      display: flex;
+      gap: 40px;
+    }
+
+    .sb-nav-top a {
+      color: #4b5563;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      padding: 8px 0;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    .sb-nav-top a.active {
+      color: var(--text);
+    }
+
+    .sb-nav-top a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--secondary);
+      border-radius: 2px;
+    }
+
+    .sb-nav-bottom {
+      display: flex;
+      gap: 32px;
+      padding: 12px 0;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .sb-nav-bottom a {
+      color: #4b5563;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s ease;
+      position: relative;
+      padding-bottom: 4px;
+    }
+
+    .sb-nav-bottom a.active {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .sb-nav-bottom a.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--secondary);
+      border-radius: 2px;
+    }
+
+    .sb-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .sb-location-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #4b5563;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sb-lang-btn {
+      background: transparent;
+      border: none;
+      font-size: 14px;
+      color: #4b5563;
+      cursor: pointer;
+    }
+
+    /* Main */
+    .sb-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 48px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .hero-content {
+      padding: 60px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-title {
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      max-width: 440px;
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .hero-img {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+      object-fit: cover;
+      aspect-ratio: 16 / 9;
+    }
+
+    /* Documents Content Area */
+    .docs-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 32px;
+      margin-bottom: 48px;
+      animation: fadeInUp 0.8s ease 0.2s backwards;
+    }
+
+    /* Document Cards */
+    .docs-main {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .docs-main-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+
+    .doc-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: var(--text);
+      animation: fadeInUp 0.5s ease backwards;
+    }
+
+    .doc-card:nth-child(1) { animation-delay: 0.05s; }
+    .doc-card:nth-child(2) { animation-delay: 0.1s; }
+    .doc-card:nth-child(3) { animation-delay: 0.15s; }
+    .doc-card:nth-child(4) { animation-delay: 0.2s; }
+    .doc-card:nth-child(5) { animation-delay: 0.25s; }
+    .doc-card:nth-child(6) { animation-delay: 0.3s; }
+    .doc-card:nth-child(7) { animation-delay: 0.35s; }
+    .doc-card:nth-child(8) { animation-delay: 0.4s; }
+    .doc-card:nth-child(9) { animation-delay: 0.45s; }
+    .doc-card:nth-child(10) { animation-delay: 0.5s; }
+
+    .doc-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+    }
+
+    .doc-card.active {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    }
+
+    .doc-card-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .doc-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .doc-card-icon svg {
+      width: 24px;
+      height: 24px;
+      color: var(--primary);
+    }
+
+    .doc-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .doc-card-arrow {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .doc-card-arrow svg {
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+      transition: color 0.3s ease;
+    }
+
+    .doc-card:hover .doc-card-arrow {
+      background: var(--primary);
+    }
+
+    .doc-card:hover .doc-card-arrow svg {
+      color: white;
+    }
+
+    /* Sidebar */
+    .docs-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sidebar-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .sidebar-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      margin-bottom: 8px;
+      border: 1px solid transparent;
+    }
+
+    .sidebar-link:hover {
+      background: #f8fafc;
+      border-color: var(--border);
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .sidebar-link-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sidebar-link-icon svg {
+      width: 18px;
+      height: 18px;
+      color: var(--secondary);
+    }
+
+    /* Archive Section */
+    .archive-section {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 48px;
+      animation: fadeInUp 0.8s ease 0.4s backwards;
+    }
+
+    .archive-toggle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      transition: all 0.3s ease;
+    }
+
+    .archive-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .archive-toggle-arrow {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .archive-toggle.open .archive-toggle-arrow {
+      transform: rotate(180deg);
+    }
+
+    .archive-toggle-arrow svg {
+      width: 14px;
+      height: 14px;
+      color: var(--text-muted);
+    }
+
+    .archive-list {
+      display: none;
+      margin-top: 16px;
+    }
+
+    .archive-list.open {
+      display: grid;
+      gap: 10px;
+    }
+
+    .archive-item {
+      padding: 16px 20px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .archive-item:hover {
+      transform: translateX(6px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      border-color: var(--primary);
+    }
+
+    .archive-item-arrow {
+      color: var(--text-muted);
+      transition: color 0.3s ease;
+    }
+
+    .archive-item:hover .archive-item-arrow {
+      color: var(--primary);
+    }
+
+    /* Footer */
+    .sb-footer {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 60px 48px 30px;
+    }
+
+    .sb-footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .sb-footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1fr;
+      gap: 60px;
+      margin-bottom: 50px;
+    }
+
+    .sb-footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .sb-footer-address {
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .sb-footer-link {
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sb-contact-item {
+      margin-bottom: 24px;
+    }
+
+    .sb-contact-number {
+      font-size: 24px;
+      font-weight: 600;
+      color: #fbbf24;
+      margin-bottom: 4px;
+    }
+
+    .sb-contact-email {
+      font-size: 18px;
+      font-weight: 500;
+      color: #e2e8f0;
+    }
+
+    .sb-contact-label {
+      color: #94a3b8;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .sb-footer-section h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .sb-app-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .sb-app-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #e2e8f0;
+      text-decoration: none;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+
+    .sb-app-btn:hover {
+      background: #334155;
+    }
+
+    .sb-social-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .sb-social-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e293b;
+      border-radius: 50%;
+      color: #94a3b8;
+      transition: all 0.2s ease;
+    }
+
+    .sb-social-icon:hover {
+      background: #334155;
+      color: #e2e8f0;
+    }
+
+    .sb-footer-bottom {
+      border-top: 1px solid #1e293b;
+      padding: 24px 0;
+      margin-bottom: 24px;
+    }
+
+    .sb-footer-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .sb-footer-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .sb-footer-links a:hover {
+      color: #e2e8f0;
+    }
+
+    .sb-footer-copyright {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid #1e293b;
+      color: #64748b;
+      font-size: 12px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-section {
+        grid-template-columns: 1fr;
+      }
+
+      .docs-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sb-footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sb-header-top,
+      .sb-header-bottom {
+        padding: 12px 20px;
+      }
+
+      .sb-nav-top,
+      .sb-nav-bottom {
+        display: none;
+      }
+
+      .hero-title {
+        font-size: 32px;
+      }
+
+      .hero-section {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        order: -1;
+      }
+
+      .sb-footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sb-main {
+        padding: 20px 16px;
+      }
+
+      .docs-main {
+        padding: 20px;
+      }
+
+      .sb-footer-links {
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .sb-footer-copyright {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
   </style>
-  <script type="module" crossorigin src="/assets/documents-4yMO1fwy.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/common-Cwdypr2M.js">
-  <link rel="stylesheet" crossorigin href="/assets/integration-DHZQThhm.css">
 </head>
 <body>
-  <div class="page">
-    <div class="shell">
-      <header>
-        <div class="header-top">
-          <div class="header-main">
-            <a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#356dff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#356dff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#356dff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a>
-            <nav class="main-nav" aria-label="Главное меню"><a href="index.html">Частным лицам</a><a href="business.html">Бизнесу</a><a class="active" href="somonibank.html">Сомонибонк</a><a href="addresses.html">Адреса и банкоматы</a></nav>
-          </div>
+  <!-- Header -->
+  <header class="sb-header">
+    <div class="sb-header-top">
+      <div class="sb-header-inner">
+        <a href="index.html" class="sb-logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="3"/>
+            <circle cx="22" cy="10" r="4" fill="#2563eb"/>
+          </svg>
+          <span>Сомонибонк</span>
+        </a>
+        <nav class="sb-nav-top">
+          <a href="index.html">Частным лицам</a>
+          <a href="business.html">Бизнесу</a>
+          <a class="active" href="somonibank.html">Сомонибонк</a>
+        </nav>
+        <div class="sb-header-actions">
+          <a href="addresses.html" class="sb-location-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Адреса и банкоматы
+          </a>
+          <button class="sb-lang-btn">Рус ▾</button>
         </div>
-        <nav class="sub-nav" aria-label="Разделы Сомонибонк"><a href="somonibank.html#history">О нас</a><a href="news.html">Новости</a><a href="addresses.html">Адреса</a><a class="active-sub" href="documents.html">Документы</a><a href="delivery.html">Доставка</a><a href="contact.html">Связь с нами</a></nav>
-      </header>
-      <main>
-        <section class="section reveal">
-          <h1 class="section-title">Документы</h1>
-          <div class="docs-panel">
-            <div class="doc-layout">
-              <div class="doc-column left">
-                <button class="doc-link active" type="button" data-doc-title="Карты / авторизация"><span>Карты / авторизация</span></button>
-                <button class="doc-link" type="button" data-doc-title="Финансовые показатели"><span>Финансовые показатели</span></button>
-                <button class="doc-link" type="button" data-doc-title="Комплексное обслуживание физических лиц"><span>Комплексное обслуживание физических лиц</span></button>
-                <button class="doc-link" type="button" data-doc-title="Расчётно-кассовое обслуживание"><span>Расчётно-кассовое обслуживание</span></button>
-                <button class="doc-link" type="button" data-doc-title="Условия по вкладам"><span>Условия по вкладам</span></button>
-                <button class="doc-link" type="button" data-doc-title="Электронные денежные средства"><span>Электронные денежные средства</span></button>
-                <button class="doc-link" type="button" data-doc-title="Платёжные терминалы"><span>Платёжные терминалы</span></button>
-                <button class="doc-link" type="button" data-doc-title="Карта рассрочки «Салом»"><span>Карта рассрочки «Салом»</span></button>
-                <button class="doc-link" type="button" data-doc-title="Для юридических лиц и индивидуальных предпринимателей"><span>Для юридических лиц и индивидуальных предпринимателей</span></button>
-                <button class="doc-link" type="button" data-doc-title="Защита персональных данных клиентов"><span>Защита персональных данных клиентов</span></button>
-                <button class="doc-link" type="button" data-doc-title="Противодействие коррупции"><span>Противодействие коррупции</span></button>
-                <button class="doc-link" type="button" data-doc-title="Кредитные продукты"><span>Кредитные продукты</span></button>
-                <button class="doc-link" type="button" data-doc-title="Банковские реквизиты"><span>Банковские реквизиты</span></button>
-                <button class="doc-link" type="button" data-doc-title="Комплаенс-политика"><span>Комплаенс-политика</span></button>
-                <button class="doc-link" type="button" data-doc-title="Акции"><span>Акции</span></button>
-              </div>
-              <div class="doc-column right">
-                <button class="side-link" type="button" data-toast="Открытие анкеты гостевого клиента."><span>Анкета гостевого клиента и обработка персональных данных</span></button>
-                <button class="side-link" type="button" data-toast="Открытие политики конфиденциальности."><span>Политика конфиденциальности</span></button>
-                <button class="side-link" type="button" data-toast="Скачивание выбранного документа."><span id="selectedDocTitle">Карты / авторизация</span></button>
-              </div>
-            </div>
-            <div class="archive-wrap">
-              <button class="archive-toggle" type="button" id="archiveToggle"><strong>Архив юридических документов</strong><span>⌄</span></button>
-              <div class="archive-list" id="archiveList" hidden>
-                <div class="archive-item">Архив тарифов за 2023 год</div>
-                <div class="archive-item">Архив условий по вкладам за 2024 год</div>
-                <div class="archive-item">Архив внутренних регламентов</div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-      <footer class="footer reveal">
-        <div class="footer-top">
-          <div class="footer-col"><a class="logo" href="index.html"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="16" cy="18" r="11" stroke="#35d2ff" stroke-width="5" fill="none"></circle><circle cx="24.5" cy="9.5" r="4.3" fill="#35d2ff"></circle><circle cx="20.5" cy="22.5" r="2.5" fill="#35d2ff" opacity="0.95"></circle></svg><span>Сомонибонк</span></a><p style="margin-top:12px;">ул. Рудаки, 48,<br>Душанбе, Таджикистан</p><a href="#" data-toast="Филиалы и точки обслуживания будут открыты позже." style="display:inline-block;margin-top:12px;">Филиалы и точки обслуживания</a></div>
-          <div class="footer-col"><p><strong>900</strong><br>Бесплатно с мобильных в Таджикистане</p><p style="margin-top:14px;"><strong>+992 48 888 1111</strong><br>Для звонков из любой точки мира</p><p style="margin-top:14px;"><strong>+992 44 600 1520</strong><br>Телефон доверия</p></div>
-          <div class="footer-col"><p>Приложения</p><div class="store-row"><button class="store-badge" type="button" data-toast="Открытие Google Play.">Google Play</button><button class="store-badge" type="button" data-toast="Открытие App Store.">App Store</button></div><p style="margin-top:18px;">Социальные сети</p><div class="social-row"><button class="social-pill" type="button" data-toast="Переход в Telegram.">tg</button><button class="social-pill" type="button" data-toast="Переход в Facebook.">f</button><button class="social-pill" type="button" data-toast="Переход в LinkedIn.">in</button><button class="social-pill" type="button" data-toast="Переход в Одноклассники.">ok</button><button class="social-pill" type="button" data-toast="Переход в Instagram.">ig</button><button class="social-pill" type="button" data-toast="Переход в YouTube.">▶</button><button class="social-pill" type="button" data-toast="Переход во VK.">vk</button><button class="social-pill" type="button" data-toast="Переход в TikTok.">♪</button></div></div>
-        </div>
-        <div class="footer-bottom"><span>О банке</span><span>Документы</span><span>Тарифы</span><span>Вакансии</span><span>Связь с нами</span></div>
-      </footer>
+      </div>
     </div>
-  </div>
-  <div class="toast" id="toast"></div>
+    <div class="sb-header-bottom">
+      <div class="sb-header-inner">
+        <nav class="sb-nav-bottom">
+          <a href="somonibank.html">О нас</a>
+          <a href="news.html">Новости</a>
+          <a href="addresses.html">Адреса</a>
+          <a href="documents.html" class="active">Документы</a>
+          <a href="delivery.html">Доставка</a>
+          <a href="contact.html">Связь с нами</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="sb-main">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Документы</h1>
+        <p class="hero-desc">Ознакомьтесь с официальными документами, тарифами и условиями обслуживания Сомонибонка. Все материалы актуальны и доступны для скачивания.</p>
+      </div>
+      <div class="hero-visual">
+        <img
+          class="hero-img"
+          alt="Документы"
+          src="https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=1200&q=80"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        />
+      </div>
+    </section>
+
+    <!-- Documents Layout -->
+    <div class="docs-layout">
+      <!-- Main Documents List -->
+      <div class="docs-main">
+        <h2 class="docs-main-title">Категории документов</h2>
+
+        <a class="doc-card active" href="#" data-doc-title="Карты / авторизация">
+          <div class="doc-card-left">
+            <div class="doc-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="5" width="20" height="14" rx="2"/>
+                <line x1="2" y1="10" x2="22" y2="10"/>
+              </svg>
+            </div>
+            <span class="doc-card-title">Карты / авторизация</span>
+          </div>
+          <div class="doc-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+
+        <a class="doc-card" href="#" data-doc-title="Финансовые показатели">
+          <div class="doc-card-left">
+            <div class="doc-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <span class="doc-card-title">Финансовые показатели</span>
+          </div>
+          <div class="doc-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+
+        <a class="doc-card" href="#" data-doc-title="Комплексное обслуживание физических лиц">
+          <div class="doc-card-left">
+            <div class="doc-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <span class="doc-card-title">Комплексное обслуживание физических лиц</span>
+          </div>
+          <div class="doc-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+
+        <a class="doc-card" href="#" data-doc-title="Расчётно-кассовое обслуживание">
+          <div class="doc-card-left">
+            <div class="doc-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="4" width="22" height="16" rx="2"/>
+                <line x1="1" y1="10" x2="23" y2="10"/>
+              </svg>
+            </div>
+            <span class="doc-card-title">Расчётно-кассовое обслуживание</span>
+          </div>
+          <div class="doc-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+
+        <a class="doc-card" href="#" data-doc-title="Условия по вкладам">
+          <div class="doc-card-left">
+            <div class="doc-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+            </div>
+            <span class="doc-card-title">Условия по вкладам</span>
+          </div>
+          <div class="doc-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+
+        <a class="doc-card" href="#" data-doc-title="Электронные денежные средства">
+          <div class="doc-card-left">
+            <div class="doc-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="5" y="2" width="14" height="20" rx="2"/>
+                <line x1="12" y1="18" x2="12.01" y2="18"/>
+              </svg>
+            </div>
+            <span class="doc-card-title">Электронные денежные средства</span>
+          </div>
+          <div class="doc-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+
+        <a class="doc-card" href="#" data-doc-title="Платёжные терминалы">
+          <div class="doc-card-left">
+            <div class="doc-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+                <line x1="12" y1="17" x2="12" y2="21"/>
+              </svg>
+            </div>
+            <span class="doc-card-title">Платёжные терминалы</span>
+          </div>
+          <div class="doc-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+
+        <a class="doc-card" href="#" data-doc-title="Карта рассрочки «Салом»">
+          <div class="doc-card-left">
+            <div class="doc-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="5" width="20" height="14" rx="2"/>
+                <line x1="2" y1="10" x2="22" y2="10"/>
+                <circle cx="7" cy="15" r="1.5"/>
+              </svg>
+            </div>
+            <span class="doc-card-title">Карта рассрочки «Салом»</span>
+          </div>
+          <div class="doc-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+
+        <a class="doc-card" href="#" data-doc-title="Для юридических лиц">
+          <div class="doc-card-left">
+            <div class="doc-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+            </div>
+            <span class="doc-card-title">Для юридических лиц</span>
+          </div>
+          <div class="doc-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+
+        <a class="doc-card" href="#" data-doc-title="Защита персональных данных">
+          <div class="doc-card-left">
+            <div class="doc-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <span class="doc-card-title">Защита персональных данных</span>
+          </div>
+          <div class="doc-card-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="docs-sidebar">
+        <div class="sidebar-card">
+          <h3 class="sidebar-title">Быстрые ссылки</h3>
+
+          <a class="sidebar-link" href="#">
+            <div class="sidebar-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <span>Анкета гостевого клиента</span>
+          </a>
+
+          <a class="sidebar-link" href="#">
+            <div class="sidebar-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <span>Политика конфиденциальности</span>
+          </a>
+
+          <a class="sidebar-link" href="#">
+            <div class="sidebar-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+              </svg>
+            </div>
+            <span>Тарифы и условия</span>
+          </a>
+
+          <a class="sidebar-link" href="#">
+            <div class="sidebar-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+            </div>
+            <span>Банковские реквизиты</span>
+          </a>
+
+          <a class="sidebar-link" href="#">
+            <div class="sidebar-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <span>Комплаенс-политика</span>
+          </a>
+        </div>
+
+        <div class="sidebar-card">
+          <h3 class="sidebar-title">Дополнительно</h3>
+
+          <a class="sidebar-link" href="#">
+            <div class="sidebar-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <span>Противодействие коррупции</span>
+          </a>
+
+          <a class="sidebar-link" href="#">
+            <div class="sidebar-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <span>Кредитные продукты</span>
+          </a>
+
+          <a class="sidebar-link" href="#">
+            <div class="sidebar-link-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            </div>
+            <span>Акции</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Archive Section -->
+    <section class="archive-section">
+      <button class="archive-toggle" type="button" id="archiveToggle">
+        <span>Архив юридических документов</span>
+        <div class="archive-toggle-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+      </button>
+      <div class="archive-list" id="archiveList">
+        <div class="archive-item">
+          <span>Архив тарифов за 2023 год</span>
+          <span class="archive-item-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </span>
+        </div>
+        <div class="archive-item">
+          <span>Архив условий по вкладам за 2024 год</span>
+          <span class="archive-item-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </span>
+        </div>
+        <div class="archive-item">
+          <span>Архив внутренних регламентов</span>
+          <span class="archive-item-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="sb-footer">
+    <div class="sb-footer-inner">
+      <div class="sb-footer-grid">
+        <div class="sb-footer-col">
+          <div class="sb-footer-logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="#fbbf24" stroke-width="2" fill="none"/>
+              <path d="M16 6L24 10V22L16 26L8 22V10L16 6Z" fill="#fbbf24"/>
+            </svg>
+            <span>Сомонибонк</span>
+          </div>
+          <p class="sb-footer-address">
+            ул. Рудаки, 48<br>
+            Душанбе, Таджикистан
+          </p>
+          <a href="addresses.html" class="sb-footer-link">Филиалы и точки обслуживания</a>
+        </div>
+
+        <div class="sb-footer-col">
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">900</div>
+            <div class="sb-contact-label">Для звонков с мобильных<br>в Таджикистане</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">+992 44 600 1111</div>
+            <div class="sb-contact-label">Для звонков из любой<br>точки мира</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">+992 44 600 1520</div>
+            <div class="sb-contact-label">Телефон доверия<br>Наблюдательный Совет<br>Безопасность и Compliance<br>Жалобы и обращения</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-email">support@somoni.tj</div>
+            <div class="sb-contact-label">Для онлайн-обращений</div>
+          </div>
+        </div>
+
+        <div class="sb-footer-col">
+          <div class="sb-footer-section">
+            <h4>Приложения</h4>
+            <div class="sb-app-buttons">
+              <a href="#" class="sb-app-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                </svg>
+                Google Play
+              </a>
+              <a href="#" class="sb-app-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.37 12.36,4.26 13,3.5Z"/>
+                </svg>
+                App Store
+              </a>
+            </div>
+          </div>
+          <div class="sb-footer-section">
+            <h4>Социальные сети</h4>
+            <div class="sb-social-grid">
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.04C20.54,3.74 21.21,4.22 20.94,5.32L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.66,16.27L10.65,18.23C10.43,18.45 10.25,18.65 9.78,18.65Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M12,2C6.48,2 2,6.48 2,12C2,16.84 5.44,20.87 10,21.8V15H8V12H10V9.5C10,7.57 11.57,6 13.5,6H16V9H14C13.45,9 13,9.45 13,10V12H16L15.5,15H13V21.8C18.56,20.87 22,16.84 22,12C22,6.48 17.52,2 12,2Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19M18.5,18.5V13.2A3.26,3.26 0 0,0 15.24,9.94C14.39,9.94 13.4,10.46 12.92,11.24V10.13H10.13V18.5H12.92V13.57C12.92,12.8 13.54,12.17 14.31,12.17A1.4,1.4 0 0,1 15.71,13.57V18.5H18.5M6.88,8.56A1.68,1.68 0 0,0 8.56,6.88C8.56,5.95 7.81,5.19 6.88,5.19A1.69,1.69 0 0,0 5.19,6.88C5.19,7.81 5.95,8.56 6.88,8.56M8.27,18.5V10.13H5.5V18.5H8.27Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22C17.53,22 22,17.53 22,12C22,6.47 17.53,2 12,2M12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4M12,7C10.5,7 9.15,7.6 8.19,8.57C7.22,9.53 6.62,10.88 6.62,12.38C6.62,13.88 7.22,15.22 8.19,16.19L9.61,14.77C9.06,14.22 8.74,13.53 8.74,12.76C8.74,12 9.06,11.31 9.61,10.76C10.16,10.21 10.85,9.89 11.61,9.89C12.38,9.89 13.07,10.21 13.62,10.76C14.17,11.31 14.49,12 14.49,12.76C14.49,13.53 14.17,14.22 13.62,14.77L15.04,16.19C16.01,15.22 16.61,13.88 16.61,12.38C16.61,10.88 16.01,9.53 15.04,8.57C14.08,7.6 12.73,7 12,7M12,13.5C11.17,13.5 10.5,14.17 10.5,15C10.5,15.83 11.17,16.5 12,16.5C12.83,16.5 13.5,15.83 13.5,15C13.5,14.17 12.83,13.5 12,13.5Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M15.07,2H8.93C3.33,2 2,3.33 2,8.93V15.07C2,20.67 3.33,22 8.93,22H15.07C20.67,22 22,20.67 22,15.07V8.93C22,3.33 20.67,2 15.07,2M12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4M12,7C10.5,7 9.15,7.6 8.19,8.57C7.22,9.53 6.62,10.88 6.62,12.38C6.62,13.88 7.22,15.22 8.19,16.19L9.61,14.77C9.06,14.22 8.74,13.53 8.74,12.76C8.74,12 9.06,11.31 9.61,10.76C10.16,10.21 10.85,9.89 11.61,9.89C12.38,9.89 13.07,10.21 13.62,10.76C14.17,11.31 14.49,12 14.49,12.76C14.49,13.53 14.17,14.22 13.62,14.77L15.04,16.19C16.01,15.22 16.61,13.88 16.61,12.38C16.61,10.88 16.01,9.53 15.04,8.57C14.08,7.6 12.73,7 12,7M12,13.5C11.17,13.5 10.5,14.17 10.5,15C10.5,15.83 11.17,16.5 12,16.5C12.83,16.5 13.5,15.83 13.5,15C13.5,14.17 12.83,13.5 12,13.5Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M19.59,6.69A4.83,4.83 0 0,1 21.5,9.5C21.5,11.99 19.49,14 17,14V11A2,2 0 0,0 15,9H14V16.5A3.5,3.5 0 0,1 10.5,20A3.5,3.5 0 0,1 7,16.5A3.5,3.5 0 0,1 10.5,13C10.8,13 11.09,13.04 11.37,13.11V10.35C11.05,10.27 10.71,10.23 10.36,10.23A6.36,6.36 0 0,0 4,16.59A6.36,6.36 0 0,0 10.36,22.95C14.31,22.95 17.5,19.76 17.5,15.81V9.5H19.59Z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sb-footer-bottom">
+        <div class="sb-footer-links">
+          <a href="#">О нас</a>
+          <a href="#">Адреса</a>
+          <a href="#">Документы и тарифы</a>
+          <a href="#">Вакансии</a>
+          <a href="#">Связь с нами</a>
+        </div>
+      </div>
+
+      <div class="sb-footer-copyright">
+        <p>&copy; 2024 ПАО Сомонибонк</p>
+        <p>Лицензия НБТ №0000114 от 3 января 2020 года</p>
+        <p>ПАО Сомонибонк является участником Фонда страхования вкладов и Объединения Таджикистана</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Archive toggle
+    const archiveToggle = document.getElementById('archiveToggle');
+    const archiveList = document.getElementById('archiveList');
+
+    archiveToggle.addEventListener('click', () => {
+      archiveToggle.classList.toggle('open');
+      archiveList.classList.toggle('open');
+    });
+
+    // Document card selection
+    const docCards = document.querySelectorAll('.doc-card');
+    docCards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault();
+        docCards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
