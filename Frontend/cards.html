@@ -11,6 +11,9 @@
     @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
     @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
     @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    @keyframes holoSheen{0%{left:-100%}100%{left:200%}}
+    @keyframes cardFloat{0%,100%{transform:translateY(0) rotateX(0) rotateY(0)}50%{transform:translateY(-6px) rotateX(2deg) rotateY(-2deg)}}
+    @keyframes pulseGlow{0%,100%{box-shadow:0 0 20px rgba(37,99,235,.2)}50%{box-shadow:0 0 40px rgba(37,99,235,.4)}}
 
     /* Header */
     .sb-header{background:#fff;position:sticky;top:0;z-index:100}
@@ -45,39 +48,108 @@
     /* Section Title */
     .section-title{font-size:32px;font-weight:700;margin-bottom:40px;text-align:center;font-family:Georgia,serif;color:#1e3a5f}
 
-    /* Card Products */
-    .cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:64px}
-    .card-product{background:var(--card-bg);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .3s ease;animation:fadeInUp .6s ease backwards}
-    .card-product:nth-child(1){animation-delay:.1s}
-    .card-product:nth-child(2){animation-delay:.2s}
-    .card-product:nth-child(3){animation-delay:.3s}
-    .card-product:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
-    .card-product-img{height:200px;overflow:hidden}
-    .card-product-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
-    .card-product:hover .card-product-img img{transform:scale(1.05)}
-    .card-product-body{padding:24px}
-    .card-product-title{font-size:20px;font-weight:700;margin-bottom:8px;color:var(--text)}
-    .card-product-desc{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:16px}
-    .card-product-features{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px}
-    .card-feature{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted)}
-    .card-feature svg{width:16px;height:16px;color:var(--secondary)}
-    .card-product-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .3s ease;box-shadow:0 6px 16px rgba(37,99,235,.25)}
-    .card-product-btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(37,99,235,.35)}
+    /* ===== BANK CARD CSS ART ===== */
+    .bank-card{width:320px;height:200px;border-radius:16px;position:relative;overflow:hidden;cursor:pointer;transition:all .4s ease;flex-shrink:0}
+    .bank-card:hover{transform:translateY(-8px) scale(1.03);box-shadow:0 24px 48px rgba(0,0,0,.25)}
+    .bank-card::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.15) 45%,rgba(255,255,255,.25) 50%,rgba(255,255,255,.15) 55%,transparent 60%);z-index:10;pointer-events:none;animation:holoSheen 4s ease-in-out infinite}
 
-    /* Premium Cards Section */
+    .card-chip{width:42px;height:32px;border-radius:6px;position:absolute;top:50px;left:28px;background:linear-gradient(135deg,#f0d078 0%,#c9a227 30%,#f0d078 50%,#c9a227 70%,#f0d078 100%);box-shadow:0 2px 6px rgba(0,0,0,.2)}
+    .card-chip::before{content:'';position:absolute;top:50%;left:4px;right:4px;height:1px;background:rgba(0,0,0,.15)}
+    .card-chip::after{content:'';position:absolute;left:50%;top:4px;bottom:4px;width:1px;background:rgba(0,0,0,.15)}
+
+    .card-chip-lines{position:absolute;top:6px;left:6px;right:6px;bottom:6px;border:1px solid rgba(0,0,0,.12);border-radius:3px}
+
+    .contactless{position:absolute;top:54px;left:82px;display:flex;gap:3px;align-items:center}
+    .contactless span{display:block;width:4px;height:4px;border:1.5px solid currentColor;border-radius:50%;opacity:.7}
+    .contactless span:nth-child(2){width:7px;height:7px;margin-left:-2px}
+    .contactless span:nth-child(3){width:10px;height:10px;margin-left:-3px}
+
+    .card-logo{position:absolute;top:20px;left:28px;font-size:18px;font-weight:700;letter-spacing:1px;opacity:.95}
+    .card-logo-sub{font-size:9px;font-weight:500;letter-spacing:2px;opacity:.7;display:block;margin-top:2px}
+
+    .card-number{position:absolute;top:100px;left:28px;font-size:15px;letter-spacing:3px;font-weight:500;font-family:'Courier New',monospace;opacity:.9}
+    .card-holder-label,.card-expiry-label{font-size:8px;text-transform:uppercase;letter-spacing:1.5px;opacity:.6;margin-bottom:2px}
+    .card-holder{position:absolute;bottom:28px;left:28px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;opacity:.9}
+    .card-expiry{position:absolute;bottom:28px;right:100px;font-size:11px;letter-spacing:1px;font-weight:500;opacity:.9}
+
+    .card-brand{position:absolute;bottom:20px;right:24px;display:flex;align-items:center;gap:4px}
+    .card-brand-text{font-size:14px;font-weight:700;font-style:italic;letter-spacing:.5px}
+
+    /* Visa Gold */
+    .card-visa-gold{background:linear-gradient(135deg,#f6e4a0 0%,#d4a823 40%,#c9951a 60%,#e8c84a 100%);color:#3d2e05}
+    .card-visa-gold .card-brand-text{color:#1a1f71;font-size:18px}
+    .card-visa-gold .contactless{color:#3d2e05}
+
+    /* Mastercard Platinum */
+    .card-mc-platinum{background:linear-gradient(135deg,#1a237e 0%,#0d47a1 40%,#1565c0 70%,#1e88e5 100%);color:#fff}
+    .card-mc-platinum .card-brand-text{color:#fff}
+    .card-mc-platinum .contactless{color:#fff}
+    .mc-circles{position:absolute;bottom:18px;right:24px;display:flex;align-items:center}
+    .mc-circle{width:28px;height:28px;border-radius:50%;position:absolute}
+    .mc-circle-red{background:rgba(234,56,76,.85);left:0;z-index:1}
+    .mc-circle-orange{background:rgba(255,159,67,.85);left:16px;z-index:2}
+
+    /* Visa Platinum */
+    .card-visa-platinum{background:linear-gradient(135deg,#e8eaf6 0%,#c5cae9 25%,#9fa8da 50%,#c5cae9 75%,#e8eaf6 100%);color:#1a237e;animation:cardFloat 6s ease-in-out infinite}
+    .card-visa-platinum::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,.4) 50%,transparent 70%);z-index:5;pointer-events:none}
+    .card-visa-platinum .card-brand-text{color:#1a237e;font-size:18px}
+    .card-visa-platinum .contactless{color:#1a237e}
+
+    /* Somoni Infinite */
+    .card-infinite{background:linear-gradient(135deg,#0f0f0f 0%,#1a1a2e 40%,#16213e 70%,#0f3460 100%);color:#fff}
+    .card-infinite::before{content:'';position:absolute;top:-50%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,rgba(0,210,255,.2),transparent 70%);border-radius:50%;z-index:1;pointer-events:none}
+    .card-infinite .card-brand-text{color:#00d4ff;font-size:16px;font-style:normal;font-weight:800;letter-spacing:3px}
+    .card-infinite .contactless{color:#00d4ff}
+    .card-infinite .card-number{color:rgba(255,255,255,.7);font-size:14px}
+    .infinite-line{position:absolute;bottom:60px;left:28px;right:28px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.3),transparent)}
+
+    /* Business */
+    .card-business{background:radial-gradient(ellipse at 30% 50%,#1e3a5f 0%,#0f2744 50%,#0a1628 100%);color:#fff}
+    .card-business::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(212,175,55,.04) 20px,rgba(212,175,55,.04) 21px),repeating-linear-gradient(-45deg,transparent,transparent 20px,rgba(212,175,55,.04) 20px,rgba(212,175,55,.04) 21px);z-index:1;pointer-events:none}
+    .card-business .card-brand-text{color:#d4af37;font-size:15px;font-weight:800}
+    .card-business .contactless{color:#d4af37}
+    .business-diamond{position:absolute;top:18px;right:24px;width:32px;height:32px;border:1.5px solid rgba(212,175,55,.5);transform:rotate(45deg);z-index:2}
+    .business-diamond::before{content:'';position:absolute;inset:6px;border:1px solid rgba(212,175,55,.3)}
+
+    /* Milli */
+    .card-milli{background:linear-gradient(135deg,#f5f5f5 0%,#e0e0e0 40%,#eeeeee 70%,#f5f5f5 100%);color:#333}
+    .card-milli::before{content:'';position:absolute;top:50%;left:50%;width:140px;height:140px;transform:translate(-50%,-50%);border:2px solid rgba(198,163,80,.15);border-radius:50%;z-index:1;pointer-events:none}
+    .card-milli::after{content:'';position:absolute;top:50%;left:50%;width:100px;height:100px;transform:translate(-50%,-50%);border:1px solid rgba(198,163,80,.1);border-radius:50%;z-index:1;pointer-events:none;animation:none}
+    .card-milli .card-brand-text{color:#8b6914;font-size:16px;font-weight:800}
+    .card-milli .contactless{color:#666}
+    .milli-pattern{position:absolute;inset:0;background:radial-gradient(circle at 80% 80%,rgba(198,163,80,.08),transparent 50%),radial-gradient(circle at 20% 20%,rgba(198,163,80,.06),transparent 40%);z-index:0;pointer-events:none}
+
+    /* Card Showcase Grid */
+    .cards-showcase{margin-bottom:64px}
+    .cards-showcase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;justify-items:center}
+    .card-wrapper{display:flex;flex-direction:column;align-items:center;gap:20px;animation:fadeInUp .6s ease backwards}
+    .card-wrapper:nth-child(1){animation-delay:.1s}
+    .card-wrapper:nth-child(2){animation-delay:.2s}
+    .card-wrapper:nth-child(3){animation-delay:.3s}
+    .card-wrapper-info{background:var(--card-bg);border-radius:16px;padding:20px;width:100%;max-width:320px;box-shadow:var(--shadow);border:1px solid var(--border);text-align:center;transition:all .3s ease}
+    .card-wrapper:hover .card-wrapper-info{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+    .card-wrapper-info h3{font-size:18px;font-weight:700;margin-bottom:6px}
+    .card-wrapper-info p{font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:14px}
+    .card-wrapper-features{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+    .card-wrapper-feature{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-muted)}
+    .card-wrapper-feature svg{width:14px;height:14px;color:var(--secondary)}
+    .card-wrapper-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .3s ease;box-shadow:0 4px 12px rgba(37,99,235,.25)}
+    .card-wrapper-btn:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(37,99,235,.35)}
+
+    /* Premium Section */
     .premium-section{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);border-radius:24px;padding:60px 48px;margin-bottom:64px;position:relative;overflow:hidden}
     .premium-section::before{content:'';position:absolute;top:-50%;right:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(37,99,235,.15),transparent 70%);border-radius:50%}
     .premium-title{font-size:32px;font-weight:700;margin-bottom:16px;color:#fff;position:relative;z-index:1}
     .premium-subtitle{color:#94a3b8;font-size:16px;margin-bottom:40px;position:relative;z-index:1}
-    .premium-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative;z-index:1}
-    .premium-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:32px 24px;text-align:center;transition:all .3s ease;backdrop-filter:blur(10px)}
-    .premium-card:hover{transform:translateY(-6px);background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)}
-    .premium-card-icon{width:80px;height:80px;margin:0 auto 20px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:36px}
-    .premium-card-icon.gold{background:linear-gradient(135deg,#fbbf24 0%,#d97706 100%)}
-    .premium-card-icon.platinum{background:linear-gradient(135deg,#e2e8f0 0%,#94a3b8 100%)}
-    .premium-card-icon.black{background:linear-gradient(135deg,#334155 0%,#0f172a 100%);border:1px solid rgba(255,255,255,.2)}
-    .premium-card h3{font-size:20px;font-weight:700;margin-bottom:12px;color:#fff}
-    .premium-card p{font-size:14px;color:#94a3b8;line-height:1.6}
+    .premium-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;justify-items:center;position:relative;z-index:1}
+    .premium-card-wrapper{display:flex;flex-direction:column;align-items:center;gap:16px;animation:fadeInUp .6s ease backwards}
+    .premium-card-wrapper:nth-child(1){animation-delay:.1s}
+    .premium-card-wrapper:nth-child(2){animation-delay:.2s}
+    .premium-card-wrapper:nth-child(3){animation-delay:.3s}
+    .premium-card-info{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:20px;text-align:center;backdrop-filter:blur(10px);width:100%;max-width:320px;transition:all .3s ease}
+    .premium-card-wrapper:hover .premium-card-info{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);transform:translateY(-4px)}
+    .premium-card-info h3{font-size:16px;font-weight:700;margin-bottom:6px;color:#fff}
+    .premium-card-info p{font-size:13px;color:#94a3b8;line-height:1.5}
 
     /* Benefits */
     .benefits-section{margin-bottom:64px}
@@ -131,8 +203,9 @@
 
     /* Responsive */
     @media(max-width:1024px){
-      .hero-section,.premium-grid{grid-template-columns:1fr}
-      .cards-grid,.benefits-grid{grid-template-columns:repeat(2,1fr)}
+      .hero-section{grid-template-columns:1fr}
+      .cards-showcase-grid,.benefits-grid{grid-template-columns:repeat(2,1fr)}
+      .premium-cards-grid{grid-template-columns:repeat(2,1fr)}
       .sb-footer-grid{grid-template-columns:1fr 1fr}
     }
     @media(max-width:768px){
@@ -141,9 +214,16 @@
       .hero-title{font-size:32px}
       .hero-section{grid-template-columns:1fr}
       .hero-visual{order:-1}
-      .cards-grid,.benefits-grid,.premium-grid,.sb-footer-grid{grid-template-columns:1fr}
+      .cards-showcase-grid,.benefits-grid,.premium-cards-grid,.sb-footer-grid{grid-template-columns:1fr}
       .sb-main{padding:20px 16px}
       .premium-section{padding:40px 24px}
+      .bank-card{width:280px;height:175px}
+      .card-chip{width:36px;height:28px;top:44px;left:22px}
+      .card-number{top:88px;left:22px;font-size:13px}
+      .card-holder{bottom:22px;left:22px;font-size:10px}
+      .card-expiry{bottom:22px;right:80px;font-size:10px}
+      .contactless{top:48px;left:70px}
+      .card-logo{font-size:15px}
     }
   </style>
 </head>
@@ -198,75 +278,193 @@
       </div>
     </section>
 
-    <section class="cards-grid">
-      <article class="card-product">
-        <div class="card-product-img">
-          <img alt="Visa Gold" src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=900&q=80" loading="lazy"/>
-        </div>
-        <div class="card-product-body">
-          <h3 class="card-product-title">Visa Gold</h3>
-          <p class="card-product-desc">Премиальная карта с расширенными привилегиями, страхованием в путешествиях и кэшбэком</p>
-          <div class="card-product-features">
-            <span class="card-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Мультивалютный счёт</span>
-            <span class="card-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Страховка</span>
-          </div>
-          <button class="card-product-btn">Получить карту</button>
-        </div>
-      </article>
+    <!-- Standard Cards -->
+    <section class="cards-showcase">
+      <h2 class="section-title">Популярные карты</h2>
+      <div class="cards-showcase-grid">
 
-      <article class="card-product">
-        <div class="card-product-img">
-          <img alt="Mastercard Platinum" src="https://images.unsplash.com/photo-1589756823695-278bc923f962?auto=format&fit=crop&w=900&q=80" loading="lazy"/>
-        </div>
-        <div class="card-product-body">
-          <h3 class="card-product-title">Mastercard Platinum</h3>
-          <p class="card-product-desc">Эксклюзивные привилегии, доступ к VIP-залам аэропортов и персональный консьерж-сервис</p>
-          <div class="card-product-features">
-            <span class="card-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Консьерж-сервис</span>
-            <span class="card-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Lounge Key</span>
+        <!-- Visa Gold -->
+        <div class="card-wrapper">
+          <div class="bank-card card-visa-gold">
+            <div class="card-logo">СОМОНИБОНК<span class="card-logo-sub">SOMONIBANK</span></div>
+            <div class="card-chip"><div class="card-chip-lines"></div></div>
+            <div class="contactless"><span></span><span></span><span></span></div>
+            <div class="card-number">•••• &nbsp; •••• &nbsp; •••• &nbsp; 4521</div>
+            <div class="card-holder">
+              <div class="card-holder-label">Держатель карты</div>
+              CARDHOLDER NAME
+            </div>
+            <div class="card-expiry">
+              <div class="card-expiry-label">До</div>
+              09/28
+            </div>
+            <div class="card-brand">
+              <span class="card-brand-text" style="color:#1a1f71;font-style:italic;font-size:20px;font-weight:900">VISA</span>
+            </div>
           </div>
-          <button class="card-product-btn">Получить карту</button>
-        </div>
-      </article>
-
-      <article class="card-product">
-        <div class="card-product-img">
-          <img alt="Карта Милли" src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=900&q=80" loading="lazy"/>
-        </div>
-        <div class="card-product-body">
-          <h3 class="card-product-title">Карта «Милли»</h3>
-          <p class="card-product-desc">Национальная карта для повседневных покупок с бесплатным обслуживанием и скидками</p>
-          <div class="card-product-features">
-            <span class="card-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Бесплатно</span>
-            <span class="card-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Кэшбэк</span>
+          <div class="card-wrapper-info">
+            <h3>Visa Gold</h3>
+            <p>Премиальная карта с расширенными привилегиями, страхованием в путешествиях и кэшбэком</p>
+            <div class="card-wrapper-features">
+              <span class="card-wrapper-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Мультивалютный счёт</span>
+              <span class="card-wrapper-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Страховка</span>
+            </div>
+            <button class="card-wrapper-btn">Получить карту</button>
           </div>
-          <button class="card-product-btn">Получить карту</button>
         </div>
-      </article>
-    </section>
 
-    <section class="premium-section">
-      <h2 class="premium-title">Премиальные карты</h2>
-      <p class="premium-subtitle">Для тех, кто ценит безупречный сервис и эксклюзивные возможности</p>
-      <div class="premium-grid">
-        <div class="premium-card">
-          <div class="premium-card-icon gold">★</div>
-          <h3>Visa Infinite</h3>
-          <p>Высший уровень привилегий: безлимитный доступ в VIP-залы, персональный менеджер и премиальная страховка</p>
+        <!-- Mastercard Platinum -->
+        <div class="card-wrapper">
+          <div class="bank-card card-mc-platinum">
+            <div class="card-logo">СОМОНИБОНК<span class="card-logo-sub">SOMONIBANK</span></div>
+            <div class="card-chip"><div class="card-chip-lines"></div></div>
+            <div class="contactless"><span></span><span></span><span></span></div>
+            <div class="card-number">•••• &nbsp; •••• &nbsp; •••• &nbsp; 8832</div>
+            <div class="card-holder">
+              <div class="card-holder-label">Держатель карты</div>
+              CARDHOLDER NAME
+            </div>
+            <div class="card-expiry">
+              <div class="card-expiry-label">До</div>
+              06/29
+            </div>
+            <div class="mc-circles">
+              <div class="mc-circle mc-circle-red"></div>
+              <div class="mc-circle mc-circle-orange"></div>
+            </div>
+          </div>
+          <div class="card-wrapper-info">
+            <h3>Mastercard Platinum</h3>
+            <p>Эксклюзивные привилегии, доступ к VIP-залам аэропортов и персональный консьерж-сервис</p>
+            <div class="card-wrapper-features">
+              <span class="card-wrapper-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Консьерж-сервис</span>
+              <span class="card-wrapper-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Lounge Key</span>
+            </div>
+            <button class="card-wrapper-btn">Получить карту</button>
+          </div>
         </div>
-        <div class="premium-card">
-          <div class="premium-card-icon platinum">◆</div>
-          <h3>Business Platinum</h3>
-          <p>Инструмент для бизнеса: мультивалютные счета, корпоративные лимиты и аналитика расходов</p>
+
+        <!-- Карта Милли -->
+        <div class="card-wrapper">
+          <div class="bank-card card-milli">
+            <div class="milli-pattern"></div>
+            <div class="card-logo" style="color:#555">СОМОНИБОНК<span class="card-logo-sub" style="color:#888">SOMONIBANK</span></div>
+            <div class="card-chip" style="background:linear-gradient(135deg,#e0d5b8 0%,#c6a350 30%,#e0d5b8 50%,#c6a350 70%,#e0d5b8 100%)"><div class="card-chip-lines"></div></div>
+            <div class="contactless"><span></span><span></span><span></span></div>
+            <div class="card-number" style="color:#444">•••• &nbsp; •••• &nbsp; •••• &nbsp; 2109</div>
+            <div class="card-holder" style="color:#555">
+              <div class="card-holder-label">Держатель карты</div>
+              CARDHOLDER NAME
+            </div>
+            <div class="card-expiry" style="color:#555">
+              <div class="card-expiry-label">До</div>
+              12/27
+            </div>
+            <div class="card-brand">
+              <span class="card-brand-text">МИЛЛИ</span>
+            </div>
+          </div>
+          <div class="card-wrapper-info">
+            <h3>Карта «Милли»</h3>
+            <p>Национальная карта для повседневных покупок с бесплатным обслуживанием и скидками</p>
+            <div class="card-wrapper-features">
+              <span class="card-wrapper-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Бесплатно</span>
+              <span class="card-wrapper-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Кэшбэк</span>
+            </div>
+            <button class="card-wrapper-btn">Получить карту</button>
+          </div>
         </div>
-        <div class="premium-card">
-          <div class="premium-card-icon black">●</div>
-          <h3>Сомонибонк Infinite</h3>
-          <p>Индивидуальные привилегии, повышенный кэшбэк и доступ к эксклюзивным событиям</p>
-        </div>
+
       </div>
     </section>
 
+    <!-- Premium Section -->
+    <section class="premium-section">
+      <h2 class="premium-title">Премиальные карты</h2>
+      <p class="premium-subtitle">Для тех, кто ценит безупречный сервис и эксклюзивные возможности</p>
+      <div class="premium-cards-grid">
+
+        <!-- Visa Platinum -->
+        <div class="premium-card-wrapper">
+          <div class="bank-card card-visa-platinum">
+            <div class="card-logo">СОМОНИБОНК<span class="card-logo-sub">SOMONIBANK</span></div>
+            <div class="card-chip"><div class="card-chip-lines"></div></div>
+            <div class="contactless"><span></span><span></span><span></span></div>
+            <div class="card-number">•••• &nbsp; •••• &nbsp; •••• &nbsp; 7703</div>
+            <div class="card-holder">
+              <div class="card-holder-label">Держатель карты</div>
+              CARDHOLDER NAME
+            </div>
+            <div class="card-expiry">
+              <div class="card-expiry-label">До</div>
+              03/29
+            </div>
+            <div class="card-brand">
+              <span class="card-brand-text" style="color:#1a237e;font-style:italic;font-size:20px;font-weight:900">VISA</span>
+            </div>
+          </div>
+          <div class="premium-card-info">
+            <h3>Visa Platinum</h3>
+            <p>Хромированная карта с расширенным лимитом, страхованием и доступом к премиальным сервисам</p>
+          </div>
+        </div>
+
+        <!-- Сомонибонк Infinite -->
+        <div class="premium-card-wrapper">
+          <div class="bank-card card-infinite">
+            <div class="infinite-line"></div>
+            <div class="card-logo">СОМОНИБОНК<span class="card-logo-sub">SOMONIBANK</span></div>
+            <div class="card-chip"><div class="card-chip-lines"></div></div>
+            <div class="contactless"><span></span><span></span><span></span></div>
+            <div class="card-number">•••• &nbsp; •••• &nbsp; •••• &nbsp; 0001</div>
+            <div class="card-holder">
+              <div class="card-holder-label">Держатель карты</div>
+              CARDHOLDER NAME
+            </div>
+            <div class="card-expiry">
+              <div class="card-expiry-label">До</div>
+              01/30
+            </div>
+            <div class="card-brand">
+              <span class="card-brand-text">INFINITE</span>
+            </div>
+          </div>
+          <div class="premium-card-info">
+            <h3>Сомонибонк Infinite</h3>
+            <p>Высший уровень: безлимитный доступ в VIP-залы, персональный менеджер и премиальная страховка</p>
+          </div>
+        </div>
+
+        <!-- Сомонибонк Business -->
+        <div class="premium-card-wrapper">
+          <div class="bank-card card-business">
+            <div class="business-diamond"></div>
+            <div class="card-logo" style="color:#d4af37">СОМОНИБОНК<span class="card-logo-sub" style="color:rgba(212,175,55,.6)">BUSINESS</span></div>
+            <div class="card-chip"><div class="card-chip-lines"></div></div>
+            <div class="contactless"><span></span><span></span><span></span></div>
+            <div class="card-number" style="color:rgba(255,255,255,.7)">•••• &nbsp; •••• &nbsp; •••• &nbsp; 5500</div>
+            <div class="card-holder" style="color:rgba(255,255,255,.8)">
+              <div class="card-holder-label" style="color:rgba(212,175,55,.5)">Держатель карты</div>
+              BUSINESS NAME
+            </div>
+            <div class="card-expiry" style="color:rgba(255,255,255,.8)">
+              <div class="card-expiry-label" style="color:rgba(212,175,55,.5)">До</div>
+              08/28
+            </div>
+            <div class="card-brand">
+              <span class="card-brand-text">BUSINESS</span>
+            </div>
+          </div>
+          <div class="premium-card-info">
+            <h3>Сомонибонк Business</h3>
+            <p>Мультивалютные счета, корпоративные лимиты и аналитика расходов для вашего бизнеса</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Benefits -->
     <section class="benefits-section">
       <h2 class="section-title">Преимущества карт Сомонибонк</h2>
       <div class="benefits-grid">
@@ -301,6 +499,7 @@
       </div>
     </section>
 
+    <!-- FAQ -->
     <section class="faq-section">
       <h2 class="section-title">Часто задаваемые вопросы</h2>
       <div class="faq-list">
