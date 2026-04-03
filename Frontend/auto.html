@@ -1282,7 +1282,7 @@
         </div>
         <div class="result-item">
           <div class="result-label">Годовая ставка</div>
-          <div class="result-value">23%</div>
+          <div class="result-value" id="annualRateValue">15%</div>
         </div>
         <button class="calculator-btn" onclick="scrollToForm()">Оставить заявку</button>
       </div>
@@ -1723,8 +1723,10 @@
     const termValue = document.getElementById('termValue');
     const overpayment = document.getElementById('overpayment');
     const monthlyPayment = document.getElementById('monthlyPayment');
+    const annualRateValue = document.getElementById('annualRateValue');
 
     const currencyRadioButtons = Array.from(document.querySelectorAll('input[name="currency"]'));
+    const annualRate = 0.15;
 
     // ------- Form elements -------
     const form = document.getElementById('autoLoanForm');
@@ -1772,6 +1774,7 @@
         btn.checked = btn.value === value;
       });
       calculateLoan();
+      filterAccountsByCurrency();
     }
 
     currencyRadioButtons.forEach((btn) => {
@@ -1779,33 +1782,58 @@
     });
     currencySelect?.addEventListener("change", () => syncCurrencyUI(currencySelect.value));
 
+    const downPaymentStep = Number(downPaymentSlider?.step || 1000);
+    let lastCarPrice = parseInt(carPriceSlider?.value || "0", 10) || 1;
+
+    function syncDownPaymentWithCarPrice(nextCarPrice) {
+      if (!downPaymentSlider || !Number.isFinite(nextCarPrice) || nextCarPrice <= 0) {
+        return;
+      }
+
+      const currentDownPayment = parseInt(downPaymentSlider.value || "0", 10) || 0;
+      const ratio = lastCarPrice > 0 ? currentDownPayment / lastCarPrice : 0;
+      const adjustedValue = Math.round((nextCarPrice * ratio) / downPaymentStep) * downPaymentStep;
+      const clampedValue = Math.min(Math.max(adjustedValue, 0), nextCarPrice);
+
+      downPaymentSlider.max = String(nextCarPrice);
+      downPaymentSlider.value = String(clampedValue);
+      lastCarPrice = nextCarPrice;
+    }
+
     function calculateLoan() {
       const currency = getSelectedCurrency();
       const symbol = currency === "USD" ? "$" : "с.";
 
       const carPrice = parseInt(carPriceSlider.value, 10);
-      const downPayment = parseInt(downPaymentSlider.value, 10);
+      let downPayment = parseInt(downPaymentSlider.value, 10);
       const term = parseInt(termSlider.value, 10);
-      const financing = carPrice - downPayment;
-
       // Update max down payment based on car price
       downPaymentSlider.max = carPrice;
+      if (downPayment > carPrice) {
+        downPayment = carPrice;
+        downPaymentSlider.value = String(downPayment);
+      }
+
+      const financing = Math.max(carPrice - downPayment, 0);
 
       carPriceValue.textContent = formatNumber(carPrice) + " " + symbol;
       downPaymentValue.textContent = formatNumber(downPayment) + " " + symbol;
       financingValue.textContent = formatNumber(financing) + " " + symbol;
       termValue.textContent = term;
 
-      // Calculate monthly payment (23% annual rate)
-      const monthlyRate = 0.23 / 12;
+      // Calculate monthly payment using the same annual rate as backend auto credit.
+      const monthlyRate = annualRate / 12;
       const monthlyPay = financing <= 0
         ? 0
         : financing * (monthlyRate * Math.pow(1 + monthlyRate, term)) / (Math.pow(1 + monthlyRate, term) - 1);
       const totalPay = monthlyPay * term;
-      const overpay = totalPay - financing;
+      const overpay = Math.max(totalPay - financing, 0);
 
       monthlyPayment.textContent = formatNumber(monthlyPay.toFixed(2)) + " " + symbol;
       overpayment.textContent = formatNumber(overpay.toFixed(2)) + " " + symbol;
+      if (annualRateValue) {
+        annualRateValue.textContent = `${Math.round(annualRate * 100)}%`;
+      }
 
       // Keep form in sync with calculator
       if (carPriceInput && document.activeElement !== carPriceInput) {
@@ -1819,9 +1847,43 @@
       }
     }
 
-    carPriceSlider.addEventListener('input', calculateLoan);
+    carPriceSlider.addEventListener('input', () => {
+      syncDownPaymentWithCarPrice(parseInt(carPriceSlider.value, 10));
+      calculateLoan();
+    });
     downPaymentSlider.addEventListener('input', calculateLoan);
     termSlider.addEventListener('input', calculateLoan);
+
+    function syncSliderFromInput(input, slider, options = {}) {
+      if (!input || !slider) {
+        return;
+      }
+
+      input.addEventListener("input", () => {
+        const rawValue = toNumber(input.value);
+        if (!Number.isFinite(rawValue)) {
+          return;
+        }
+
+        const min = Number(slider.min || 0);
+        const dynamicMax = options.getMax ? options.getMax() : Number(slider.max || rawValue);
+        const max = Number.isFinite(dynamicMax) ? dynamicMax : rawValue;
+        const nextValue = Math.min(Math.max(rawValue, min), max);
+
+        slider.max = String(max);
+        slider.value = String(nextValue);
+        if (slider === carPriceSlider) {
+          syncDownPaymentWithCarPrice(nextValue);
+        }
+        calculateLoan();
+      });
+    }
+
+    syncSliderFromInput(carPriceInput, carPriceSlider);
+    syncSliderFromInput(downPaymentInput, downPaymentSlider, {
+      getMax: () => Number(carPriceSlider.value || downPaymentSlider.max || 0)
+    });
+    syncSliderFromInput(termMonthsInput, termSlider);
 
     // FAQ functionality
     document.querySelectorAll('.faq-question').forEach(button => {
@@ -1882,6 +1944,31 @@
       }
     }
 
+    function filterAccountsByCurrency() {
+      if (!accountsSelect) {
+        return;
+      }
+
+      const currentCurrency = getSelectedCurrency();
+      const options = Array.from(accountsSelect.querySelectorAll("option[data-currency]"));
+      const matchingOptions = options.filter((option) => option.dataset.currency === currentCurrency);
+
+      options.forEach((option) => {
+        option.hidden = option.dataset.currency !== currentCurrency;
+      });
+
+      const selectedOption = accountsSelect.selectedOptions?.[0];
+      if (!selectedOption || selectedOption.hidden) {
+        accountsSelect.value = matchingOptions[0]?.value || "";
+      }
+
+      if (matchingOptions.length === 0) {
+        accountsHint.textContent = `Нет счетов в валюте ${currentCurrency}. Выберите другую валюту или откройте подходящий счет.`;
+      } else {
+        accountsHint.textContent = `Показаны только счета в валюте ${currentCurrency}, чтобы заявка прошла без ошибки по валюте.`;
+      }
+    }
+
     async function loadAccounts() {
       setAccountsLoading(true);
       accountsHint.textContent = "Загрузка счетов из backend API…";
@@ -1904,11 +1991,12 @@
             const type = acc.type ?? acc.Type ?? "";
             const balance = acc.balance ?? acc.Balance ?? 0;
             const label = `${accountNumber} — ${formatMoney(balance, currency)} (${type})`;
-            return `<option value="${id}">${label}</option>`;
+            return `<option value="${id}" data-currency="${currency}">${label}</option>`;
           }).join("");
 
         accountsHint.textContent = "Выберите счёт, с которого будет списан первоначальный взнос.";
 
+        filterAccountsByCurrency();
       } catch (error) {
         accountsSelect.innerHTML = `<option value="" selected disabled>Ошибка загрузки счетов</option>`;
         accountsHint.textContent = "Не удалось загрузить счета. Проверьте авторизацию и backend.";
@@ -1984,6 +2072,7 @@
 
     // Initial calculation + keep form inputs consistent with sliders
     calculateLoan();
+    filterAccountsByCurrency();
   </script>
 </body>
 </html>
