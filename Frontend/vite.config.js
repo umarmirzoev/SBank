@@ -45,6 +45,14 @@ export default defineConfig({
         deposits: resolve(__dirname, "deposits.html"),
         history: resolve(__dirname, "history.html"),
         accounts: resolve(__dirname, "accounts.html"),
+        appCards: resolve(__dirname, "app-cards.html"),
+        appDeposits: resolve(__dirname, "app-deposits.html"),
+        appTransfers: resolve(__dirname, "app-transfers.html"),
+        appFinancing: resolve(__dirname, "app-financing.html"),
+        appAccounts: resolve(__dirname, "app-accounts.html"),
+        appHistory: resolve(__dirname, "app-history.html"),
+        appBank: resolve(__dirname, "app-bank.html"),
+        appPayments: resolve(__dirname, "app-payments.html"),
         visaBusiness: resolve(__dirname, "visa-business.html")
       }
     }

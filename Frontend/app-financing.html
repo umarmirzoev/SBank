@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кредиты — Сомонибанк</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+  <style>
+    :root {
+      --bg: #f5f8ff;
+      --glass: rgba(255, 255, 255, 0.85);
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --brand: #2563eb;
+      --brand-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      --card-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      background-image: radial-gradient(at 0% 0%, hsla(210,100%,96%,1) 0, transparent 50%), 
+                        radial-gradient(at 100% 100%, hsla(220,100%,93%,1) 0, transparent 50%);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
+      padding: 16px;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      height: 100%;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-xl);
+      border: 1px solid white;
+      box-shadow: 0 40px 100px rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      background: #ffffff;
+      border-right: 1px solid #f1f5f9;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      background: #2b61ff; /* Deep blue from screenshot */
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 24px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .brand-name {
+      color: #1e3a8a; /* Dark navy */
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: #64748b;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      background: rgba(0,0,0,0.02);
+      color: #2b61ff;
+    }
+    .nav-item.active {
+      background: #2b61ff;
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(43, 97, 255, 0.2);
+    }
+    .nav-item svg { width: 22px; height: 22px; stroke-width: 2.2; }
+    .nav-item.active svg { stroke: #ffffff !important; }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    /* Main Area */
+    .main { display: flex; flex-direction: column; overflow: hidden; }
+    
+    /* Header */
+    .header {
+      padding: 24px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .search-pill {
+      width: 460px; height: 48px; background: white; border-radius: 99px;
+      display: flex; align-items: center; padding: 0 20px; gap: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .search-pill input { border: none; outline: none; width: 100%; font-size: 14px; font-weight: 500; color: #94a3b8; }
+    
+    .header-right { display: flex; align-items: center; gap: 24px; }
+    .user-profile {
+      display: flex; align-items: center; gap: 12px; padding: 6px 16px 6px 6px;
+      background: white; border-radius: 99px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      cursor: pointer;
+    }
+    .user-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+    .user-name { font-size: 14px; font-weight: 700; }
+
+    /* Content */
+    .content { padding: 0 40px 40px; overflow-y: auto; flex: 1; }
+    
+    .page-title-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+    .page-title-row h1 { font-size: 32px; font-weight: 900; letter-spacing: -1px; }
+    .page-title-row p { font-size: 15px; color: var(--text-muted); font-weight: 500; }
+
+    .date-pill { display: flex; gap: 8px; background: white; padding: 6px; border-radius: 14px; box-shadow: var(--card-shadow); }
+    .date-btn { padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; border: none; background: transparent; color: #64748b; cursor: pointer; }
+    .date-btn.active { background: #f8fafc; color: #1e293b; box-shadow: inset 0 0 0 1px #e2e8f0; }
+
+    /* Credits Row */
+    .credits-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; }
+    .row-card {
+      padding: 24px; border-radius: 28px; cursor: pointer; position: relative;
+      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; gap: 16px;
+    }
+    .row-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+    
+    .row-card.blue { background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%); }
+    .row-card.green { background: linear-gradient(135deg, #ccfbf1 0%, #f0fdfa 100%); }
+    .row-card.yellow { background: linear-gradient(135deg, #fef9c3 0%, #fefce8 100%); opacity: 0.8; }
+
+    .row-card-top { display: flex; justify-content: space-between; align-items: center; }
+    .card-icon-sq { width: 44px; height: 44px; border-radius: 12px; background: white; display: grid; place-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); font-size: 20px; }
+    .card-rate { font-size: 18px; font-weight: 900; color: #1e40af; opacity: 0.8; }
+
+    .card-label { font-size: 15px; font-weight: 800; color: #1e3a8a; }
+    .card-bal { font-size: 24px; font-weight: 900; color: #0f172a; margin: 4px 0; }
+    .card-details { font-size: 11px; color: #64748b; font-weight: 700; }
+    .card-btn { margin-top: auto; width: fit-content; padding: 10px 20px; border-radius: 12px; font-size: 13px; font-weight: 800; color: white; background: var(--brand-gradient); box-shadow: 0 5px 15px rgba(37,99,235,0.2); }
+    .row-card.yellow .card-btn { background: #cbd5e1; color: #64748b; box-shadow: none; }
+
+    .quick-tabs { display: flex; gap: 24px; margin-bottom: 32px; padding-left: 8px; }
+    .tab-link { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #64748b; text-decoration: none; transition: 0.2s; }
+    .tab-link:hover { color: var(--brand); }
+    .tab-link svg { width: 16px; height: 16px; stroke-width: 2.5; }
+
+    /* Dashboard Grid */
+    .dashboard-grid { display: grid; grid-template-columns: 1.2fr 1fr 340px; gap: 24px; }
+
+    /* Left Column: Focus Credit */
+    .focus-box { padding: 32px; background: white; border-radius: 32px; box-shadow: var(--card-shadow); display: flex; flex-direction: column; gap: 24px; }
+    
+    .visual-loan {
+      height: 180px; border-radius: 24px; background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+      color: white; padding: 24px; position: relative; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+      box-shadow: 0 15px 35px rgba(37,99,235,0.25);
+    }
+    .v-loan-top { display: flex; justify-content: space-between; z-index: 2; position: relative; }
+    .v-loan-title { font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+    .v-loan-bal { font-size: 32px; font-weight: 900; text-align: right; letter-spacing: -1px; }
+    .v-loan-trend { font-size: 11px; font-weight: 800; color: #dcfce7; text-align: right; margin-top: 4px; }
+    
+    .v-loan-bottom { display: flex; justify-content: space-between; align-items: flex-end; z-index: 2; position: relative; }
+    .v-loan-info { font-size: 11px; font-weight: 700; opacity: 0.8; }
+    .v-loan-rate { font-size: 13px; font-weight: 900; color: #dcfce7; }
+
+    .loan-stats-row { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; }
+    .loan-stat-box { padding: 18px; background: #f8fafc; border-radius: 20px; border: 1px solid #f1f5f9; }
+    .loan-stat-label { font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px; display: block; }
+    .loan-stat-val { font-size: 20px; font-weight: 900; color: #1e293b; }
+    .loan-stat-sub { font-size: 10px; font-weight: 700; color: #10b981; margin-top: 4px; }
+
+    .repayment-bar { width: 100%; height: 12px; background: #eff6ff; border-radius: 6px; overflow: hidden; display: flex; margin: 16px 0; }
+    .bar-segment { height: 100%; }
+    .bar-segment.principal { width: 55%; background: #3b82f6; }
+    .bar-segment.interest { width: 25%; background: #fbbf24; }
+    .bar-segment.insurance { width: 10%; background: #94a3b8; }
+
+    .focus-actions { display: flex; gap: 14px; margin-top: 8px; }
+    .action-btn { flex: 1; height: 50px; border-radius: 14px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    .action-btn.primary { background: var(--brand-gradient); color: white; box-shadow: 0 10px 20px rgba(37,99,235,0.2); }
+    .action-btn.ghost { background: #f1f5f9; color: var(--brand); }
+
+    /* Middle Column: List + Knowledge */
+    .middle-col { display: flex; flex-direction: column; gap: 24px; }
+    .credit-list { display: flex; flex-direction: column; gap: 14px; }
+    .credit-item {
+      padding: 18px; background: white; border-radius: 20px; display: flex; align-items: center; gap: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+    .item-icon { width: 44px; height: 44px; border-radius: 12px; background: #eff6ff; display: grid; place-items: center; font-size: 20px; }
+    .item-info { flex: 1; }
+    .item-name { font-size: 13px; font-weight: 800; }
+    .item-sub { font-size: 10px; color: #94a3b8; font-weight: 600; }
+    .item-val-col { text-align: right; }
+    .item-val { font-size: 14px; font-weight: 900; }
+    .item-date { font-size: 10px; color: #94a3b8; font-weight: 600; }
+
+    .knowledge-section h3 { font-size: 15px; font-weight: 800; margin-bottom: 16px; }
+    .knowledge-card { display: flex; align-items: center; gap: 14px; padding: 18px; background: white; border-radius: 20px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-bottom: 12px; }
+    .knowledge-card:hover { background: #f8fafc; }
+    .k-icon { width: 36px; height: 36px; border-radius: 10px; background: #eff6ff; display: grid; place-items: center; color: #3b82f6; font-size: 18px; }
+    .k-text { flex: 1; min-width: 0; }
+    .k-title { font-size: 13px; font-weight: 750; margin-bottom: 2px; }
+    .k-desc { font-size: 10px; color: #94a3b8; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Right Column: CTA + Payments + Popular */
+    .right-col { display: flex; flex-direction: column; gap: 24px; }
+    .cta-widget { padding: 24px; background: white; border-radius: 28px; box-shadow: var(--card-shadow); text-align: center; }
+    .btn-new-loan { width: 100%; height: 48px; border-radius: 14px; background: var(--brand); color: white; font-size: 14px; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 8px 20px rgba(37,99,235,0.2); margin-top: 16px; }
+
+    .payments-widget { background: white; border-radius: 28px; padding: 24px; box-shadow: var(--card-shadow); }
+    .pay-item { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+    .pay-icon { width: 36px; height: 36px; border-radius: 10px; background: #f8fafc; display: grid; place-items: center; font-size: 18px; }
+    .pay-info { flex: 1; }
+    .pay-name { font-size: 12px; font-weight: 800; }
+    .pay-sub { font-size: 10px; color: #94a3b8; }
+    .pay-amt { font-size: 12px; font-weight: 900; text-align: right; }
+
+    .offers-widget { background: white; border-radius: 28px; padding: 24px; box-shadow: var(--card-shadow); }
+    .offer-item { display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: 20px; background: #f8fafc; margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
+    .offer-item:hover { background: #f1f5f9; }
+    .o-icon { width: 40px; height: 40px; border-radius: 10px; background: white; display: grid; place-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.04); font-size: 20px; }
+    .o-name { font-size: 12px; font-weight: 800; }
+    .o-desc { font-size: 10px; color: #94a3b8; }
+
+    #toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+      background: #1e293b; color: white; padding: 12px 24px; border-radius: 99px;
+      font-weight: 600; font-size: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      display: none; z-index: 2000;
+    }
+    #toast.show { display: block; animation: slideIn 0.4s ease-out; }
+    @keyframes slideIn { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
+    @media (max-width: 1440px) {
+      .dashboard-grid { grid-template-columns: 1fr 1fr; }
+      .right-col { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">S</div>
+        <div class="brand-name">Сомонибанк</div>
+      </div>
+      <nav class="side-nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="somonibank-app.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Главная</span></a></li>
+          <li class="nav-item"><a href="app-bank.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 10l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-width="2.2"/><polyline points="9 22 9 12 15 12 15 22" stroke-width="2.2"/></svg><span>Банк</span></a></li>
+          <li class="nav-item"><a href="app-payments.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="6" width="18" height="12" rx="2" stroke-width="2.2"/><line x1="3" y1="10" x2="21" y2="10" stroke-width="2.2"/></svg><span>Платежи</span></a></li>
+          <li class="nav-item"><a href="app-transfers.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 2l-7 20-4-9-9-4z" stroke-width="2.2"/><path d="M22 2L11 13" stroke-width="2.2"/></svg><span>Переводы</span></a></li>
+          <li class="nav-item"><a href="app-accounts.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="5" width="20" height="14" rx="2" stroke-width="2.2"/><line x1="2" y1="10" x2="22" y2="10" stroke-width="2.2"/></svg><span>Счета</span></a></li>
+          <li class="nav-item"><a href="app-cards.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="1" y="4" width="22" height="16" rx="2" stroke-width="2.2"/><line x1="1" y1="10" x2="23" y2="10" stroke-width="2.2"/></svg><span>Карты</span></a></li>
+          <li class="nav-item active"><a href="app-financing.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke-width="2.2"/></svg><span>Кредиты</span></a></li>
+          <li class="nav-item"><a href="app-deposits.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-width="2.2"/></svg><span>Депозиты</span></a></li>
+          <li class="nav-item"><a href="app-history.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2.2"/><polyline points="12 6 12 12 16 14" stroke-width="2.2"/></svg><span>История</span></a></li>
+        </ul>
+      </nav>
+      <div class="sidebar-bottom">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="#" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" stroke-width="2.2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke-width="2.2"/></svg><span>Настройки</span></a></li>
+          <li class="nav-item"><a href="#" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2.2"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke-width="2.2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2.2"/></svg><span>Помощь</span></a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div class="search-pill">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5"><circle cx="11" cy="11" r="6"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="text" placeholder="Поиск по услугам, переводам, получателям...">
+        </div>
+        <div class="header-right">
+          <div class="icon-btn" style="position:relative; cursor:pointer; color:#64748b;">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+             <div class="badge" style="position:absolute; top:-4px; right:-4px; width:16px; height:16px; border-radius:50%; background:#f43f5e; color:white; font-size:10px; display:grid; place-items:center; font-weight:800; border:2px solid white;">3</div>
+          </div>
+          <div class="user-profile">
+            <img src="https://i.pravatar.cc/100?u=ivan" class="user-avatar" alt="Avatar">
+            <span class="user-name">Иван Иванов</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="page-title-row">
+          <div>
+            <h1>Кредиты</h1>
+            <p>Управляйте своими кредитами легко</p>
+          </div>
+          <div class="date-pill">
+            <button class="date-btn">Период</button>
+            <button class="date-btn active">Неделя</button>
+            <button class="date-btn" style="display:flex; align-items:center; gap:8px;">
+               28.09.2024 — 22.04.2024 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="credits-row" id="creditsOverview">
+           <!-- Cards Overview -->
+           <div class="row-card blue">
+              <div class="row-card-top">
+                 <div class="card-icon-sq">🏠</div>
+                 <div class="card-rate">18%</div>
+              </div>
+              <div>
+                 <div class="card-label">Ипотечный кредит</div>
+                 <div class="card-bal">523 000 с.</div>
+                 <div class="card-details">До 24.12.2026</div>
+              </div>
+              <div class="card-btn">Погасить ></div>
+           </div>
+           <div class="row-card green">
+              <div class="row-card-top">
+                 <div class="card-icon-sq">🚗</div>
+                 <div class="card-rate">20%</div>
+              </div>
+              <div>
+                 <div class="card-label">Автокредит</div>
+                 <div class="card-bal">71 200 с.</div>
+                 <div class="card-details">До 15.03.2026 · +4,990 с.</div>
+              </div>
+              <div class="card-btn" style="background:#ccfbf1; color:#059669;">История ></div>
+           </div>
+           <div class="row-card yellow">
+              <div class="row-card-top">
+                 <div class="card-icon-sq">💵</div>
+                 <div class="card-rate">25%</div>
+              </div>
+              <div>
+                 <div class="card-label">Потребительский кредит</div>
+                 <div class="card-bal">Погашен досрочно</div>
+                 <div class="card-details">Срок: 9 месяцев</div>
+              </div>
+              <div class="card-btn">Погашен</div>
+           </div>
+        </div>
+
+        <div class="quick-tabs">
+           <a href="#" class="tab-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Погасить</a>
+           <a href="#" class="tab-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Рефинансировать</a>
+        </div>
+
+        <div class="dashboard-grid">
+           <!-- Column 1: Focus Credit -->
+           <div class="focus-box">
+              <div class="box-header">
+                 <span class="box-title">Ипотечный кредит</span>
+              </div>
+              
+              <div class="visual-loan">
+                 <div class="v-loan-top">
+                    <div>
+                       <div class="v-loan-title">🏠 Ипотечный кредит</div>
+                       <div style="font-size:11px; opacity:0.7; margin-top:4px;">IBAN: TJSOMON104169733592467</div>
+                    </div>
+                    <div>
+                       <div class="v-loan-bal">523 000,0 с.</div>
+                       <div class="v-loan-trend">+ 18%</div>
+                    </div>
+                 </div>
+                 <div style="font-size:12px; margin-top:20px; font-weight:700;">
+                    + 323 000 c. | сумма кредит 890 000 c.
+                    <span style="float:right; color:#dcfce7;">+13.0% ⏱️ 220 с.</span>
+                 </div>
+                 <div class="v-loan-bottom">
+                    <div class="v-loan-info">Срок кредита: 15 лет (до 2039)</div>
+                    <div class="v-loan-rate">18% ГОДОВЫХ</div>
+                 </div>
+              </div>
+
+              <div class="loan-stats-row">
+                 <div class="loan-stat-box">
+                    <span class="loan-stat-label">Остаточный платеж</span>
+                    <span class="loan-stat-val">- 7 280 c. <span style="font-size:12px; color:#94a3b8; font-weight:700;">до 24.04.2024</span></span>
+                    <div class="loan-stat-sub">1110 500 c.</div>
+                 </div>
+                 <div class="loan-stat-box">
+                    <span class="loan-stat-label">К уплате</span>
+                    <span class="loan-stat-val">+36,270 c.</span>
+                 </div>
+              </div>
+
+              <div>
+                 <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:800; color:#64748b;">
+                    <span>Анализ платежей</span>
+                    <span style="color:#1e293b;">635 300,0 с.</span>
+                 </div>
+                 <div class="repayment-bar">
+                    <div class="bar-segment principal"></div>
+                    <div class="bar-segment interest"></div>
+                    <div class="bar-segment insurance"></div>
+                 </div>
+                 <div style="display:flex; gap:20px; font-size:11px; font-weight:800; color:#94a3b8;">
+                    <div style="display:flex; align-items:center; gap:6px;"><div style="width:8px; height:8px; border-radius:2px; background:#3b82f6;"></div> Основной долг <span style="color:#1e293b;">523 000 с.</span></div>
+                    <div style="display:flex; align-items:center; gap:6px;"><div style="width:8px; height:8px; border-radius:2px; background:#fbbf24;"></div> Начисленные проценты <span style="color:#1e293b;">112 300 с.</span></div>
+                 </div>
+              </div>
+              
+              <div class="focus-actions">
+                 <button class="action-btn ghost">⏳ История</button>
+                 <button class="action-btn ghost">📄 Условия</button>
+                 <button class="action-btn primary">Погасить</button>
+                 <button class="action-btn ghost">Досрочное погашение</button>
+              </div>
+           </div>
+
+           <!-- Column 2: List + Insights -->
+           <div class="middle-col">
+              <div class="credit-list">
+                 <div class="box-header">
+                    <span class="box-title">Ваши кредиты</span>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                 </div>
+                 <div class="credit-item">
+                    <div class="item-icon">🏠</div>
+                    <div class="item-info">
+                       <div class="item-name">Ипотечный</div>
+                       <div class="item-sub">Срок: 15 лет</div>
+                    </div>
+                    <div class="item-val-col">
+                       <div class="item-val">523 000,0 с.</div>
+                       <div class="item-date">24.12.2026, Сомони</div>
+                    </div>
+                 </div>
+                 <div class="credit-item">
+                    <div class="item-icon">🚗</div>
+                    <div class="item-info">
+                       <div class="item-name">Автокредит</div>
+                       <div class="item-sub">Свой автомобиль</div>
+                    </div>
+                    <div class="item-val-col">
+                       <div class="item-val">71 200,0 с.</div>
+                       <div class="item-date">15.03.2026, Сомони</div>
+                    </div>
+                 </div>
+              </div>
+
+              <div class="knowledge-section">
+                 <h3>Полезно знать</h3>
+                 <div class="knowledge-card">
+                    <div class="k-icon">💡</div>
+                    <div class="k-text">
+                       <div class="k-title">Как платить меньше</div>
+                       <div class="k-desc">280 секретов как снизить процент</div>
+                    </div>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                 </div>
+                 <div class="knowledge-card">
+                    <div class="k-icon">🏠</div>
+                    <div class="k-text">
+                       <div class="k-title">Оформить рефинансирование</div>
+                       <div class="k-desc">Консолидируйте все кредиты в один</div>
+                    </div>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                 </div>
+              </div>
+           </div>
+
+           <!-- Column 3: Stats + Payments -->
+           <div class="right-col">
+              <div class="cta-widget">
+                 <div class="box-header">
+                    <span class="box-title" style="font-size:14px;">Ваши кредиты</span>
+                 </div>
+                 <button class="btn-new-loan">➕ Новый кредит</button>
+              </div>
+
+              <div class="payments-widget">
+                 <div class="box-header" style="margin-bottom:20px;">
+                    <span class="box-title" style="font-size:14px;">Последние платежи</span>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                 </div>
+                 <div class="pay-item">
+                    <div class="pay-icon">🏠</div>
+                    <div class="pay-info">
+                       <div class="pay-name">Ипотечный кредит</div>
+                       <div class="pay-sub">Снятие за июль</div>
+                    </div>
+                    <div class="pay-amt">~ 7,280 c.<br><span style="font-size:10px; color:#94a3b8; font-weight:600;">10.1 июня</span></div>
+                 </div>
+                 <div class="pay-item">
+                    <div class="pay-icon">🚗</div>
+                    <div class="pay-info">
+                       <div class="pay-name">Автокредит</div>
+                       <div class="pay-sub">Платы за страховку</div>
+                    </div>
+                    <div class="pay-amt">- 2 400 c.<br><span style="font-size:10px; color:#94a3b8; font-weight:600;">28.08.2024</span></div>
+                 </div>
+                 <div class="pay-item">
+                    <div class="pay-icon">📶</div>
+                    <div class="pay-info">
+                       <div class="pay-name">Ростелеком</div>
+                       <div class="pay-sub">Автоплатеж проведен</div>
+                    </div>
+                    <div class="pay-amt">- 100,00 c.<br><span style="font-size:10px; color:#94a3b8; font-weight:600;">23 марта</span></div>
+                 </div>
+              </div>
+
+              <div class="offers-widget">
+                 <div class="box-header" style="margin-bottom:20px;">
+                    <span class="box-title" style="font-size:14px;">Популярные предложения</span>
+                 </div>
+                 <div class="offer-item">
+                    <div class="o-icon">📱</div>
+                    <div class="o-info">
+                       <div class="o-name">Как платить меньше</div>
+                       <div class="o-desc">808 секретов ипотеки</div>
+                    </div>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                 </div>
+                 <div class="offer-item">
+                    <div class="o-icon" style="background:#dcfce7;">🏡</div>
+                    <div class="o-info">
+                       <div class="o-name">Оформить рефинансирование</div>
+                       <div class="o-desc">Снизьте ставку и ежемесячный платеж</div>
+                    </div>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                 </div>
+                 <div style="text-align: right; font-size:12px; font-weight:800; color:var(--brand); cursor:pointer; margin-top:8px;">Смотреть все ></div>
+              </div>
+           </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast">Сообщение</div>
+
+  <script type="module" src="scripts/financing-page.js"></script>
+</body>
+</html>
