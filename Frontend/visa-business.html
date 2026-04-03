@@ -203,6 +203,9 @@
       .tariff-row{grid-template-columns:1fr}
     }
   </style>
+<style>
+  .sb-header-actions > :not(.sb-global-controls){display:none !important;}
+</style>
 </head>
 <body>
   <header class="sb-header">
@@ -217,18 +220,12 @@
           <a href="business.html" class="active">Бизнесу</a>
           <a href="somonibank.html">Сомонибонк</a>
         </nav>
-        <div class="sb-header-actions">
-          <a href="addresses.html" class="sb-location-link">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Адреса и банкоматы
-          </a>
-          <button class="sb-lang-btn">Рус ▾</button>
-        </div>
+                <div class="sb-header-actions"></div>
       </div>
     </div>
     <div class="sb-header-bottom">
       <div class="sb-header-inner">
-        <nav class="sb-nav-bottom">
+                <nav class="sb-nav-bottom">
           <a href="business.html">Сомонибонк Business</a>
           <a href="salary-project.html">Зарплатный проект</a>
           <a href="financing.html">Финансирование</a>
@@ -237,6 +234,7 @@
           <a href="settlement-account.html">Расчётный счёт</a>
           <a href="visa-business.html" class="active">Visa Business</a>
           <a href="business-transfers.html">Переводы</a>
+          <a href="#">Ещё ▾</a>
         </nav>
       </div>
     </div>
@@ -551,5 +549,10 @@
     });
   </script>
   <script type="module" src="scripts/visa-business-page.js"></script>
+  <script type="module">
+    import { mountHeaderAuth } from "./scripts/common.js";
+
+    mountHeaderAuth();
+  </script>
 </body>
 </html>

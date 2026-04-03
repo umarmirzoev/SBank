@@ -240,13 +240,7 @@
           <a href="business.html">Бизнесу</a>
           <a href="somonibank.html">Сомонибонк</a>
         </nav>
-        <div class="sb-header-actions">
-          <a href="addresses.html" class="sb-location-link">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Адреса и банкоматы
-          </a>
-          <button class="sb-lang-btn">Рус ▾</button>
-        </div>
+        <div class="sb-header-actions"></div>
       </div>
     </div>
     <div class="sb-header-bottom">
@@ -254,11 +248,10 @@
         <nav class="sb-nav-bottom">
           <a href="somonibank-app.html">Приложение Somoni</a>
           <a href="cards.html" class="active">Карты</a>
-          <a href="#">Салом</a>
           <a href="auto.html">Покупка авто</a>
           <a href="#">Somoni Shop</a>
           <a href="transfers.html">Переводы</a>
-          <a href="#">Депозиты</a>
+          <a href="deposits.html">Депозиты</a>
           <a href="#">Авиабилеты</a>
           <a href="#">Ещё ▾</a>
         </nav>
@@ -594,6 +587,11 @@
     </div>
   </footer>
 
+  <script type="module">
+    import { mountHeaderAuth } from "./scripts/common.js";
+
+    mountHeaderAuth();
+  </script>
   <script type="module" src="scripts/public-cards-page.js"></script>
   <script>
     document.querySelectorAll('.faq-question').forEach(btn => {
