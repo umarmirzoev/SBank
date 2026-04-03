@@ -13,8 +13,22 @@ public sealed class ExchangeRateService(
     ILogger<ExchangeRateService> logger) : IExchangeRateService
 {
     private static readonly string[] SupportedCurrencies = ["TJS", "USD", "EUR", "RUB"];
+    private static readonly SemaphoreSlim RefreshLock = new(1, 1);
 
     public async Task RefreshRatesAsync(CancellationToken cancellationToken = default)
+    {
+        await RefreshLock.WaitAsync(cancellationToken);
+        try
+        {
+            await RefreshRatesCoreAsync(cancellationToken);
+        }
+        finally
+        {
+            RefreshLock.Release();
+        }
+    }
+
+    private async Task RefreshRatesCoreAsync(CancellationToken cancellationToken)
     {
         var snapshot = await nbtExchangeRateSource.FetchLatestRatesAsync(cancellationToken);
         var existingCodes = await dbContext.ExchangeRates.AsNoTracking()

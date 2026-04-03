@@ -11,6 +11,7 @@ public sealed class NbtExchangeRateSource(HttpClient httpClient, ILogger<NbtExch
 {
     private const string HtmlSourceUrl = "https://www.nbt.tj/en/kurs/kurs.php";
     private const string XmlSourceUrl = "https://www.nbt.tj/en/kurs/export_xml.php?export=xmlout";
+    private static readonly TimeSpan RequestTimeout = TimeSpan.FromSeconds(10);
     private static readonly Regex[] RateDateRegexes =
     [
         new Regex(@"as\s+of\s+(?<date>\d{2}[./]\d{2}[./]\d{4})", RegexOptions.IgnoreCase | RegexOptions.Compiled),
@@ -45,6 +46,8 @@ public sealed class NbtExchangeRateSource(HttpClient httpClient, ILogger<NbtExch
 
     public async Task<NbtExchangeRateSnapshot> FetchLatestRatesAsync(CancellationToken cancellationToken = default)
     {
+        Exception? xmlFailure = null;
+
         try
         {
             var xml = await DownloadContentAsync(XmlSourceUrl, cancellationToken);
@@ -52,41 +55,51 @@ public sealed class NbtExchangeRateSource(HttpClient httpClient, ILogger<NbtExch
         }
         catch (Exception ex)
         {
+            xmlFailure = ex;
             logger.LogWarning(ex, "NBT XML exchange-rate feed could not be parsed. Falling back to HTML page.");
         }
 
-        var html = await DownloadContentAsync(HtmlSourceUrl, cancellationToken);
-        var rateDate = ParseRateDate(html);
-        var items = ParseRates(html);
-
-        if (items.Count == 0)
+        try
         {
-            throw new InvalidOperationException("NBT exchange rates page did not contain any supported rates.");
-        }
+            var html = await DownloadContentAsync(HtmlSourceUrl, cancellationToken);
+            var rateDate = ParseRateDate(html);
+            var items = ParseRates(html);
 
-        items["TJS"] = 1m;
-
-        return new NbtExchangeRateSnapshot
-        {
-            RateDate = rateDate,
-            Source = HtmlSourceUrl,
-            Rates = items.Select(x => new NbtExchangeRateItem
+            if (items.Count == 0)
             {
-                CurrencyCode = x.Key,
-                Rate = x.Value
-            }).ToArray()
-        };
+                throw new InvalidOperationException("NBT exchange rates page did not contain any supported rates.");
+            }
+
+            items["TJS"] = 1m;
+
+            return new NbtExchangeRateSnapshot
+            {
+                RateDate = rateDate,
+                Source = HtmlSourceUrl,
+                Rates = items.Select(x => new NbtExchangeRateItem
+                {
+                    CurrencyCode = x.Key,
+                    Rate = x.Value
+                }).ToArray()
+            };
+        }
+        catch (Exception htmlFailure) when (htmlFailure is not OperationCanceledException || !cancellationToken.IsCancellationRequested)
+        {
+            throw new InvalidOperationException("Unable to fetch exchange rates from NBT XML and HTML sources.", new AggregateException(xmlFailure!, htmlFailure));
+        }
     }
 
     private async Task<string> DownloadContentAsync(string url, CancellationToken cancellationToken)
     {
+        using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        timeoutCts.CancelAfter(RequestTimeout);
         using var request = new HttpRequestMessage(HttpMethod.Get, url);
         request.Headers.TryAddWithoutValidation("Accept-Language", "en");
         request.Headers.TryAddWithoutValidation("User-Agent", "SomoniBank/1.0");
 
-        using var response = await httpClient.SendAsync(request, cancellationToken);
+        using var response = await httpClient.SendAsync(request, timeoutCts.Token);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync(cancellationToken);
+        return await response.Content.ReadAsStringAsync(timeoutCts.Token);
     }
 
     private NbtExchangeRateSnapshot ParseXmlSnapshot(string xml)

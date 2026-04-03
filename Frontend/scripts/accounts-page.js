@@ -8,9 +8,9 @@ import {
 } from "./common.js";
 
 let accounts = [];
-let savingsGoals = [];
 let transactions = [];
 let selectedAccount = null;
+let selectedPeriod = "week";
 
 const elements = {
   accountsList: document.getElementById("accountsList"),
@@ -25,7 +25,12 @@ const elements = {
   miniBars: document.getElementById("miniBars"),
   operationsListMiddle: document.getElementById("operationsListMiddle"),
   operationsListWidget: document.getElementById("operationsListWidget"),
-  transferActionBtn: document.getElementById("transferActionBtn")
+  transferActionBtn: document.getElementById("transferActionBtn"),
+  periodButtons: Array.from(document.querySelectorAll(".date-controls .date-btn")).slice(0, 3),
+  statLabels: document.querySelectorAll(".bottom-bar .stat-label"),
+  statValues: document.querySelectorAll(".bottom-bar .stat-val"),
+  statPrimaryValue: document.querySelector(".bottom-bar .income-sum"),
+  statLineFill: document.querySelector(".stat-line-fill")
 };
 
 async function init() {
@@ -35,201 +40,408 @@ async function init() {
   }
 
   const session = getSession();
-  elements.profileName.textContent = session.fullName || "Иван Иванов";
+  if (elements.profileName) {
+    elements.profileName.textContent = session.fullName || "Пользователь";
+  }
 
+  configurePeriodButtons();
   await loadData();
   setupEventListeners();
 }
 
+function configurePeriodButtons() {
+  const labels = [
+    { key: "day", text: "День" },
+    { key: "week", text: "Неделя" },
+    { key: "month", text: "Месяц" }
+  ];
+
+  elements.periodButtons.forEach((button, index) => {
+    const config = labels[index];
+    if (!config) {
+      return;
+    }
+
+    button.dataset.period = config.key;
+    button.textContent = config.text;
+    button.classList.toggle("active", config.key === selectedPeriod);
+  });
+}
+
 async function loadData() {
   try {
-    const [accRes, goalRes, transRes] = await Promise.all([
+    const [accountsPayload, transfersPayload] = await Promise.all([
       apiRequest("/api/accounts/my?page=1&pageSize=20", { auth: true }),
-      apiRequest("/api/SavingsGoal/my?page=1&pageSize=20", { auth: true }),
-      apiRequest("/api/transaction/my?page=1&pageSize=20", { auth: true })
+      apiRequest("/api/transfers/my?page=1&pageSize=50", { auth: true })
     ]);
 
-    accounts = accRes.items || [];
-    savingsGoals = goalRes.items || [];
-    transactions = transRes.items || [];
-
-    // Seeding demo data to match the "Photo" exactly if backend is empty
-    if (accounts.length === 0) {
-      accounts = [
-        { id: '1', type: 'Current', currency: 'TJS', balance: 5230, accountNumber: '4166 7385 **** 2467', iban: 'TJSOMON104167332467' },
-        { id: '2', type: 'Savings', currency: 'USD', balance: 970.20, accountNumber: '4165 7885 **** 7942', iban: 'USDOMON992123456789' }
-      ];
-    }
-    if (savingsGoals.length === 0) {
-      savingsGoals = [
-        { id: 'g1', name: 'Накопительный', currentAmount: 24500, targetAmount: 100000, deadline: '2024-10-24' },
-        { id: 'g2', name: 'Целевой', currentAmount: 127500, targetAmount: 200000, description: 'План: Новая машина' }
-      ];
-    }
-    if (transactions.length === 0) {
-      transactions = [
-        { id: 't1', type: 'Transfer', amount: 700000, description: 'Мария П.', createdAt: new Date().toISOString() },
-        { id: 't2', type: 'Payment', amount: -75, description: 'Коммунальные', createdAt: new Date().toISOString() },
-        { id: 't3', type: 'Transfer', amount: -1000, description: 'Артем И.', createdAt: new Date().toISOString() },
-        { id: 't4', type: 'Withdrawal', amount: -164.50, description: 'Продуктовый магазин', createdAt: new Date().toISOString() }
-      ];
-    }
+    accounts = accountsPayload.items || accountsPayload.Items || [];
+    transactions = transfersPayload.items || transfersPayload.Items || [];
 
     renderTopCards();
-    
-    // Select first account by default
+
     if (accounts.length > 0) {
-      selectAccount(accounts[0].id);
+      selectAccount(accounts[0].id || accounts[0].Id);
+    } else {
+      renderEmptyState("У вас пока нет реальных счетов.");
     }
-    
-    renderOperations();
   } catch (error) {
-    console.error("Failed to load data", error);
-    showToast("Ошибка загрузки данных");
+    console.error("Failed to load accounts page", error);
+    showToast("Ошибка загрузки счетов");
+    renderEmptyState(error.message || "Не удалось загрузить реальные данные.");
   }
 }
 
 function renderTopCards() {
-  elements.accountsList.innerHTML = "";
-  
-  const cardConfigs = [
-    { type: 'Current', color: 'blue', icon: '💳', label: 'Текущий' },
-    { type: 'Savings', color: 'teal', icon: '💵', label: 'Долларовый' },
-    { type: 'Goal', color: 'yellow', icon: '🐷', label: 'Накопительный' },
-    { type: 'Target', color: 'green', icon: '🎯', label: 'Целевой' }
-  ];
+  if (!elements.accountsList) {
+    return;
+  }
 
-  cardConfigs.forEach(cfg => {
-    let data = null;
-    if (cfg.type === 'Current') data = accounts.find(a => a.type === 'Current') || accounts[0];
-    else if (cfg.type === 'Savings') data = accounts.find(a => a.currency === 'USD') || accounts[1];
-    else if (cfg.type === 'Goal') data = savingsGoals[0];
-    else if (cfg.type === 'Target') data = savingsGoals[1];
-
-    const card = document.createElement("div");
-    card.className = `acc-card ${cfg.color}`;
-    
-    const balance = data ? (data.balance ?? data.currentAmount) : 0;
-    const currency = data?.currency === 'USD' ? '$' : 'с.';
-    const sub = data?.accountNumber ? data.accountNumber : (data?.targetAmount ? `${Math.round((data.currentAmount/data.targetAmount)*100)}% до ${data.deadline || 'цели'}` : 'План: Новая машина');
-
-    card.innerHTML = `
-      <div class="card-top">
-        <div class="card-icon-box" style="font-size:20px;">${cfg.icon}</div>
-        <div class="card-check">✓</div>
-      </div>
-      <div>
-        <div class="card-label">${cfg.label}</div>
-        <div class="card-balance">${currency === '$' ? '$' : ''}${formatMoney(balance, '')} ${currency === '$' ? '' : 'с.'}</div>
-        <div class="card-number">${sub}</div>
+  if (accounts.length === 0) {
+    elements.accountsList.innerHTML = `
+      <div class="empty-state" style="grid-column: span 4;">
+        У вас пока нет реальных счетов.
       </div>
     `;
-    card.onclick = () => data && selectAccount(data.id);
-    elements.accountsList.appendChild(card);
+    return;
+  }
+
+  const colorClasses = ["blue", "teal", "yellow", "green"];
+  const icons = ["💳", "🏦", "💼", "📈"];
+
+  elements.accountsList.innerHTML = accounts.map((account, index) => {
+    const id = account.id || account.Id;
+    const type = account.type || account.Type || "Account";
+    const currency = account.currency || account.Currency || "TJS";
+    const balance = Number(account.balance ?? account.Balance ?? 0);
+    const accountNumber = account.accountNumber || account.AccountNumber || "Без номера";
+    const status = account.status || account.Status || "Active";
+    const colorClass = colorClasses[index % colorClasses.length];
+    const icon = icons[index % icons.length];
+
+    return `
+      <div class="acc-card ${colorClass}" data-account-id="${id}">
+        <div class="card-top">
+          <div class="card-icon-box" style="font-size:20px;">${icon}</div>
+          <div class="card-check">${status === "Active" ? "✓" : "!"}</div>
+        </div>
+        <div>
+          <div class="card-label">${escapeHtml(type)}</div>
+          <div class="card-balance">${escapeHtml(formatMoney(balance, currency))}</div>
+          <div class="card-number">${escapeHtml(accountNumber)}</div>
+          <div class="card-sub">${escapeHtml(status)}</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  elements.accountsList.querySelectorAll(".acc-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      selectAccount(card.dataset.accountId);
+    });
   });
 }
 
 function selectAccount(id) {
-  selectedAccount = accounts.find(a => a.id === id) || savingsGoals.find(g => g.id === id);
-  if (!selectedAccount) return;
+  selectedAccount = accounts.find((account) => String(account.id || account.Id) === String(id));
+  if (!selectedAccount) {
+    return;
+  }
 
-  // Visual highlights
-  document.querySelectorAll(".acc-card").forEach(c => c.style.border = "none");
-  // Find card and highlight? No, the photo doesn't show a borders for active card, it just updates the detail view.
+  const accountType = selectedAccount.type || selectedAccount.Type || "Счёт";
+  const accountNumber = selectedAccount.accountNumber || selectedAccount.AccountNumber || "Без номера";
+  const iban = selectedAccount.iban || selectedAccount.Iban || "";
+  const currency = selectedAccount.currency || selectedAccount.Currency || "TJS";
+  const balance = Number(selectedAccount.balance ?? selectedAccount.Balance ?? 0);
 
-  elements.detailTitle.textContent = selectedAccount.type === 'Current' ? 'Текущий счёт' : 'Детали счёта';
-  elements.selectedAccLabel.textContent = selectedAccount.name || (selectedAccount.type === 'Current' ? 'Основной счёт' : (selectedAccount.currency === 'USD' ? 'Валютный счёт' : 'Цель'));
-  elements.selectedAccNumber.textContent = selectedAccount.accountNumber || '4169 7385 **** 2467';
-  
-  const currency = selectedAccount.currency === 'USD' ? '$' : 'с.';
-  const balance = selectedAccount.balance ?? selectedAccount.currentAmount;
-  elements.selectedAccBalance.textContent = `${currency === '$' ? '$' : ''}${formatMoney(balance, '')} ${currency === '$' ? '' : 'с.'}`;
-  elements.selectedAccIban.textContent = `IBAN ${selectedAccount.iban || 'TJSOMON104167332467'}`;
-  
-  elements.selectedAccTrend.textContent = '+ 3,36%'; // Static like in photo
-  elements.balanceSecondary.textContent = '+ 520,00 с.'; // Static like in photo
+  if (elements.detailTitle) {
+    elements.detailTitle.textContent = "Детали счёта";
+  }
+  if (elements.selectedAccLabel) {
+    elements.selectedAccLabel.textContent = accountType;
+  }
+  if (elements.selectedAccNumber) {
+    elements.selectedAccNumber.textContent = accountNumber;
+  }
+  if (elements.selectedAccBalance) {
+    elements.selectedAccBalance.textContent = formatMoney(balance, currency);
+  }
+  if (elements.selectedAccIban) {
+    elements.selectedAccIban.textContent = iban ? `IBAN ${iban}` : "IBAN не указан";
+  }
+  if (elements.selectedAccTrend) {
+    elements.selectedAccTrend.textContent = periodTitle();
+  }
+  if (elements.balanceSecondary) {
+    elements.balanceSecondary.textContent = `${formatMoney(balance, currency)} доступно`;
+  }
 
-  updateMiniBars();
+  updateMiniBars(balance);
+  renderOperations();
+  updateBottomStats();
 }
 
-function updateMiniBars() {
+function updateMiniBars(balance) {
+  if (!elements.miniBars) {
+    return;
+  }
+
   const bars = elements.miniBars.querySelectorAll(".mini-bar");
-  bars.forEach(bar => {
-    const h = Math.floor(Math.random() * 70) + 10;
-    bar.style.height = `${h}%`;
-    bar.classList.remove("active");
+  const numericBalance = Number(balance || 0);
+  const seed = Math.max(1, Math.round(numericBalance) || 1);
+
+  bars.forEach((bar, index) => {
+    const height = 18 + ((seed + index * 17) % 70);
+    bar.style.height = `${height}%`;
+    bar.classList.toggle("active", index === bars.length - 1);
   });
-  bars[Math.floor(Math.random() * bars.length)].classList.add("active");
 }
 
 function renderOperations() {
-  // Clear previous
-  elements.operationsListMiddle.innerHTML = "";
-  elements.operationsListWidget.innerHTML = "";
+  if (elements.operationsListMiddle) {
+    elements.operationsListMiddle.innerHTML = "";
+  }
+  if (elements.operationsListWidget) {
+    elements.operationsListWidget.innerHTML = "";
+  }
 
-  transactions.forEach((t, i) => {
-    const item = renderOpItem(t, true);
-    elements.operationsListMiddle.innerHTML += item;
-    
-    if (i < 4) {
-      const widgetItem = renderOpItem(t, false);
-      elements.operationsListWidget.innerHTML += widgetItem;
+  const filteredTransactions = getFilteredTransactions()
+    .sort((left, right) => new Date(right.createdAt || right.CreatedAt || 0) - new Date(left.createdAt || left.CreatedAt || 0));
+
+  if (filteredTransactions.length === 0) {
+    const emptyMarkup = `<div class="empty-state">По этому счёту нет реальных операций за ${periodText()}.</div>`;
+    if (elements.operationsListMiddle) {
+      elements.operationsListMiddle.innerHTML = emptyMarkup;
+    }
+    if (elements.operationsListWidget) {
+      elements.operationsListWidget.innerHTML = emptyMarkup;
+    }
+    return;
+  }
+
+  filteredTransactions.forEach((transaction, index) => {
+    if (elements.operationsListMiddle) {
+      elements.operationsListMiddle.innerHTML += renderOpItem(transaction, true);
+    }
+    if (elements.operationsListWidget && index < 4) {
+      elements.operationsListWidget.innerHTML += renderOpItem(transaction, false);
     }
   });
 }
 
-function renderOpItem(t, isFull) {
-  const isPlus = t.amount > 0;
-  const avatar = `https://i.pravatar.cc/100?u=${t.id}`;
-  
+function getFilteredTransactions() {
+  const currentId = String(selectedAccount?.id || selectedAccount?.Id || "");
+  const start = getPeriodStart();
+
+  return transactions.filter((transaction) => {
+    const createdAt = new Date(transaction.createdAt || transaction.CreatedAt || 0).getTime();
+    if (Number.isNaN(createdAt) || createdAt < start) {
+      return false;
+    }
+
+    const fromAccountId = String(transaction.fromAccountId || transaction.FromAccountId || "");
+    const toAccountId = String(transaction.toAccountId || transaction.ToAccountId || "");
+    return fromAccountId === currentId || toAccountId === currentId;
+  });
+}
+
+function getPeriodStart() {
+  const now = Date.now();
+  const day = 24 * 60 * 60 * 1000;
+
+  if (selectedPeriod === "day") {
+    return now - day;
+  }
+
+  if (selectedPeriod === "month") {
+    return now - 30 * day;
+  }
+
+  return now - 7 * day;
+}
+
+function renderOpItem(transaction, isFull) {
+  const amount = Number(transaction.amount ?? transaction.Amount ?? 0);
+  const currency = transaction.currency || transaction.Currency || "TJS";
+  const description = transaction.description || transaction.Description || "Операция";
+  const createdAt = transaction.createdAt || transaction.CreatedAt;
+  const toAccountNumber = transaction.toAccountNumber || transaction.ToAccountNumber || "";
+  const fromAccountNumber = transaction.fromAccountNumber || transaction.FromAccountNumber || "";
+  const currentId = String(selectedAccount?.id || selectedAccount?.Id || "");
+  const fromAccountId = String(transaction.fromAccountId || transaction.FromAccountId || "");
+  const isOutgoing = currentId && currentId === fromAccountId;
+  const sign = isOutgoing ? "-" : "+";
+  const amountClass = isOutgoing ? "minus" : "plus";
+  const subtitle = isOutgoing
+    ? `Получатель: ${toAccountNumber || "Счёт"}`
+    : `Отправитель: ${fromAccountNumber || "Счёт"}`;
+
   if (isFull) {
     return `
       <div class="op-card" style="margin-bottom:8px;">
-        <img src="${avatar}" class="avatar-sm" alt="U">
+        <div class="avatar-sm" style="display:grid;place-items:center;background:#eff6ff;color:#2563eb;font-weight:800;">${isOutgoing ? "↑" : "↓"}</div>
         <div class="op-info">
-          <div class="op-name">${t.description || t.type}</div>
-          <div class="op-sub">${t.accountNumber || (isPlus ? 'Пополнение' : 'Перевод')}</div>
+          <div class="op-name">${escapeHtml(description)}</div>
+          <div class="op-sub">${escapeHtml(subtitle)}</div>
         </div>
         <div class="op-amount-side">
-          <div class="op-amt ${isPlus ? 'plus' : 'minus'}">
-            ${isPlus ? '+' : ''}${formatMoney(t.amount, '')}
+          <div class="op-amt ${amountClass}">
+            ${sign}${escapeHtml(formatMoney(Math.abs(amount), currency))}
           </div>
-          <div class="op-time">${formatDate(t.createdAt)}</div>
+          <div class="op-time">${escapeHtml(formatDate(createdAt))}</div>
         </div>
-      </div>
-    `;
-  } else {
-    // Smaller widget style
-    return `
-      <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-         <img src="${avatar}" style="width:32px; height:32px; border-radius:50%;" alt="U">
-         <div style="flex:1">
-            <div style="font-size:12px; font-weight:700;">${t.description || t.type}</div>
-            <div style="font-size:10px; color:#94a3b8;">${formatDate(t.createdAt)}</div>
-         </div>
-         <div style="font-size:12px; font-weight:800; color: ${isPlus ? '#10b981' : '#1e293b'}">
-            ${isPlus ? '+' : ''}${formatMoney(t.amount, '')}
-         </div>
       </div>
     `;
   }
+
+  return `
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+       <div style="width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#eff6ff;color:#2563eb;font-weight:800;">${isOutgoing ? "↑" : "↓"}</div>
+       <div style="flex:1">
+          <div style="font-size:12px; font-weight:700;">${escapeHtml(description)}</div>
+          <div style="font-size:10px; color:#94a3b8;">${escapeHtml(formatDate(createdAt))}</div>
+       </div>
+       <div style="font-size:12px; font-weight:800; color: ${isOutgoing ? "#1e293b" : "#10b981"}">
+          ${sign}${escapeHtml(formatMoney(Math.abs(amount), currency))}
+       </div>
+    </div>
+  `;
+}
+
+function updateBottomStats() {
+  const filteredTransactions = getFilteredTransactions();
+  const currentId = String(selectedAccount?.id || selectedAccount?.Id || "");
+  const currency = selectedAccount?.currency || selectedAccount?.Currency || "TJS";
+  let incoming = 0;
+  let outgoing = 0;
+
+  filteredTransactions.forEach((transaction) => {
+    const amount = Math.abs(Number(transaction.amount ?? transaction.Amount ?? 0));
+    const fromAccountId = String(transaction.fromAccountId || transaction.FromAccountId || "");
+
+    if (fromAccountId === currentId) {
+      outgoing += amount;
+    } else {
+      incoming += amount;
+    }
+  });
+
+  const turnover = incoming + outgoing;
+  const accountBalance = Number(selectedAccount?.balance ?? selectedAccount?.Balance ?? 0);
+  const fill = accountBalance > 0 ? Math.min(100, Math.round((turnover / accountBalance) * 100)) : 0;
+
+  if (elements.statLabels[0]) {
+    elements.statLabels[0].textContent = `Оборот за ${periodText()}`;
+  }
+  if (elements.statPrimaryValue) {
+    elements.statPrimaryValue.textContent = formatMoney(turnover, currency);
+  }
+  if (elements.statLabels[1]) {
+    elements.statLabels[1].textContent = `Входящие за ${periodText()}`;
+  }
+  if (elements.statValues[1]) {
+    elements.statValues[1].textContent = formatMoney(incoming, currency);
+  }
+  if (elements.statLabels[2]) {
+    elements.statLabels[2].textContent = `Исходящие за ${periodText()}`;
+  }
+  if (elements.statValues[2]) {
+    elements.statValues[2].textContent = formatMoney(outgoing, currency);
+  }
+  if (elements.statLineFill) {
+    elements.statLineFill.style.width = `${fill}%`;
+  }
+}
+
+function renderEmptyState(message) {
+  const text = message || "Реальные данные пока недоступны.";
+  if (elements.accountsList) {
+    elements.accountsList.innerHTML = `
+      <div class="empty-state" style="grid-column: span 4;">
+        ${escapeHtml(text)}
+      </div>
+    `;
+  }
+
+  if (elements.operationsListMiddle) {
+    elements.operationsListMiddle.innerHTML = `<div class="empty-state">${escapeHtml(text)}</div>`;
+  }
+  if (elements.operationsListWidget) {
+    elements.operationsListWidget.innerHTML = `<div class="empty-state">${escapeHtml(text)}</div>`;
+  }
+}
+
+function periodTitle() {
+  if (selectedPeriod === "day") {
+    return "За день";
+  }
+  if (selectedPeriod === "month") {
+    return "За месяц";
+  }
+  return "За неделю";
+}
+
+function periodText() {
+  if (selectedPeriod === "day") {
+    return "день";
+  }
+  if (selectedPeriod === "month") {
+    return "месяц";
+  }
+  return "неделю";
 }
 
 function setupEventListeners() {
-  elements.transferActionBtn.onclick = () => {
-    if (!selectedAccount) return;
-    window.location.href = `transfers.html?from=${selectedAccount.id}&type=${(selectedAccount.type || 'card').toLowerCase()}`;
-  };
+  elements.periodButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      selectedPeriod = button.dataset.period || "week";
+      elements.periodButtons.forEach((node) => node.classList.toggle("active", node === button));
+      if (selectedAccount) {
+        if (elements.selectedAccTrend) {
+          elements.selectedAccTrend.textContent = periodTitle();
+        }
+        renderOperations();
+        updateBottomStats();
+      }
+    });
+  });
 
-  document.querySelectorAll(".copy-icon").forEach(btn => {
-    btn.onclick = () => {
-      const targetId = btn.dataset.copy;
-      const text = document.getElementById(targetId).textContent;
+  if (elements.transferActionBtn) {
+    elements.transferActionBtn.onclick = () => {
+      if (!selectedAccount) {
+        showToast("Сначала выберите счёт");
+        return;
+      }
+
+      const id = selectedAccount.id || selectedAccount.Id;
+      window.location.href = `transfers.html?from=${id}`;
+    };
+  }
+
+  document.querySelectorAll(".copy-icon").forEach((button) => {
+    button.onclick = () => {
+      const targetId = button.dataset.copy;
+      const target = document.getElementById(targetId);
+      const text = target?.textContent?.trim();
+      if (!text) {
+        showToast("Нечего копировать");
+        return;
+      }
+
       navigator.clipboard.writeText(text).then(() => {
         showToast("Скопировано в буфер обмена");
       });
     };
   });
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
 document.addEventListener("DOMContentLoaded", init);

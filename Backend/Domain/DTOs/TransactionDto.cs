@@ -11,11 +11,21 @@ public class TransferDto
     [StringLength(20, MinimumLength = 4)]
     public string ToAccountNumber { get; set; } = null!;
 
-    [Range(typeof(decimal), "0.01", "999999999999")]
+    [Range(0.01d, 999999999999d)]
     public decimal Amount { get; set; }
 
     [StringLength(250)]
     public string? Description { get; set; }
+}
+
+public class TransferRecipientLookupDto
+{
+    public string TransferType { get; set; } = null!;
+    public string InputValue { get; set; } = null!;
+    public string ResolvedAccountNumber { get; set; } = null!;
+    public string RecipientName { get; set; } = null!;
+    public string MaskedPhone { get; set; } = null!;
+    public string? MaskedCardNumber { get; set; }
 }
 
 public class DepositMoneyDto

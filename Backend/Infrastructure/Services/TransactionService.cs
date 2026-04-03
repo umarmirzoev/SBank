@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SomoniBank.Domain.DTOs;
@@ -15,8 +16,11 @@ public class TransactionService(
     AppDbContext db,
     IFraudDetectionService fraudDetectionService,
     INotificationService notificationService,
+    ISmsSender smsSender,
     ILogger<TransactionService> logger) : ITransactionService
 {
+    private static readonly Regex TajikPhoneRegex = new(@"^\+992\d{9}$", RegexOptions.Compiled);
+
     public async Task<Response<TransactionGetDto>> GetByIdAsync(Guid id, Guid? requesterUserId = null, bool isAdmin = false)
     {
         try
@@ -42,6 +46,33 @@ public class TransactionService(
         {
             logger.LogError(ex, "GetTransactionById failed");
             return new Response<TransactionGetDto>(HttpStatusCode.InternalServerError, "Something went wrong");
+        }
+    }
+
+    public async Task<Response<TransferRecipientLookupDto>> ResolveRecipientAsync(Guid userId, string transferType, string value)
+    {
+        try
+        {
+            var normalizedType = (transferType ?? string.Empty).Trim().ToLowerInvariant();
+            var normalizedValue = value?.Trim() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(normalizedValue))
+            {
+                return new Response<TransferRecipientLookupDto>(HttpStatusCode.BadRequest, "Recipient value is required");
+            }
+
+            return normalizedType switch
+            {
+                "card" => await ResolveByCardAsync(userId, normalizedValue),
+                "phone" => await ResolveByPhoneAsync(userId, normalizedValue),
+                "requisites" => await ResolveByAccountNumberAsync(userId, normalizedValue),
+                _ => new Response<TransferRecipientLookupDto>(HttpStatusCode.BadRequest, "Unsupported transfer type")
+            };
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "ResolveRecipient failed");
+            return new Response<TransferRecipientLookupDto>(HttpStatusCode.InternalServerError, "Something went wrong");
         }
     }
 
@@ -195,6 +226,7 @@ public class TransactionService(
             await dbTransaction.CommitAsync();
             await notificationService.SendAsync(userId, "Transfer successful", $"Transfer of {dto.Amount} {fromAccount.Currency} to {toAccount.AccountNumber} completed successfully.", "Transfer");
             await notificationService.SendAsync(toAccount.UserId, "Incoming transfer", $"You received {dto.Amount} {fromAccount.Currency} from account {fromAccount.AccountNumber}.", "Transfer");
+            await SendTransferSmsAsync(fromAccount, toAccount, dto.Amount, dto.Description);
 
             return new Response<string>(HttpStatusCode.OK, "Transfer completed successfully");
         }
@@ -348,6 +380,191 @@ public class TransactionService(
     {
         db.AuditLogs.Add(CreateAuditLog(userId, action, ipAddress, userAgent, isSuccess));
         await db.SaveChangesAsync();
+    }
+
+    private async Task<Response<TransferRecipientLookupDto>> ResolveByCardAsync(Guid userId, string rawCardNumber)
+    {
+        var cardNumber = new string(rawCardNumber.Where(char.IsDigit).ToArray());
+        if (cardNumber.Length != 12)
+        {
+            return new Response<TransferRecipientLookupDto>(HttpStatusCode.BadRequest, "Card number must contain 12 digits");
+        }
+
+        var recipient = await db.Cards.AsNoTracking()
+            .Include(x => x.Account)
+            .ThenInclude(x => x.User)
+            .FirstOrDefaultAsync(x =>
+                x.CardNumber == cardNumber &&
+                x.Status == CardStatus.Active &&
+                x.Account.IsActive &&
+                x.Account.Status == AccountStatus.Active);
+
+        if (recipient == null)
+        {
+            return new Response<TransferRecipientLookupDto>(HttpStatusCode.NotFound, "Recipient card was not found");
+        }
+
+        if (recipient.Account.UserId == userId)
+        {
+            return new Response<TransferRecipientLookupDto>(HttpStatusCode.BadRequest, "Cannot transfer to your own card");
+        }
+
+        return new Response<TransferRecipientLookupDto>(
+            HttpStatusCode.OK,
+            "Recipient found",
+            BuildLookupDto("card", cardNumber, recipient.Account.AccountNumber, recipient.Account.User, recipient.CardNumber));
+    }
+
+    private async Task<Response<TransferRecipientLookupDto>> ResolveByPhoneAsync(Guid userId, string rawPhone)
+    {
+        var phone = NormalizePhone(rawPhone);
+        if (!TajikPhoneRegex.IsMatch(phone))
+        {
+            return new Response<TransferRecipientLookupDto>(HttpStatusCode.BadRequest, "Phone number must be in +992XXXXXXXXX format");
+        }
+
+        var recipientAccount = await db.Accounts.AsNoTracking()
+            .Include(x => x.User)
+            .Where(x =>
+                x.User.Phone == phone &&
+                x.IsActive &&
+                x.Status == AccountStatus.Active &&
+                x.Currency == Currency.TJS)
+            .OrderBy(x => x.CreatedAt)
+            .FirstOrDefaultAsync();
+
+        if (recipientAccount == null)
+        {
+            return new Response<TransferRecipientLookupDto>(HttpStatusCode.NotFound, "Recipient phone was not found");
+        }
+
+        if (recipientAccount.UserId == userId)
+        {
+            return new Response<TransferRecipientLookupDto>(HttpStatusCode.BadRequest, "Cannot transfer to your own phone");
+        }
+
+        return new Response<TransferRecipientLookupDto>(
+            HttpStatusCode.OK,
+            "Recipient found",
+            BuildLookupDto("phone", phone, recipientAccount.AccountNumber, recipientAccount.User, null));
+    }
+
+    private async Task<Response<TransferRecipientLookupDto>> ResolveByAccountNumberAsync(Guid userId, string accountNumber)
+    {
+        var normalizedAccountNumber = accountNumber.Trim();
+        var recipientAccount = await db.Accounts.AsNoTracking()
+            .Include(x => x.User)
+            .FirstOrDefaultAsync(x =>
+                x.AccountNumber == normalizedAccountNumber &&
+                x.IsActive &&
+                x.Status == AccountStatus.Active);
+
+        if (recipientAccount == null)
+        {
+            return new Response<TransferRecipientLookupDto>(HttpStatusCode.NotFound, "Recipient account was not found");
+        }
+
+        if (recipientAccount.UserId == userId)
+        {
+            return new Response<TransferRecipientLookupDto>(HttpStatusCode.BadRequest, "Cannot transfer to your own account");
+        }
+
+        return new Response<TransferRecipientLookupDto>(
+            HttpStatusCode.OK,
+            "Recipient found",
+            BuildLookupDto("requisites", normalizedAccountNumber, recipientAccount.AccountNumber, recipientAccount.User, null));
+    }
+
+    private static TransferRecipientLookupDto BuildLookupDto(string transferType, string inputValue, string accountNumber, User user, string? cardNumber)
+        => new()
+        {
+            TransferType = transferType,
+            InputValue = inputValue,
+            ResolvedAccountNumber = accountNumber,
+            RecipientName = $"{user.FirstName} {user.LastName}".Trim(),
+            MaskedPhone = MaskPhone(user.Phone),
+            MaskedCardNumber = string.IsNullOrWhiteSpace(cardNumber) ? null : MaskCard(cardNumber)
+        };
+
+    private static string NormalizePhone(string phone)
+    {
+        var normalized = phone.Trim()
+            .Replace(" ", string.Empty)
+            .Replace("-", string.Empty)
+            .Replace("(", string.Empty)
+            .Replace(")", string.Empty);
+
+        if (normalized.StartsWith("00", StringComparison.Ordinal))
+        {
+            normalized = "+" + normalized[2..];
+        }
+
+        return normalized;
+    }
+
+    private static string MaskPhone(string phone)
+    {
+        if (phone.Length < 4)
+        {
+            return phone;
+        }
+
+        return $"{phone[..4]} *** ** {phone[^2..]}";
+    }
+
+    private static string MaskCard(string cardNumber)
+    {
+        if (cardNumber.Length <= 4)
+        {
+            return cardNumber;
+        }
+
+        return $"**** **** {cardNumber[^4..]}";
+    }
+
+    private async Task SendTransferSmsAsync(Account fromAccount, Account toAccount, decimal amount, string? description)
+    {
+        var participantIds = new[] { fromAccount.UserId, toAccount.UserId };
+        var users = await db.Users.AsNoTracking()
+            .Where(x => participantIds.Contains(x.Id))
+            .Select(x => new
+            {
+                x.Id,
+                x.Phone,
+                FullName = $"{x.FirstName} {x.LastName}".Trim()
+            })
+            .ToListAsync();
+
+        var sender = users.FirstOrDefault(x => x.Id == fromAccount.UserId);
+        var recipient = users.FirstOrDefault(x => x.Id == toAccount.UserId);
+        var timestamp = DateTime.Now.ToString("dd.MM.yyyy HH:mm");
+        var amountText = $"{amount:0.##} {fromAccount.Currency}";
+        var recipientName = string.IsNullOrWhiteSpace(recipient?.FullName) ? toAccount.AccountNumber : recipient.FullName;
+        var senderName = string.IsNullOrWhiteSpace(sender?.FullName) ? fromAccount.AccountNumber : sender.FullName;
+        var senderSms = $"Перевод выполнен {timestamp}. Получатель: {recipientName}. Сумма: {amountText}.";
+        var recipientSms = $"Зачисление {timestamp}. Отправитель: {senderName}. Сумма: {amountText}.";
+
+        if (!string.IsNullOrWhiteSpace(description))
+        {
+            senderSms += $" Комментарий: {description.Trim()}.";
+        }
+
+        var smsTasks = new List<Task>(2);
+
+        if (!string.IsNullOrWhiteSpace(sender?.Phone))
+        {
+            smsTasks.Add(smsSender.SendAsync(sender.Phone, senderSms));
+        }
+
+        if (!string.IsNullOrWhiteSpace(recipient?.Phone))
+        {
+            smsTasks.Add(smsSender.SendAsync(recipient.Phone, recipientSms));
+        }
+
+        if (smsTasks.Count > 0)
+        {
+            await Task.WhenAll(smsTasks);
+        }
     }
 
     private async Task<TransactionLimit> GetOrCreateTransactionLimitAsync(Guid accountId)

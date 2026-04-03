@@ -1,220 +1,433 @@
-import { apiRequest, showToast, formatMoney, requireAuth } from './common.js';
+import { apiRequest, formatDate, formatMoney, requireAuth, showToast, unwrapResponse } from "./common.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    requireAuth(initTransfersPage);
+const transferOptions = [
+  {
+    id: "card",
+    title: "На карту",
+    subtitle: "По номеру банковской карты",
+    label: "Номер карты получателя (12 цифр)",
+    placeholder: "0000 0000 0000"
+  },
+  {
+    id: "phone",
+    title: "По номеру телефона",
+    subtitle: "Телефон получателя",
+    label: "Номер телефона получателя",
+    placeholder: "+992 000 000 000"
+  },
+  {
+    id: "requisites",
+    title: "По реквизитам",
+    subtitle: "По номеру счёта",
+    label: "Номер счёта получателя",
+    placeholder: "Введите номер счёта"
+  }
+];
+
+const state = {
+  selectedType: "card",
+  accounts: [],
+  resolvedRecipient: null
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+  ensureToastHost();
+  requireAuth(initTransfersPage);
 });
 
 async function initTransfersPage(session) {
-  const optionsGrid = document.getElementById('optionsGrid');
-  const formTitle = document.getElementById('formTitle');
-  const transferForm = document.getElementById('transferForm');
-  const fromSelect = document.getElementById('fromAccountSelect');
-  const toInput = document.getElementById('toAccountInput');
-  const amountInput = document.getElementById('amountInput');
-  const descInput = document.getElementById('descInput');
-  
-  const sumAmount = document.getElementById('summaryAmount');
-  const sumFee = document.getElementById('summaryFee');
-  const sumTotal = document.getElementById('summaryTotal');
-  const submitBtn = document.getElementById('submitBtn');
+  const elements = {
+    optionsGrid: document.getElementById("optionsGrid"),
+    formTitle: document.getElementById("formTitle"),
+    transferForm: document.getElementById("transferForm"),
+    fromSelect: document.getElementById("fromAccountSelect"),
+    toInput: document.getElementById("toAccountInput"),
+    toLabel: document.getElementById("toAccountLabel"),
+    amountInput: document.getElementById("amountInput"),
+    descInput: document.getElementById("descInput"),
+    sumAmount: document.getElementById("summaryAmount"),
+    sumFee: document.getElementById("summaryFee"),
+    sumTotal: document.getElementById("summaryTotal"),
+    submitBtn: document.getElementById("submitBtn"),
+    rightWidgets: document.querySelector(".t-right"),
+    profileName: document.querySelector(".profile strong"),
+    profileAvatar: document.querySelector(".avatar span")
+  };
 
-  // Parse Query Parameters
-  const urlParams = new URLSearchParams(window.location.search);
-  const preSelectedAccountId = urlParams.get('from');
-  const preSelectedType = urlParams.get('type');
+  hydrateProfile(session, elements);
+  renderTransferOptions(elements);
+  renderRightColumn(elements);
+  bindEvents(elements);
+  await loadAccounts(elements);
+  await loadRecentTransfers(elements);
+  updateRecipientField(elements);
+  updateSummary(elements);
+}
 
-  // Hardcode options UI visually
-  const transferOptions = [
-    {
-      id: 'card',
-      title: 'На карту',
-      subtitle: 'По номеру банковской карты',
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
-      active: true
-    },
-    {
-      id: 'phone',
-      title: 'По номеру телефона',
-      subtitle: 'Телефон получателя',
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>'
-    },
-    {
-      id: 'requisites',
-      title: 'По реквизитам',
-      subtitle: 'По номеру счета, БИК, ИНН',
-      icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>'
-    }
-  ];
+function hydrateProfile(session, elements) {
+  const displayName = session?.fullName || "Клиент";
+  if (elements.profileName) {
+    elements.profileName.textContent = displayName;
+  }
+  if (elements.profileAvatar) {
+    elements.profileAvatar.textContent = displayName
+      .split(" ")
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() || "")
+      .join("");
+  }
+}
 
-  if (preSelectedType) {
-    transferOptions.forEach(opt => opt.active = opt.id === preSelectedType);
-    if (!transferOptions.some(opt => opt.active)) {
-        transferOptions[0].active = true;
-    }
+function ensureToastHost() {
+  if (document.getElementById("toast")) {
+    return;
   }
 
-  function renderOptions() {
-    optionsGrid.innerHTML = transferOptions.map(opt => `
-      <div class="t-option ${opt.active ? 'active' : ''}" data-id="${opt.id}">
-        <div class="t-icon">${opt.icon}</div>
-        <strong>${opt.title}</strong>
-        <span>${opt.subtitle}</span>
-      </div>
-    `).join('');
+  const toast = document.createElement("div");
+  toast.id = "toast";
+  toast.className = "toast-status";
+  document.body.appendChild(toast);
+}
 
-    optionsGrid.querySelectorAll('.t-option').forEach(el => {
-      el.addEventListener('click', () => {
-        transferOptions.forEach(o => o.active = false);
-        const selected = transferOptions.find(o => o.id === el.dataset.id);
-        if (selected) selected.active = true;
-        renderOptions();
-        formTitle.textContent = selected.title;
-        
-        // simple anim
-        transferForm.style.opacity = '0';
-        transferForm.style.transform = 'translateY(10px)';
-        setTimeout(() => {
-          transferForm.style.opacity = '1';
-          transferForm.style.transform = 'translateY(0)';
-          transferForm.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-        }, 50);
-      });
+function renderTransferOptions(elements) {
+  elements.optionsGrid.innerHTML = transferOptions.map((option) => `
+    <div class="t-option ${option.id === state.selectedType ? "active" : ""}" data-option-id="${option.id}">
+      <div class="t-icon">${iconMarkup(option.id)}</div>
+      <strong>${option.title}</strong>
+      <span>${option.subtitle}</span>
+    </div>
+  `).join("");
+
+  elements.optionsGrid.querySelectorAll("[data-option-id]").forEach((optionElement) => {
+    optionElement.addEventListener("click", () => {
+      state.selectedType = optionElement.dataset.optionId;
+      state.resolvedRecipient = null;
+      renderTransferOptions(elements);
+      updateRecipientField(elements);
+      renderRecipientState(elements);
     });
+  });
+}
+
+function iconMarkup(type) {
+  if (type === "phone") {
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>`;
   }
 
-  renderOptions();
-
-  // Load User Accounts & Seed if Empty
-  async function loadAccounts() {
-    try {
-      let accountsData = await apiRequest('/api/account/my');
-      
-      // Auto-Seed Logic: "Создай мне карту и на моем счета был 100 сомон"
-      if (!accountsData || !accountsData.items || accountsData.items.length === 0) {
-        showToast('Создаем тестовый счет и карту со 100 сомони...');
-        // 1. Create account
-        const newAcc = await apiRequest('/api/account/open', {
-          method: 'POST',
-          body: { type: 'Current', currency: 'TJS' }
-        });
-        const accId = newAcc.data.id;
-        
-        // 2. Add 100 Somoni
-        await apiRequest('/api/transaction/deposit', {
-          method: 'POST',
-          body: { accountId: accId, amount: 100, description: 'Приветственный бонус' }
-        });
-        
-        // 3. Create Card 
-        await apiRequest('/api/card/create', {
-          method: 'POST',
-          body: { accountId: accId, cardHolderName: 'MY CARD', type: 'Physical' }
-        });
-        
-        // reload
-        accountsData = await apiRequest('/api/account/my');
-      }
-
-      fromSelect.innerHTML = '';
-      if (accountsData && accountsData.items && accountsData.items.length > 0) {
-        accountsData.items.forEach(acc => {
-          const opt = document.createElement('option');
-          opt.value = acc.id || acc.Id;
-          opt.textContent = `Счёт ${acc.accountNumber || acc.AccountNumber} • ${formatMoney(acc.balance || acc.Balance, acc.currency || acc.Currency)}`;
-          if (preSelectedAccountId && (acc.id === preSelectedAccountId || acc.Id === preSelectedAccountId)) {
-            opt.selected = true;
-          }
-          fromSelect.appendChild(opt);
-        });
-      } else {
-         fromSelect.innerHTML = '<option value="">Нет счетов</option>';
-      }
-    } catch (e) {
-      console.error(e);
-      showToast('Ошибка загрузки счетов');
-    }
+  if (type === "requisites") {
+    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`;
   }
 
-  await loadAccounts();
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>`;
+}
 
-  // Dynamic fee calculation
-  function updateSummary() {
-    const amount = parseFloat(amountInput.value) || 0;
-    // Let's assume 1% fee for simplicity, or 0 if same bank
-    const fee = amount * 0.01; 
-    const total = amount + fee;
-    
-    sumAmount.textContent = formatMoney(amount, 'с.');
-    sumFee.textContent = formatMoney(fee, 'с.');
-    sumTotal.textContent = formatMoney(total, 'с.');
-    submitBtn.textContent = `Перевести ${formatMoney(total, 'с.')}`;
-  }
+function renderRightColumn(elements) {
+  elements.rightWidgets.innerHTML = `
+    <div class="widget">
+      <div class="w-title">Получатель</div>
+      <div id="recipientState" class="w-list">
+        <div class="empty-state">Введите номер карты, телефона или счёта, чтобы проверить получателя.</div>
+      </div>
+    </div>
+    <div class="widget">
+      <div class="w-title">Последние переводы</div>
+      <div id="recentTransfersList" class="w-list">
+        <div class="empty-state">Загрузка переводов...</div>
+      </div>
+    </div>
+    <div class="widget" style="margin-bottom:0;">
+      <div class="w-title">Лимиты и комиссия</div>
+      <div class="empty-state">
+        <div>Комиссия рассчитывается автоматически.</div>
+        <div style="margin-top:8px;">Перевод можно выполнить только зарегистрированному получателю.</div>
+      </div>
+    </div>
+  `;
+}
 
-  amountInput.addEventListener('input', updateSummary);
-  updateSummary(); // init
+function bindEvents(elements) {
+  elements.amountInput.addEventListener("input", () => updateSummary(elements));
 
-  // Card Number 12-digits formatting
-  toInput.addEventListener('input', (e) => {
-    let val = e.target.value.replace(/\D/g, '').substring(0, 12);
-    // Format as 4 4 4 (12 digits)
-    val = val.replace(/(.{4})/g, '$1 ').trim();
-    e.target.value = val;
+  elements.toInput.addEventListener("input", () => {
+    state.resolvedRecipient = null;
+    formatRecipientInput(elements);
+    renderRecipientState(elements);
   });
 
-  // Handle Form Submission
-  transferForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const accountId = fromSelect.value;
-    const toAccount = toInput.value.replace(/\s/g, ''); // Unformat
-    const amount = parseFloat(amountInput.value);
-    const desc = descInput.value;
-
-    if (!accountId) {
-      showToast('Выберите счет списания'); return;
-    }
-    if (toAccount.length < 12) {
-      showToast('Номер получателя должен быть 12 цифр'); return;
-    }
-    if (amount <= 0) {
-      showToast('Сумма должна быть больше 0'); return;
-    }
-
-    const originalText = submitBtn.textContent;
-    submitBtn.innerHTML = 'Обработка... <svg width="20" height="20" style="vertical-align:-4px; margin-left:8px; animation:spin 1s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg>';
-    submitBtn.disabled = true;
-
-    try {
-      const resp = await apiRequest('/api/transaction/transfer', {
-         method: 'POST',
-         body: {
-            fromAccountId: accountId,
-            toAccountNumber: toAccount,
-            amount: amount,
-            description: desc || 'Перевод с карты'
-         }
-      });
-      
-      showToast('Перевод успешно выполнен!');
-      // reload balances
-      await loadAccounts();
-      amountInput.value = '100';
-      updateSummary();
-      toInput.value = '';
-      descInput.value = '';
-    } catch (err) {
-      showToast(err.message || 'Ошибка перевода');
-    } finally {
-      submitBtn.innerHTML = originalText;
-      submitBtn.disabled = false;
-    }
+  elements.toInput.addEventListener("blur", async () => {
+    await resolveRecipient(elements);
   });
 
-  // Animation for loading icon
-  if (!document.getElementById('spinStyle')) {
-    const style = document.createElement('style');
-    style.id = 'spinStyle';
-    style.innerHTML = `@keyframes spin { 100% { transform: rotate(360deg); } }`;
-    document.head.appendChild(style);
+  elements.transferForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    await submitTransfer(elements);
+  });
+}
+
+async function loadAccounts(elements) {
+  try {
+    const payload = await apiRequest("/api/accounts/my?page=1&pageSize=20", { auth: true });
+    state.accounts = payload.items || payload.Items || [];
+
+    if (state.accounts.length === 0) {
+      elements.fromSelect.innerHTML = `<option value="">Нет доступных счетов</option>`;
+      elements.submitBtn.disabled = true;
+      showToast("У вас нет доступных счетов для перевода");
+      return;
+    }
+
+    elements.fromSelect.innerHTML = state.accounts.map((account) => {
+      const id = account.id || account.Id;
+      const number = account.accountNumber || account.AccountNumber;
+      const balance = account.balance ?? account.Balance ?? 0;
+      const currency = account.currency || account.Currency || "TJS";
+      return `<option value="${id}">Счёт ${number} • ${formatMoney(balance, currency)}</option>`;
+    }).join("");
+  } catch (error) {
+    console.error(error);
+    elements.fromSelect.innerHTML = `<option value="">Не удалось загрузить счета</option>`;
+    showToast("Не удалось загрузить ваши счета");
   }
+}
+
+async function loadRecentTransfers(elements) {
+  const recentTransfersList = document.getElementById("recentTransfersList");
+  if (!recentTransfersList) {
+    return;
+  }
+
+  try {
+    const payload = await apiRequest("/api/transfers/my?page=1&pageSize=5", { auth: true });
+    const items = payload.items || payload.Items || [];
+
+    if (items.length === 0) {
+      recentTransfersList.innerHTML = `<div class="empty-state">У вас пока нет выполненных переводов.</div>`;
+      return;
+    }
+
+    recentTransfersList.innerHTML = items.map((item) => {
+      const amount = item.amount ?? item.Amount ?? 0;
+      const currency = item.currency || item.Currency || "TJS";
+      const toAccountNumber = item.toAccountNumber || item.ToAccountNumber || "Неизвестно";
+      const description = item.description || item.Description || "Перевод";
+      const createdAt = item.createdAt || item.CreatedAt;
+
+      return `
+        <div class="w-item">
+          <div class="w-avatar" style="background:#dbeafe; color:#1d4ed8;">→</div>
+          <div class="w-info">
+            <strong>${description}</strong>
+            <span>Получатель: ${toAccountNumber}</span>
+            <span>${formatDate(createdAt)}</span>
+          </div>
+          <div class="w-val">${formatMoney(amount, currency)}</div>
+        </div>
+      `;
+    }).join("");
+  } catch (error) {
+    console.error(error);
+    recentTransfersList.innerHTML = `<div class="empty-state">Не удалось загрузить реальные переводы.</div>`;
+  }
+}
+
+function updateRecipientField(elements) {
+  const selectedOption = transferOptions.find((option) => option.id === state.selectedType) || transferOptions[0];
+  elements.formTitle.textContent = selectedOption.title;
+  elements.toLabel.textContent = selectedOption.label;
+  elements.toInput.placeholder = selectedOption.placeholder;
+  elements.toInput.value = state.selectedType === "phone" ? "+992 " : "";
+
+  if (state.selectedType === "phone") {
+    elements.toInput.maxLength = 16;
+    elements.toInput.inputMode = "tel";
+  } else if (state.selectedType === "card") {
+    elements.toInput.maxLength = 14;
+    elements.toInput.inputMode = "numeric";
+  } else {
+    elements.toInput.removeAttribute("maxLength");
+    elements.toInput.inputMode = "text";
+  }
+}
+
+function formatRecipientInput(elements) {
+  if (state.selectedType === "card") {
+    const digits = elements.toInput.value.replace(/\D/g, "").slice(0, 12);
+    elements.toInput.value = digits.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+    return;
+  }
+
+  if (state.selectedType === "phone") {
+    const digits = elements.toInput.value.replace(/\D/g, "");
+    let localDigits = digits;
+
+    if (localDigits.startsWith("992")) {
+      localDigits = localDigits.slice(3);
+    }
+
+    localDigits = localDigits.slice(0, 9);
+    const parts = [];
+    if (localDigits.length > 0) parts.push(localDigits.slice(0, 3));
+    if (localDigits.length > 3) parts.push(localDigits.slice(3, 6));
+    if (localDigits.length > 6) parts.push(localDigits.slice(6, 9));
+    elements.toInput.value = `+992${parts.length ? ` ${parts.join(" ")}` : " "}`;
+  }
+}
+
+function normalizeRecipientValue(elements) {
+  const rawValue = elements.toInput.value.trim();
+
+  if (state.selectedType === "card") {
+    return rawValue.replace(/\D/g, "");
+  }
+
+  if (state.selectedType === "phone") {
+    const digits = rawValue.replace(/\D/g, "");
+    const localDigits = digits.startsWith("992") ? digits.slice(3) : digits;
+    return `+992${localDigits}`;
+  }
+
+  return rawValue;
+}
+
+async function resolveRecipient(elements) {
+  const value = normalizeRecipientValue(elements);
+  if (!value) {
+    return false;
+  }
+
+  if (state.selectedType === "card" && value.length !== 12) {
+    showToast("Введите 12 цифр номера карты");
+    return false;
+  }
+
+  if (state.selectedType === "phone" && !/^\+992\d{9}$/.test(value)) {
+    showToast("Введите номер в формате +992 и 9 цифр");
+    return false;
+  }
+
+  try {
+    const payload = await apiRequest(`/api/transfers/lookup?type=${encodeURIComponent(state.selectedType)}&value=${encodeURIComponent(value)}`, { auth: true });
+    const response = unwrapResponse(payload);
+    state.resolvedRecipient = response.data;
+    renderRecipientState(elements);
+    return true;
+  } catch (error) {
+    state.resolvedRecipient = null;
+    renderRecipientState(elements, error.message);
+    showToast(error.message);
+    return false;
+  }
+}
+
+function renderRecipientState(elements, errorMessage = "") {
+  const recipientState = document.getElementById("recipientState");
+  if (!recipientState) {
+    return;
+  }
+
+  if (errorMessage) {
+    recipientState.innerHTML = `<div class="empty-state">${errorMessage}</div>`;
+    return;
+  }
+
+  if (!state.resolvedRecipient) {
+    recipientState.innerHTML = `<div class="empty-state">Введите номер получателя и дождитесь проверки регистрации.</div>`;
+    return;
+  }
+
+  recipientState.innerHTML = `
+    <div class="w-item">
+      <div class="w-avatar" style="background:#dbeafe; color:#1d4ed8;">✓</div>
+      <div class="w-info">
+        <strong>${state.resolvedRecipient.recipientName || state.resolvedRecipient.RecipientName}</strong>
+        <span>Телефон: ${state.resolvedRecipient.maskedPhone || state.resolvedRecipient.MaskedPhone}</span>
+        <span>${recipientSubtitle(state.resolvedRecipient)}</span>
+      </div>
+      <div class="w-val">Найден</div>
+    </div>
+  `;
+}
+
+function recipientSubtitle(recipient) {
+  const account = recipient.resolvedAccountNumber || recipient.ResolvedAccountNumber;
+  const card = recipient.maskedCardNumber || recipient.MaskedCardNumber;
+  return card ? `Карта: ${card} • Счёт: ${account}` : `Счёт: ${account}`;
+}
+
+function updateSummary(elements) {
+  const amount = Number(elements.amountInput.value || 0);
+  const fee = state.selectedType === "requisites" ? 0 : Number((amount * 0.01).toFixed(2));
+  const total = amount + fee;
+
+  elements.sumAmount.textContent = formatMoney(amount, "с.");
+  elements.sumFee.textContent = formatMoney(fee, "с.");
+  elements.sumTotal.textContent = formatMoney(total, "с.");
+  elements.submitBtn.textContent = `Перевести ${formatMoney(total, "с.")}`;
+}
+
+async function submitTransfer(elements) {
+  const accountId = elements.fromSelect.value;
+  const amount = Number(elements.amountInput.value || 0);
+
+  if (!accountId) {
+    showToast("Выберите счёт списания");
+    return;
+  }
+
+  if (amount <= 0) {
+    showToast("Сумма перевода должна быть больше 0");
+    return;
+  }
+
+  const recipientReady = state.resolvedRecipient && normalizeRecipientValue(elements) === (state.resolvedRecipient.inputValue || state.resolvedRecipient.InputValue);
+  const lookupOk = recipientReady ? true : await resolveRecipient(elements);
+  if (!lookupOk || !state.resolvedRecipient) {
+    return;
+  }
+
+  const resolvedAccountNumber = state.resolvedRecipient.resolvedAccountNumber || state.resolvedRecipient.ResolvedAccountNumber;
+  const originalText = elements.submitBtn.textContent;
+  elements.submitBtn.disabled = true;
+  elements.submitBtn.textContent = "Отправка...";
+
+  try {
+    await apiRequest("/api/transfers", {
+      method: "POST",
+      auth: true,
+      body: {
+        fromAccountId: accountId,
+        toAccountNumber: resolvedAccountNumber,
+        amount,
+        description: elements.descInput.value.trim() || transferDescription()
+      }
+    });
+
+    showToast("Перевод выполнен успешно");
+    elements.toInput.value = state.selectedType === "phone" ? "+992 " : "";
+    elements.descInput.value = "";
+    elements.amountInput.value = "100";
+    state.resolvedRecipient = null;
+    renderRecipientState(elements);
+    updateSummary(elements);
+    await loadAccounts(elements);
+    await loadRecentTransfers(elements);
+  } catch (error) {
+    showToast(error.message || "Не удалось выполнить перевод");
+  } finally {
+    elements.submitBtn.disabled = false;
+    elements.submitBtn.textContent = originalText;
+  }
+}
+
+function transferDescription() {
+  if (state.selectedType === "phone") {
+    return "Перевод по номеру телефона";
+  }
+
+  if (state.selectedType === "requisites") {
+    return "Перевод по реквизитам";
+  }
+
+  return "Перевод на карту";
 }

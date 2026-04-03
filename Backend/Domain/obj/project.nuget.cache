@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "jSK6JX2driI=",
+  "dgSpecHash": "bRWcuXblsjY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\HP\\Desktop\\]\\SBank\\Backend\\Domain\\Domain.csproj",
+  "projectFilePath": "C:\\Users\\HP\\Desktop\\]\\SBank\\backend\\Domain\\Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\HP\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512"
   ],

@@ -8,6 +8,7 @@ public interface ITransactionService
 {
     Task<Response<TransactionGetDto>> GetByIdAsync(Guid id, Guid? requesterUserId = null, bool isAdmin = false);
     Task<PagedResult<TransactionGetDto>> GetAllAsync(TransactionFilter filter, PagedQuery pagedQuery, Guid? requesterUserId = null, bool isAdmin = false);
+    Task<Response<TransferRecipientLookupDto>> ResolveRecipientAsync(Guid userId, string transferType, string value);
     Task<Response<string>> TransferAsync(Guid userId, TransferDto dto, string ipAddress, string userAgent);
     Task<Response<string>> DepositMoneyAsync(Guid userId, DepositMoneyDto dto);
     Task<Response<string>> WithdrawMoneyAsync(Guid userId, WithdrawMoneyDto dto);

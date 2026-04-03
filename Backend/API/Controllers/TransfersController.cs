@@ -17,6 +17,10 @@ public class TransfersController(ITransactionService transactionService) : Contr
     private string IpAddress => HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
     private string UserAgent => Request.Headers.UserAgent.ToString();
 
+    [HttpGet("lookup")]
+    public async Task<Response<TransferRecipientLookupDto>> LookupRecipient([FromQuery] string type, [FromQuery] string value)
+        => await transactionService.ResolveRecipientAsync(CurrentUserId, type, value);
+
     [HttpPost]
     public async Task<Response<string>> Create([FromBody] TransferDto dto)
         => await transactionService.TransferAsync(CurrentUserId, dto, IpAddress, UserAgent);

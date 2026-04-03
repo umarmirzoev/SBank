@@ -59,6 +59,7 @@ builder.Services.AddScoped<IVirtualCardService, VirtualCardService>();
 builder.Services.AddScoped<ICreditScoringService, CreditScoringService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<INbtExchangeRateSource, NbtExchangeRateSource>();
+builder.Services.AddHostedService<ExchangeRateRefreshBackgroundService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
@@ -123,6 +124,9 @@ using (var scope = app.Services.CreateScope())
     await EnsureDevelopmentTestUserAsync(
         dbContext,
         builder.Configuration,
+        builder.Environment);
+    await EnsureDevelopmentFixturesAsync(
+        dbContext,
         builder.Environment);
 }
 
@@ -191,6 +195,205 @@ static async Task EnsureDevelopmentTestUserAsync(
     await dbContext.SaveChangesAsync();
 }
 
+static async Task EnsureDevelopmentFixturesAsync(
+    AppDbContext dbContext,
+    IWebHostEnvironment environment)
+{
+    if (!environment.IsDevelopment())
+    {
+        return;
+    }
+
+    var requestedUsers = new[]
+    {
+        new DevelopmentUserProfile(
+            Phone: "+992979117007",
+            Password: null,
+            FirstName: "Gumarjon",
+            LastName: "Test",
+            Address: "Local development profile",
+            PassportNumber: "DEV992979117007"),
+        new DevelopmentUserProfile(
+            Phone: "+992987848430",
+            Password: "umarjon.1711",
+            FirstName: "Umarjon",
+            LastName: "Test",
+            Address: "Local development profile",
+            PassportNumber: "DEV992987848430")
+    };
+
+    foreach (var profile in requestedUsers)
+    {
+        var user = await EnsureDevelopmentUserProfileAsync(dbContext, profile);
+        var account = await EnsureDevelopmentTjsAccountAsync(dbContext, user.Id);
+        EnsureDevelopmentBalance(account, 100m);
+
+        if (profile.Phone == "+992979117007")
+        {
+            await EnsureDevelopmentCardAsync(dbContext, account, $"{user.FirstName} {user.LastName}");
+        }
+    }
+
+    await dbContext.SaveChangesAsync();
+}
+
+static async Task<User> EnsureDevelopmentUserProfileAsync(
+    AppDbContext dbContext,
+    DevelopmentUserProfile profile)
+{
+    var normalizedPhone = NormalizePhone(profile.Phone);
+    var digits = new string(normalizedPhone.Where(char.IsDigit).ToArray());
+    var email = $"{digits}@sbank.local";
+
+    var user = await dbContext.Users.FirstOrDefaultAsync(x => x.Phone == normalizedPhone);
+    if (user == null)
+    {
+        user = new User
+        {
+            FirstName = profile.FirstName,
+            LastName = profile.LastName,
+            Email = email,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(profile.Password ?? "gumarjon.1711"),
+            Phone = normalizedPhone,
+            Address = profile.Address,
+            PassportNumber = profile.PassportNumber,
+            Role = UserRole.Client,
+            IsActive = true
+        };
+
+        dbContext.Users.Add(user);
+        return user;
+    }
+
+    user.FirstName = profile.FirstName;
+    user.LastName = profile.LastName;
+    user.Email = email;
+    user.Address = profile.Address;
+    user.PassportNumber = profile.PassportNumber;
+    user.IsActive = true;
+
+    if (!string.IsNullOrWhiteSpace(profile.Password))
+    {
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(profile.Password);
+    }
+
+    return user;
+}
+
+static async Task<Account> EnsureDevelopmentTjsAccountAsync(AppDbContext dbContext, Guid userId)
+{
+    var account = await dbContext.Accounts.FirstOrDefaultAsync(x =>
+        x.UserId == userId &&
+        x.Currency == Currency.TJS &&
+        x.Type == AccountType.Current &&
+        x.IsActive);
+
+    if (account != null)
+    {
+        if (account.Status != AccountStatus.Active)
+        {
+            account.Status = AccountStatus.Active;
+            account.IsActive = true;
+        }
+
+        await EnsureTransactionLimitAsync(dbContext, account.Id);
+        return account;
+    }
+
+    account = new Account
+    {
+        UserId = userId,
+        AccountNumber = await GenerateUniqueAccountNumberAsync(dbContext),
+        Iban = await GenerateUniqueIbanAsync(dbContext),
+        Type = AccountType.Current,
+        Status = AccountStatus.Active,
+        Currency = Currency.TJS,
+        Balance = 0m,
+        IsActive = true
+    };
+
+    dbContext.Accounts.Add(account);
+    await EnsureTransactionLimitAsync(dbContext, account.Id);
+    return account;
+}
+
+static async Task EnsureTransactionLimitAsync(AppDbContext dbContext, Guid accountId)
+{
+    var limitExists = await dbContext.TransactionLimits.AnyAsync(x => x.AccountId == accountId);
+    if (!limitExists)
+    {
+        dbContext.TransactionLimits.Add(new TransactionLimit
+        {
+            AccountId = accountId
+        });
+    }
+}
+
+static void EnsureDevelopmentBalance(Account account, decimal amount)
+    => account.Balance = amount;
+
+static async Task EnsureDevelopmentCardAsync(AppDbContext dbContext, Account account, string cardHolderName)
+{
+    var existingCard = await dbContext.Cards.FirstOrDefaultAsync(x =>
+        x.AccountId == account.Id &&
+        x.Type == CardType.Physical &&
+        x.Status == CardStatus.Active &&
+        x.CardNumber.Length == 12);
+
+    if (existingCard != null)
+    {
+        return;
+    }
+
+    dbContext.Cards.Add(new Card
+    {
+        AccountId = account.Id,
+        Type = CardType.Physical,
+        CardNumber = await GenerateUniqueCardNumberAsync(dbContext, 12),
+        CardHolderName = cardHolderName.Trim().ToUpperInvariant(),
+        ExpiryDate = $"{DateTime.UtcNow.AddYears(3):MM/yy}",
+        Cvv = Random.Shared.Next(100, 1000).ToString(),
+        Status = CardStatus.Active
+    });
+}
+
+static async Task<string> GenerateUniqueAccountNumberAsync(AppDbContext dbContext)
+{
+    while (true)
+    {
+        var digits = string.Concat(Enumerable.Range(0, 16).Select(_ => Random.Shared.Next(0, 10).ToString()));
+        if (!await dbContext.Accounts.AsNoTracking().AnyAsync(x => x.AccountNumber == digits))
+        {
+            return digits;
+        }
+    }
+}
+
+static async Task<string> GenerateUniqueIbanAsync(AppDbContext dbContext)
+{
+    while (true)
+    {
+        var digits = string.Concat(Enumerable.Range(0, 13).Select(_ => Random.Shared.Next(0, 10).ToString()));
+        var iban = $"TJSOMON{digits}";
+        if (!await dbContext.Accounts.AsNoTracking().AnyAsync(x => x.Iban == iban))
+        {
+            return iban;
+        }
+    }
+}
+
+static async Task<string> GenerateUniqueCardNumberAsync(AppDbContext dbContext, int length)
+{
+    while (true)
+    {
+        var digits = string.Concat(Enumerable.Range(0, length).Select(_ => Random.Shared.Next(0, 10).ToString()));
+        if (!await dbContext.Cards.AsNoTracking().AnyAsync(x => x.CardNumber == digits))
+        {
+            return digits;
+        }
+    }
+}
+
 static string NormalizePhone(string phone)
 {
     var normalized = phone.Trim()
@@ -206,3 +409,11 @@ static string NormalizePhone(string phone)
 
     return normalized;
 }
+
+file sealed record DevelopmentUserProfile(
+    string Phone,
+    string? Password,
+    string FirstName,
+    string LastName,
+    string Address,
+    string PassportNumber);

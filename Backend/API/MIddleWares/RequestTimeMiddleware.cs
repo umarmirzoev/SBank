@@ -9,17 +9,21 @@ public class RequestTimeMiddleware(RequestDelegate next, ILogger<RequestTimeMidd
     {
         _logger.LogInformation("Incoming request: {Method} {Path}",
             context.Request.Method, context.Request.Path);
-        var start = DateTime.Now;
+        var start = DateTime.UtcNow;
         try
         {
             await _next(context);
         }
-        catch
+        catch (Exception ex)
         {
-            _logger.LogError("The request was not successful");
+            _logger.LogError(ex, "The request was not successful");
+            throw;
         }
-        var end = DateTime.Now;
-        _logger.LogInformation("Request finished in {Ms} ms",
-            (end - start).TotalMilliseconds);
+        finally
+        {
+            var end = DateTime.UtcNow;
+            _logger.LogInformation("Request finished in {Ms} ms",
+                (end - start).TotalMilliseconds);
+        }
     }
 }

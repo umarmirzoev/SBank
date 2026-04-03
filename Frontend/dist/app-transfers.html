@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Переводы — Сомонибанк</title>
+  <style>
+    :root{
+      --bg-gradient: linear-gradient(135deg, #f0f5ff 0%, #ffffff 50%, #e6f0ff 100%);
+      --mesh-bg: radial-gradient(at 40% 20%, hsla(210,100%,85%,0.5) 0px, transparent 50%),
+                 radial-gradient(at 80% 0%, hsla(220,100%,80%,0.4) 0px, transparent 50%),
+                 radial-gradient(at 0% 50%, hsla(200,100%,90%,0.6) 0px, transparent 50%);
+      --glass: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.9);
+      --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --brand: #2563eb;
+      --brand-hover: #1d4ed8;
+      --accent: #38bdf8;
+      --line: #e2e8f0;
+    }
+    *{box-sizing:border-box; margin:0; padding:0;}
+    html,body{height:100%;}
+    body{
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #f8fafc;
+      background-image: var(--mesh-bg);
+      background-attachment: fixed;
+      color: var(--text-main);
+      padding: 12px;
+      overflow-x: hidden;
+      animation: ambientBg 15s ease-in-out infinite alternate;
+    }
+    @keyframes ambientBg { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+    button,input{font:inherit;}
+    a{text-decoration:none; color:inherit;}
+    
+    .app-shell{
+      display:grid; grid-template-columns: 240px minmax(0,1fr);
+      min-height: calc(100vh - 24px); border-radius: 32px; overflow: hidden;
+      background: var(--glass); backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border); box-shadow: 0 24px 64px rgba(15, 23, 42, 0.1);
+    }
+    
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      background: #ffffff;
+      border-right: 1px solid #f1f5f9;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      background: #2b61ff; /* Deep blue from screenshot */
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 24px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .brand-name {
+      color: #1e3a8a; /* Dark navy */
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center; gap: 16px; padding: 12px 16px;
+      border-radius: 14px; color: #64748b; text-decoration: none;
+      font-weight: 600; font-size: 15px; transition: 0.2s;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      background: rgba(0,0,0,0.02);
+      color: #2b61ff;
+    }
+    .nav-item.active {
+      background: #2b61ff;
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(43, 97, 255, 0.2);
+    }
+    .nav-item svg { width: 22px; height: 22px; stroke-width: 2.2; }
+    .nav-item.active svg { stroke: #ffffff !important; }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .main{ padding: 24px 32px 32px; overflow-y: auto; perspective: 1000px; }
+    .frame{ animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(30px) rotateX(2deg); } to { opacity: 1; transform: translateY(0) rotateX(0); } }
+    
+    .topbar{ display:flex; align-items:center; gap: 24px; margin-bottom: 32px; }
+    .search{
+      display:flex; align-items:center; gap: 12px; flex: 1; height: 52px; padding: 0 20px;
+      background: rgba(255, 255, 255, 0.8); border: 1px solid var(--glass-border); border-radius: 999px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: all 0.3s;
+    }
+    .search:focus-within { background: white; border-color: #cbd5e1; box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1); transform: translateY(-1px); }
+    .search svg { width: 22px; height: 22px; color: #94a3b8; }
+    .search input{ width:100%; border:none; outline:none; background:transparent; font-size: 15px; color: var(--text-main); font-weight: 500; }
+    
+    .top-actions{ display:flex; align-items:center; gap: 16px; margin-left:auto; }
+    .icon-btn{
+      position:relative; width: 48px; height: 48px; border-radius: 50%; border:none; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow); cursor:pointer; display:grid; place-items:center; transition: all 0.3s; color: var(--text-muted);
+    }
+    .icon-btn svg { width: 22px; height: 22px; }
+    .icon-btn:hover{ transform: translateY(-3px) scale(1.05); color: var(--brand); box-shadow: 0 12px 24px rgba(37, 99, 235, 0.15); }
+    
+    .badge{ position:absolute; top: 8px; right: 8px; width: 10px; height: 10px; border-radius: 50%; background: #ef4444; border: 2px solid white; animation: pulse 2s infinite; font-size:0; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+    
+    .profile{
+      display:flex; align-items:center; gap: 14px; padding: 6px 16px 6px 6px; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--glass-border);
+      border-radius: 30px; box-shadow: var(--glass-shadow); cursor:pointer; transition: all 0.3s;
+    }
+    .profile:hover { background: white; transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,0.06); }
+    .avatar{ width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 700; font-size: 16px; display:grid; place-items:center; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .profile strong{ font-size: 14px; font-weight: 700; color: var(--text-main); }
+    .chevron{ width: 18px; height: 18px; color: var(--text-muted); }
+    
+    /* Layout specific to Transfers Page */
+    .th-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; animation: slideRight 0.6s ease-out; }
+    .page-title{ margin: 0; font-size: 34px; font-weight: 900; letter-spacing: -1px; color: var(--text-main); background: linear-gradient(90deg, #0f172a, #334155); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .subtitle { margin-top: 8px; font-size: 16px; color: var(--text-muted); font-weight: 500; }
+    
+    @keyframes slideRight { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+    
+    .limits-btn {
+      display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 20px; border:none; border-radius: 22px;
+      background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); box-shadow: 0 8px 16px rgba(0,0,0,0.05); color: #3b82f6; font-weight: 600; cursor:pointer;
+      transition: all 0.3s; font-size: 14px; border: 1px solid white;
+    }
+    .limits-btn:hover { background: white; box-shadow: 0 12px 24px rgba(37,99,235,0.1); transform: translateY(-2px); }
+    .limits-btn svg { width: 18px; height: 18px; }
+    
+    .t-layout { display: grid; grid-template-columns: 1fr 360px; gap: 32px; align-items: start; }
+    
+    .t-options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+    .t-option {
+      background: rgba(255, 255, 255, 0.7); border-radius: 20px; padding: 20px 16px; border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.03); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column; align-items: flex-start; text-align: left; position: relative; overflow: hidden;
+    }
+    .t-option:hover { transform: translateY(-4px); background: white; box-shadow: 0 16px 40px rgba(37,99,235,0.08); }
+    .t-option.active {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      border-color: #7dd3fc; box-shadow: 0 12px 32px rgba(2, 132, 199, 0.15);
+    }
+    .t-icon { width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, #f8fafc, #e2e8f0); box-shadow: inset 0 2px 4px white, 0 8px 16px rgba(0,0,0,0.05); display:grid; place-items:center; margin-bottom: 20px; }
+    .t-option.active .t-icon { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 8px 16px rgba(29, 78, 216, 0.3); }
+    .t-icon svg { width: 28px; height: 28px; filter: drop-shadow(0 4px 6px rgba(59,130,246,0.2)); }
+    .t-option.active .t-icon svg { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+    .t-option strong { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+    .t-option.active strong { color: #0284c7; }
+    .t-option span { font-size: 12px; color: #64748b; font-weight: 500; line-height: 1.4; }
+    
+    .section-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 16px; }
+    
+    .card { background: rgba(255,255,255,0.8); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; backdrop-filter: blur(12px); box-shadow: 0 12px 32px rgba(0,0,0,0.04); }
+    
+    .t-form { display: flex; flex-direction: column; gap: 16px; }
+    .input-group { background: white; border-radius: 14px; border: 1px solid #e2e8f0; display:flex; align-items:center; padding: 0 16px; height: 56px; transition: all 0.2s; position: relative; }
+    .input-group:focus-within { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    .input-group label { position: absolute; left: 16px; font-size: 11px; color: #64748b; font-weight: 600; top: 8px; }
+    .input-group input, .input-group .val { width: 100%; border: none; outline: none; background: transparent; font-size: 15px; font-weight: 600; color: #0f172a; padding-top: 14px; }
+    .input-group .arrow { color: #94a3b8; margin-left: auto; width: 18px; height: 18px; }
+    
+    .summary-box { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; align-items: flex-end; }
+    .summary-row { display: flex; justify-content: space-between; width: 220px; font-size: 14px; font-weight: 500; color: #475569; }
+    .summary-row.total { font-weight: 800; font-size: 16px; color: #0f172a; margin-top: 4px; }
+    
+    .btn-primary {
+      height: 56px; background: linear-gradient(135deg, #3b82f6, #2563eb); border:none; border-radius: 14px;
+      color: white; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 12px 24px rgba(37,99,235,0.3); transition: all 0.3s; width: 100%;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(37,99,235,0.4); }
+    
+    .widget { background: rgba(255,255,255,0.7); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.03); margin-bottom: 24px; animation: fadeSlideUp 0.6s backwards; }
+    .w-title { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 20px; }
+    .w-link { font-size: 13px; color: #64748b; font-weight: 600; cursor: pointer; transition: color 0.2s; }
+    .w-link:hover { color: #3b82f6; }
+    
+    .w-list { display: flex; flex-direction: column; gap: 16px; }
+    .w-item { display: flex; align-items: center; gap: 14px; transition: transform 0.2s; cursor: pointer; }
+    .w-item:hover { transform: translateX(4px); }
+    .w-avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #e2e8f0; font-weight: 700; font-size: 16px; position:relative; overflow:hidden;}
+    .w-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .w-avatar svg { width: 22px; height: 22px; }
+    .w-info { flex: 1; min-width: 0; }
+    .w-info strong { display: block; font-size: 14px; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .w-info span { font-size: 12px; color: #64748b; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display:block; margin-top:2px; }
+    .w-val { font-size: 13px; font-weight: 600; color: #475569; }
+    
+    .progress-bar { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 12px 0; }
+    .progress-fill { height: 100%; background: #3b82f6; border-radius: 4px; width: 45%; }
+    .lim-row { display: flex; justify-content: space-between; font-size: 11px; color: #64748b; font-weight: 600; }
+    .fee-text { font-size: 13px; color: #0f172a; font-weight: 600; margin-top: 24px; }
+    .fee-text span { color: #3b82f6; }
+    
+    .toast-status{ position:fixed; right: 24px; bottom: 24px; padding: 16px 24px; border-radius: 100px; background: #0f172a; color: white; font-weight: 600; box-shadow: 0 20px 40px rgba(0,0,0,0.3); opacity:0; transform: translateY(20px); transition: 0.4s cubic-bezier(0.2,0.8,0.2,1); pointer-events:none; z-index: 1000; }
+    .toast-status.show{ opacity:1; transform: translateY(0); }
+    
+    @media (max-width:1180px){ .t-layout { grid-template-columns: 1fr; } .t-options-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width:860px){
+      .app-shell{ border-radius:0; min-height:100vh;} .sidebar{display:none;} .main{padding: 20px;}
+      .topbar{flex-wrap:wrap;} .search{width: 100%; order:3; margin-top: 16px;} .t-options-grid{ grid-template-columns: 1fr; }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/appTransfers-Bllri8Iv.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/common-BnoPv7Ge.js">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">S</div>
+        <div class="brand-name">Сомонибанк</div>
+      </div>
+      <nav class="side-nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="somonibank-app.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Главная</span></a></li>
+          <li class="nav-item"><a href="app-bank.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 10l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-width="2.2"/><polyline points="9 22 9 12 15 12 15 22" stroke-width="2.2"/></svg><span>Банк</span></a></li>
+          <li class="nav-item"><a href="app-payments.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="6" width="18" height="12" rx="2" stroke-width="2.2"/><line x1="3" y1="10" x2="21" y2="10" stroke-width="2.2"/></svg><span>Платежи</span></a></li>
+          <li class="nav-item active"><a href="app-transfers.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 2l-7 20-4-9-9-4z" stroke-width="2.2"/><path d="M22 2L11 13" stroke-width="2.2"/></svg><span>Переводы</span></a></li>
+          <li class="nav-item"><a href="app-accounts.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="5" width="20" height="14" rx="2" stroke-width="2.2"/><line x1="2" y1="10" x2="22" y2="10" stroke-width="2.2"/></svg><span>Счета</span></a></li>
+          <li class="nav-item"><a href="app-cards.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="1" y="4" width="22" height="16" rx="2" stroke-width="2.2"/><line x1="1" y1="10" x2="23" y2="10" stroke-width="2.2"/></svg><span>Карты</span></a></li>
+          <li class="nav-item"><a href="app-financing.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke-width="2.2"/></svg><span>Кредиты</span></a></li>
+          <li class="nav-item"><a href="app-deposits.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-width="2.2"/></svg><span>Депозиты</span></a></li>
+          <li class="nav-item"><a href="app-history.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2.2"/><polyline points="12 6 12 12 16 14" stroke-width="2.2"/></svg><span>История</span></a></li>
+        </ul>
+      </nav>
+      <div class="sidebar-bottom">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="#" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" stroke-width="2.2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke-width="2.2"/></svg><span>Настройки</span></a></li>
+          <li class="nav-item"><a href="#" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2.2"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke-width="2.2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2.2"/></svg><span>Помощь</span></a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="frame">
+        <header class="topbar">
+          <label class="search">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <input id="searchInput" type="search" placeholder="Поиск...">
+          </label>
+          <div class="top-actions">
+            <button class="icon-btn" type="button" aria-label="Поиск"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+            <button class="icon-btn" type="button" aria-label="Уведомления"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3a5 5 0 0 0-5 5v2l-2 3h14l-2-3V8a5 5 0 0 0-5-5Z" stroke="currentColor" stroke-width="2"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="badge">9</span></button>
+            <div class="profile">
+              <div class="avatar"><span>И</span></div>
+              <strong>Иван Иванов</strong>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </header>
+
+        <section class="content">
+          <div class="th-header">
+            <div>
+              <h1 class="page-title">Переводы</h1>
+              <p class="subtitle">Переводите деньги быстро и безопасно</p>
+            </div>
+            <button class="limits-btn">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 8h16M4 16h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Лимиты &nbsp;|&nbsp; Итого &nbsp; <span style="font-weight: 400; opacity: 0.8">50800</span>
+            </button>
+          </div>
+
+          <div class="t-layout">
+            <div class="t-left">
+              <div class="t-options-grid" id="optionsGrid">
+                <!-- Rendered remotely -->
+              </div>
+
+              <h2 class="section-title" id="formTitle">На карту</h2>
+              <form class="t-form card" id="transferForm">
+                <div class="input-group">
+                  <label>Откуда</label>
+                  <select id="fromAccountSelect" class="val" style="padding-top: 10px; width: 100%;" required>
+                    <option value="">Загрузка счетов...</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label id="toAccountLabel">Номер карты получателя (12 цифр)</label>
+                  <input type="text" id="toAccountInput" placeholder="xxxx xxxx xxxx" maxlength="14" required>
+                </div>
+                <div class="input-group">
+                  <label>Сумма перевода</label>
+                  <input type="number" id="amountInput" value="100" min="1" required>
+                </div>
+                <div class="input-group" style="margin-top: 16px;">
+                  <input type="text" id="descInput" placeholder="Комментарий (необязательно)">
+                </div>
+
+                <div class="summary-box">
+                  <div class="summary-row"><span>Сумма:</span> <span id="summaryAmount">100 с.</span></div>
+                  <div class="summary-row"><span>Комиссия:</span> <span id="summaryFee">1 с.</span></div>
+                  <div class="summary-row total"><span>Итого:</span> <span id="summaryTotal">101 с.</span></div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-primary">Перевести 101 с.</button>
+              </form>
+            </div>
+
+            <div class="t-right">
+              <div class="widget" style="animation-delay: 0.1s;">
+                <div class="w-title">Избранные получатели <span class="w-link">Смотреть все ></span></div>
+                <div class="w-list">
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #3b82f6; color: white;">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div class="w-info"><strong>Мама</strong><span>Бахромова</span></div>
+                    <div class="w-val">******* 1468</div>
+                  </div>
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #10b981;">
+                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div class="w-info"><strong>Брат</strong><span>Едгоров</span></div>
+                    <div class="w-val">******* 0321</div>
+                  </div>
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #ef4444;">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    </div>
+                    <div class="w-info"><strong>Рабочая карта</strong><span>ЗАО МДО</span></div>
+                    <div class="w-val">**** 4587</div>
+                  </div>
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #14b8a6;">
+                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                    </div>
+                    <div class="w-info"><strong>Мама</strong><span>По номеру телефона</span></div>
+                    <div class="w-val">** 2095</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="widget" style="animation-delay: 0.2s;">
+                <div class="w-title">Последние переводы</div>
+                <div class="w-list">
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #fcd34d; color: #78350f;">М</div>
+                    <div class="w-info"><strong>Мария П.</strong><span>На карту **** 4213</span></div>
+                  </div>
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #6ee7b7; color: #064e3b;">А</div>
+                    <div class="w-info"><strong>Артём</strong><span>Перевод 500 USD</span></div>
+                  </div>
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #7dd3fc; color: #0c4a6e;">М</div>
+                    <div class="w-info"><strong>Мама</strong><span>По номеру 300 с.</span></div>
+                  </div>
+                </div>
+                <div style="text-align: right; margin-top: 16px;"><span class="w-link">История все ></span></div>
+              </div>
+
+              <div class="widget" style="margin-bottom: 0; animation-delay: 0.3s;">
+                <div class="w-title" style="margin-bottom: 12px;">Лимиты и комиссия</div>
+                <div class="w-info"><strong>Ваши лимиты</strong> <span style="float:right; color:#0f172a; font-size:13px; font-weight:700; margin-top: -18px;">47 230 с.</span></div>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+                <div class="lim-row"><span>Последний ... 78 560 с.</span><span>98 990 с.</span></div>
+                
+                <div class="fee-text">Комиссия <br><span>1%</span> <span style="color: #64748b; font-weight:500;">— на карту других банков</span></div>
+                <div style="text-align: right; margin-top: 16px;"><button style="background:#f1f5f9; color:#334155; border:none; padding:8px 18px; border-radius:12px; font-weight:600; cursor:pointer;">История ></button></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast-status" id="toastStatus"></div>
+</body>
+</html>
