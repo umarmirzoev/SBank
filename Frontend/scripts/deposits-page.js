@@ -78,7 +78,6 @@ function hydrateProfile() {
 
 async function init() {
   if (!isAuthenticated()) {
-    window.location.href = "login.html";
     return;
   }
 
