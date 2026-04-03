@@ -253,28 +253,29 @@
               <form class="t-form card" id="transferForm">
                 <div class="input-group">
                   <label>Откуда</label>
-                  <div class="val" style="color: #64748b;">Текущий • <span style="color: #0f172a;">5 230 с.</span></div>
-                  <svg class="arrow" viewBox="0 0 24 24" fill="none"><path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  <select id="fromAccountSelect" class="val" style="padding-top: 10px; width: 100%;" required>
+                    <option value="">Загрузка счетов...</option>
+                  </select>
                 </div>
                 <div class="input-group">
-                  <label>Номер карты</label>
-                  <input type="text" value="1234 *** *** 2324">
+                  <label id="toAccountLabel">Номер карты получателя (12 цифр)</label>
+                  <input type="text" id="toAccountInput" placeholder="xxxx xxxx xxxx" maxlength="14" required>
                 </div>
                 <div class="input-group">
-                  <label>Имя получателя</label>
-                  <input type="text" value="Иван Иванов">
+                  <label>Сумма перевода</label>
+                  <input type="number" id="amountInput" value="100" min="1" required>
                 </div>
                 <div class="input-group" style="margin-top: 16px;">
-                  <input type="text" placeholder="Комментарий (необязательно)">
+                  <input type="text" id="descInput" placeholder="Комментарий (необязательно)">
                 </div>
 
                 <div class="summary-box">
-                  <div class="summary-row"><span>Сумма:</span> <span>500 с.</span></div>
-                  <div class="summary-row"><span>Комиссия:</span> <span>5 с.</span></div>
-                  <div class="summary-row total"><span>Итого:</span> <span>505 с.</span></div>
+                  <div class="summary-row"><span>Сумма:</span> <span id="summaryAmount">100 с.</span></div>
+                  <div class="summary-row"><span>Комиссия:</span> <span id="summaryFee">1 с.</span></div>
+                  <div class="summary-row total"><span>Итого:</span> <span id="summaryTotal">101 с.</span></div>
                 </div>
 
-                <button type="submit" class="btn-primary">Перевести 505 с.</button>
+                <button type="submit" id="submitBtn" class="btn-primary">Перевести 101 с.</button>
               </form>
             </div>
 
