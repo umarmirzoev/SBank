@@ -105,6 +105,7 @@ public class AccountService(AppDbContext db, INotificationService notificationSe
             {
                 UserId = userId,
                 AccountNumber = await GenerateAccountNumberAsync(),
+                Iban = await GenerateIbanAsync(),
                 Type = accountType,
                 Status = AccountStatus.Active,
                 Currency = currency,
@@ -220,10 +221,20 @@ public class AccountService(AppDbContext db, INotificationService notificationSe
     {
         while (true)
         {
-            var digits = string.Concat(Enumerable.Range(0, 18).Select(_ => Random.Shared.Next(0, 10).ToString()));
-            var accountNumber = $"TJ{digits}";
-            if (!await db.Accounts.AnyAsync(x => x.AccountNumber == accountNumber))
-                return accountNumber;
+            var digits = string.Concat(Enumerable.Range(0, 16).Select(_ => Random.Shared.Next(0, 10).ToString()));
+            if (!await db.Accounts.AsNoTracking().AnyAsync(x => x.AccountNumber == digits))
+                return digits;
+        }
+    }
+
+    private async Task<string> GenerateIbanAsync()
+    {
+        while (true)
+        {
+            var digits = string.Concat(Enumerable.Range(0, 13).Select(_ => Random.Shared.Next(0, 10).ToString()));
+            var iban = $"TJSOMON{digits}";
+            if (!await db.Accounts.AsNoTracking().AnyAsync(x => x.Iban == iban))
+                return iban;
         }
     }
 
@@ -231,6 +242,7 @@ public class AccountService(AppDbContext db, INotificationService notificationSe
     {
         Id = account.Id,
         AccountNumber = account.AccountNumber,
+        Iban = account.Iban,
         Type = account.Type.ToString(),
         Status = account.Status.ToString(),
         Currency = account.Currency.ToString(),

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Счета — Сомонибанк</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+  <style>
+    :root {
+      --bg: #f5f8ff;
+      --glass: rgba(255, 255, 255, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.5);
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --brand: #2563eb;
+      --brand-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      --accent-blue: #dbeafe;
+      --accent-teal: #ccfbf1;
+      --accent-yellow: #fef9c3;
+      --accent-green: #dcfce7;
+      --success: #10b981;
+      --danger: #ef4444;
+      --card-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      background-image: radial-gradient(at 0% 0%, hsla(210,100%,95%,1) 0, transparent 50%), 
+                        radial-gradient(at 100% 100%, hsla(220,100%,92%,1) 0, transparent 50%);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
+      padding: 16px;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      height: 100%;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-xl);
+      border: 1px solid white;
+      box-shadow: 0 40px 100px rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 260px;
+      height: 100vh;
+      background: #ffffff;
+      border-right: 1px solid #f1f5f9;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      background: #2b61ff; /* Deep blue from screenshot */
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 24px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .brand-name {
+      color: #1e3a8a; /* Dark navy */
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: #64748b;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      background: rgba(0,0,0,0.02);
+      color: #2b61ff;
+    }
+    .nav-item.active {
+      background: #2b61ff;
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(43, 97, 255, 0.2);
+    }
+    .nav-item svg { width: 22px; height: 22px; stroke-width: 2.2; }
+    .nav-item.active svg { stroke: #ffffff !important; }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    /* Main Area */
+    .main { display: flex; flex-direction: column; overflow: hidden; }
+    
+    /* Header */
+    .header {
+      padding: 24px 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .search-pill {
+      width: 460px; height: 48px; background: white; border-radius: 99px;
+      display: flex; align-items: center; padding: 0 20px; gap: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+    .search-pill input { border: none; outline: none; width: 100%; font-size: 14px; font-weight: 500; color: #94a3b8; }
+    
+    .header-right { display: flex; align-items: center; gap: 24px; }
+    .icon-btn { position: relative; cursor: pointer; color: #64748b; }
+    .badge { position: absolute; top: -4px; right: -4px; width: 16px; height: 16px; border-radius: 50%; background: #f43f5e; color: white; font-size: 10px; display: grid; place-items: center; font-weight: 800; border: 2px solid white; }
+    
+    .user-profile {
+      display: flex; align-items: center; gap: 12px; padding: 6px 16px 6px 6px;
+      background: white; border-radius: 99px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      cursor: pointer;
+    }
+    .user-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+    .user-name { font-size: 14px; font-weight: 700; color: #1e293b; }
+
+    /* Content Scrollable */
+    .content { padding: 0 40px 40px; overflow-y: auto; flex: 1; }
+    
+    .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+    .title-group h1 { font-size: 32px; font-weight: 900; letter-spacing: -1px; margin-bottom: 4px; }
+    .title-group p { font-size: 15px; color: var(--text-muted); font-weight: 500; }
+    
+    .date-controls { display: flex; gap: 8px; background: white; padding: 6px; border-radius: 14px; box-shadow: var(--card-shadow); }
+    .date-btn { padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; border: none; background: transparent; color: #64748b; cursor: pointer; transition: 0.2s; }
+    .date-btn.active { background: #f8fafc; color: #1e293b; box-shadow: inset 0 0 0 1px #e2e8f0; }
+
+    /* Account Cards Row */
+    .accounts-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px; }
+    .acc-card {
+      padding: 24px; border-radius: 28px; cursor: pointer; position: relative;
+      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: hidden;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .acc-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    
+    .acc-card.blue { background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%); }
+    .acc-card.teal { background: linear-gradient(135deg, #ccfbf1 0%, #f0fdfa 100%); }
+    .acc-card.yellow { background: linear-gradient(135deg, #fef9c3 0%, #fefce8 100%); }
+    .acc-card.green { background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%); }
+
+    .card-top { display: flex; justify-content: space-between; align-items: center; }
+    .card-icon-box { width: 44px; height: 44px; border-radius: 12px; background: white; display: grid; place-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .card-check { width: 22px; height: 22px; border-radius: 50%; background: #3b82f6; color: white; display: grid; place-items: center; font-size: 12px; border: 2px solid white; }
+    .sync-icon { color: #3b82f6; font-size: 14px; }
+
+    .card-label { font-size: 16px; font-weight: 800; color: #1e3a8a; }
+    .card-balance { font-size: 24px; font-weight: 900; color: #0f172a; }
+    .card-number { font-size: 13px; color: #64748b; font-weight: 600; font-family: monospace; }
+    .card-sub { font-size: 12px; font-weight: 700; color: #475569; margin-top: 4px; }
+
+    /* 3-Column Content Layout */
+    .dashboard-grid { display: grid; grid-template-columns: 1.2fr 1fr 340px; gap: 24px; }
+
+    /* Left Column: Detail Box */
+    .detail-box {
+      background: white; border-radius: 32px; padding: 32px;
+      box-shadow: var(--card-shadow); position: relative; display: flex; flex-direction: column; gap: 24px;
+    }
+    .detail-box-header { display: flex; justify-content: space-between; align-items: center; }
+    .detail-box-title { font-size: 18px; font-weight: 800; }
+    
+    .main-acc-info { display: flex; align-items: center; gap: 16px; padding: 16px; background: #f8fafc; border-radius: 20px; }
+    .card-micro-icon { width: 48px; height: 32px; border-radius: 6px; background: var(--brand-gradient); position: relative; }
+    .card-micro-icon::after { content: ''; position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: #fbbf24; border-radius: 50%; }
+    
+    .main-balance-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .main-balance-val { font-size: 36px; font-weight: 900; letter-spacing: -1px; }
+    .trend-tag { font-size: 12px; font-weight: 800; color: var(--success); padding: 4px 8px; border-radius: 6px; background: #ecfdf5; }
+    
+    .iban-box {
+      padding: 16px 20px; background: #f8fafc; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;
+      font-family: monospace; font-size: 13px; font-weight: 600; color: #64748b; 
+    }
+    .copy-icon { cursor: pointer; transition: 0.2s; }
+    .copy-icon:hover { color: var(--brand); }
+
+    .spending-chart-box { margin-top: 10px; }
+    .chart-label-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: #64748b; margin-bottom: 8px; }
+    .chart-mini-bars { display: flex; align-items: flex-end; gap: 8px; height: 60px; padding: 0 10px; }
+    .mini-bar { flex: 1; border-radius: 4px; background: #e2e8f0; min-height: 10px; transition: 0.5s; }
+    .mini-bar.active { background: #3b82f6; }
+
+    .btn-transfer {
+      width: 100%; height: 56px; border-radius: 18px; border: none;
+      background: var(--brand-gradient); color: white; font-size: 16px; font-weight: 800;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+      box-shadow: 0 10px 25px rgba(37,99,235,0.25); transition: 0.3s;
+    }
+    .btn-transfer:hover { transform: translateY(-2px); box-shadow: 0 15px 35px rgba(37,99,235,0.35); }
+
+    /* Middle Column: Operations */
+    .ops-column { display: flex; flex-direction: column; gap: 20px; }
+    .section-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .section-title { font-size: 18px; font-weight: 800; }
+    .link-all { font-size: 13px; font-weight: 700; color: #64748b; text-decoration: none; }
+
+    .ops-list { display: flex; flex-direction: column; gap: 12px; }
+    .op-card {
+      padding: 16px; background: white; border-radius: 20px; display: flex; align-items: center; gap: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+    .avatar-sm { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+    .op-info { flex: 1; }
+    .op-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .op-sub { font-size: 11px; color: #94a3b8; font-weight: 600; }
+    .op-amount-side { text-align: right; }
+    .op-amt { font-size: 14px; font-weight: 800; }
+    .op-amt.plus { color: var(--success); }
+    .op-amt.minus { color: var(--text-main); }
+    .op-time { font-size: 11px; color: #94a3b8; font-weight: 600; margin-top: 2px; }
+
+    /* Right Column: Widgets */
+    .widgets-panel { display: flex; flex-direction: column; gap: 24px; }
+    .widget-box { background: white; border-radius: 28px; padding: 24px; box-shadow: var(--card-shadow); }
+    
+    .recommendations { display: flex; flex-direction: column; gap: 16px; }
+    .promo-item {
+      display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 20px;
+      background: #f8fafc; cursor: pointer; transition: 0.3s;
+    }
+    .promo-item:hover { background: #f1f5f9; transform: translateX(4px); }
+    .promo-icon { width: 48px; height: 48px; border-radius: 12px; background: white; display: grid; place-items: center; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .promo-text { flex: 1; }
+    .promo-name { font-size: 13px; font-weight: 800; margin-bottom: 4px; }
+    .promo-desc { font-size: 11px; color: #64748b; font-weight: 500; }
+
+    .savings-promo { background: #fef9c3; position: relative; overflow: hidden; }
+    .savings-progress-bar { width: 100%; height: 6px; background: rgba(0,0,0,0.05); border-radius: 3px; margin: 12px 0 4px; position: relative; }
+    .savings-fill { height: 100%; background: #3b82f6; border-radius: 3px; }
+
+    /* Bottom Stats Bar */
+    .bottom-bar {
+      margin-top: 32px; padding: 24px 32px; background: white; border-radius: 28px;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: var(--card-shadow);
+    }
+    .stat-item { display: flex; flex-direction: column; gap: 6px; }
+    .stat-label { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-val { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+    .income-sum { color: var(--brand); }
+    .stat-line-container { flex: 1; margin: 0 40px; height: 12px; background: #eff6ff; border-radius: 99px; overflow: hidden; position: relative; }
+    .stat-line-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--brand); border-radius: 99px; }
+
+    #toast {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+      background: #1e293b; color: white; padding: 12px 24px; border-radius: 99px;
+      font-weight: 600; font-size: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+       display: none; z-index: 2000;
+    }
+    #toast.show { display: block; animation: slideUp 0.4s ease-out; }
+    @keyframes slideUp { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
+    @media (max-width: 1280px) {
+      .dashboard-grid { grid-template-columns: 1fr 1fr; }
+      .widgets-panel { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">S</div>
+        <div class="brand-name">Сомонибанк</div>
+      </div>
+      <nav class="side-nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="somonibank-app.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9 22 9 12 15 12 15 22" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Главная</span></a></li>
+          <li class="nav-item"><a href="bank.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 10l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-width="2.2"/><polyline points="9 22 9 12 15 12 15 22" stroke-width="2.2"/></svg><span>Банк</span></a></li>
+          <li class="nav-item"><a href="payments.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="6" width="18" height="12" rx="2" stroke-width="2.2"/><line x1="3" y1="10" x2="21" y2="10" stroke-width="2.2"/></svg><span>Платежи</span></a></li>
+          <li class="nav-item"><a href="transfers.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 2l-7 20-4-9-9-4z" stroke-width="2.2"/><path d="M22 2L11 13" stroke-width="2.2"/></svg><span>Переводы</span></a></li>
+          <li class="nav-item active"><a href="accounts.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="5" width="20" height="14" rx="2" stroke-width="2.2"/><line x1="2" y1="10" x2="22" y2="10" stroke-width="2.2"/></svg><span>Счета</span></a></li>
+          <li class="nav-item"><a href="cards.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="1" y="4" width="22" height="16" rx="2" stroke-width="2.2"/><line x1="1" y1="10" x2="23" y2="10" stroke-width="2.2"/></svg><span>Карты</span></a></li>
+          <li class="nav-item"><a href="financing.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke-width="2.2"/></svg><span>Кредиты</span></a></li>
+          <li class="nav-item"><a href="deposits.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-width="2.2"/></svg><span>Депозиты</span></a></li>
+          <li class="nav-item"><a href="history.html" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2.2"/><polyline points="12 6 12 12 16 14" stroke-width="2.2"/></svg><span>История</span></a></li>
+        </ul>
+      </nav>
+      <div class="sidebar-bottom">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="#" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" stroke-width="2.2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke-width="2.2"/></svg><span>Настройки</span></a></li>
+          <li class="nav-item"><a href="#" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2.2"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke-width="2.2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2.2"/></svg><span>Помощь</span></a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="header">
+        <div class="search-pill">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5"><circle cx="11" cy="11" r="6"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="text" placeholder="Поиск по услугам, переводам, получателям...">
+        </div>
+        <div class="header-right">
+          <div class="icon-btn">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9z"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+             <div class="badge">4</div>
+          </div>
+          <div class="user-profile">
+            <img src="https://i.pravatar.cc/100?u=ivan" class="user-avatar" alt="Avatar">
+            <span class="user-name" id="profileName">Иван Иванов</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+        </div>
+      </header>
+
+      <div class="content">
+        <div class="page-header">
+          <div class="title-group">
+            <h1>Счета</h1>
+            <p>Управляйте своими счетами легко</p>
+          </div>
+          <div class="date-controls">
+            <button class="date-btn">Месяц</button>
+            <button class="date-btn active">Неделя</button>
+            <button class="date-btn">За месяц</button>
+            <button class="date-btn" style="display:flex; align-items:center; gap:8px;">
+              23.04.2024 — <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="accounts-row" id="accountsList">
+          <!-- Rendered via JS -->
+          <div style="grid-column: span 4; text-align: center; padding: 40px;">Загрузка счетов...</div>
+        </div>
+
+        <div class="dashboard-grid">
+          <!-- Left Column: Detailed box -->
+          <div class="detail-box">
+             <div class="detail-box-header">
+                <span class="detail-box-title" id="detailTitle">Текущий счёт</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+             </div>
+             
+             <div class="main-acc-info">
+                <div class="card-micro-icon"></div>
+                <div style="flex:1">
+                   <div style="font-size:14px; font-weight:800; margin-bottom:2px;" id="selectedAccLabel">Основной счёт</div>
+                   <div style="font-size:11px; color:#94a3b8; font-weight:600;" id="selectedAccNumber">4169 7385 **** 2467</div>
+                </div>
+                <div style="width:12px; height:12px; background:#e2e8f0; border-radius:50%;"></div>
+             </div>
+
+             <div>
+                <div class="main-balance-row">
+                   <div class="main-balance-val" id="selectedAccBalance">5 230,00 с.</div>
+                   <div class="trend-tag" id="selectedAccTrend">+ 3,36%</div>
+                </div>
+             </div>
+
+             <div class="iban-box">
+                <span id="selectedAccIban">IBAN TJSOMON104167332467</span>
+                <svg class="copy-icon" data-copy="selectedAccIban" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+             </div>
+
+             <div class="spending-chart-box">
+                <div class="chart-label-row">
+                   <span>Остаток</span>
+                   <span id="balanceSecondary">+ 520,00 с.</span>
+                </div>
+                <div class="chart-label-row" style="font-size:11px; margin-bottom:12px;">Снижение тревог</div>
+                <div class="chart-mini-bars" id="miniBars">
+                   <div class="mini-bar" style="height: 40%;"></div>
+                   <div class="mini-bar" style="height: 60%;"></div>
+                   <div class="mini-bar" style="height: 30%;"></div>
+                   <div class="mini-bar active" style="height: 80%;"></div>
+                   <div class="mini-bar" style="height: 50%;"></div>
+                   <div class="mini-bar" style="height: 70%;"></div>
+                   <div class="mini-bar" style="height: 20%;"></div>
+                </div>
+             </div>
+
+             <button class="btn-transfer" id="transferActionBtn">
+                Перевести 
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m9 18 6-6-6-6"/></svg>
+             </button>
+          </div>
+
+          <!-- Middle Column: Middle Ops -->
+          <div class="ops-column">
+             <div class="section-title-row">
+                <h3 class="section-title">Последние операции</h3>
+             </div>
+             <div class="ops-list" id="operationsListMiddle">
+                <!-- Data rendered by JS -->
+             </div>
+             <div style="display:flex; align-items:center; justify-content:center; gap:8px; padding-top:12px; cursor:pointer; color:#64748b; font-size:13px; font-weight:700;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                Меньше управл...
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+             </div>
+          </div>
+
+          <!-- Right Column: Widgets -->
+          <div class="widgets-panel">
+             <div class="widget-box" style="padding:16px;">
+                <div class="section-title-row" style="margin-bottom:16px;">
+                   <h3 class="section-title" style="font-size:15px;">Последние операции</h3>
+                   <a href="#" class="link-all">Все</a>
+                </div>
+                <div class="ops-list" id="operationsListWidget">
+                   <!-- Mini items -->
+                </div>
+             </div>
+
+             <div class="widget-box">
+                <h3 class="section-title" style="font-size:15px; margin-bottom:20px;">Рекомендуем</h3>
+                <div class="recommendations">
+                   <div class="promo-item">
+                      <div class="promo-icon" style="color:#3b82f6;">🔄</div>
+                      <div class="promo-text">
+                         <div class="promo-name">Обмен валют</div>
+                         <div class="promo-desc">Команду токум по средствам</div>
+                      </div>
+                   </div>
+                   <div class="promo-item">
+                      <div class="promo-icon" style="color:#3b82f6; background:#eff6ff;">📋</div>
+                      <div class="promo-text">
+                         <div class="promo-name">Калькулятор дохода</div>
+                         <div class="promo-desc">Планируйте доходы рационально</div>
+                      </div>
+                   </div>
+                   <div class="promo-item savings-promo">
+                      <div class="promo-icon">💰</div>
+                      <div class="promo-text">
+                         <div class="promo-name">Открыть копилку</div>
+                         <div class="promo-desc">+89 800 c. из 565 330 c.</div>
+                         <div class="savings-progress-bar"><div class="savings-fill" style="width:35%"></div></div>
+                         <div style="display:flex; justify-content:space-between; font-size:10px; color:#64748b; margin-top:4px;">
+                            <span>Пополнение</span>
+                            <span>Сбор</span>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <div class="bottom-bar">
+           <div class="stat-item">
+              <span class="stat-label">Пополнения снятия</span>
+              <span class="stat-val"><span class="income-sum">+ 87 880 с.</span></span>
+           </div>
+           
+           <div class="stat-line-container">
+              <div class="stat-line-fill" style="width: 65%;"></div>
+           </div>
+
+           <div style="display:flex; gap:32px;">
+              <div class="stat-item">
+                 <span class="stat-label">Сегодня 3 месяца</span>
+                 <span class="stat-val">+ 450 с.</span>
+              </div>
+              <div class="stat-item">
+                 <span class="stat-label" style="opacity:0;">-</span>
+                 <span class="stat-val" style="color:var(--success);">+ 450 с.</span>
+              </div>
+           </div>
+           
+           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast">Сообщение</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="scripts/accounts-page.js"></script>
+</body>
+</html>

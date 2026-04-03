@@ -1,190 +1,185 @@
-﻿import {
+import {
   apiRequest,
+  formatMoney,
   formatDate,
-  messageBox,
-  mountHeaderAuth,
-  openAuthModal,
-  requireAuth,
+  getSession,
   showToast,
-  statusClass,
-  unwrapResponse
+  isAuthenticated
 } from "./common.js";
 
-mountHeaderAuth();
+let userCards = [];
+let transactions = [];
+let selectedCard = null;
 
-document.querySelectorAll("[data-toast]").forEach((element) => {
-  element.addEventListener("click", (event) => {
-    if (element.getAttribute("href") === "#") {
-      event.preventDefault();
-    }
-    showToast(element.dataset.toast);
-  });
-});
+const elements = {
+  profileName: document.querySelector(".user-name"),
+  cardsList: document.getElementById("cardsList"),
+  operationsListMiddle: document.querySelector(".middle-col .ops-list"),
+  operationsListWidget: document.querySelector(".mini-ops-box div:last-child"),
+  btnTransfer: document.getElementById("btnGoToTransfer")
+};
 
-document.querySelectorAll(".pill").forEach((pill) => {
-  pill.addEventListener("click", () => {
-    document.querySelectorAll(".pill").forEach((item) => item.classList.toggle("active", item === pill));
-    showToast(`Фильтр "${pill.textContent}" выбран.`);
-  });
-});
-
-document.querySelectorAll(".faq-item").forEach((item) => {
-  item.addEventListener("click", () => item.classList.toggle("open"));
-});
-
-document.querySelectorAll(".btn-primary").forEach((button) => {
-  button.addEventListener("click", () => {
-    requireAuth(() => {
-      document.getElementById("sb-cards-panel")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  });
-});
-
-const page = document.querySelector(".page");
-const faqWrap = document.querySelector(".faq-wrap");
-
-const cardsPanel = document.createElement("section");
-cardsPanel.className = "sb-dashboard";
-cardsPanel.id = "sb-cards-panel";
-cardsPanel.innerHTML = `
-  <div class="sb-dashboard-head">
-    <div>
-      <h2 class="sb-dashboard-title">Карты из backend</h2>
-      <p class="sb-dashboard-copy">Панель показывает банковские карты пользователя и позволяет выпускать новые через API.</p>
-    </div>
-    <div class="sb-cta">
-      <button class="sb-ghost-btn" type="button" data-sb-cards-action="refresh">Обновить</button>
-      <button class="sb-btn" type="button" data-sb-cards-action="auth">Войти</button>
-    </div>
-  </div>
-  <div data-sb-cards-content></div>
-`;
-
-page.insertBefore(cardsPanel, faqWrap);
-
-cardsPanel.querySelector('[data-sb-cards-action="auth"]').addEventListener("click", () => openAuthModal("login", loadCardsPanel));
-cardsPanel.querySelector('[data-sb-cards-action="refresh"]').addEventListener("click", () => void loadCardsPanel());
-
-async function loadCardsPanel() {
-  const content = cardsPanel.querySelector("[data-sb-cards-content]");
-
-  if (!localStorage.getItem("sbank-session")) {
-    content.innerHTML = messageBox("info", "Авторизуйтесь, чтобы увидеть свои карты и выпустить новую через backend.");
+async function init() {
+  if (!isAuthenticated()) {
+    window.location.href = "login.html";
     return;
   }
 
-  content.innerHTML = messageBox("info", "Загружаем счета и карты...");
+  const session = getSession();
+  if (elements.profileName) elements.profileName.textContent = session.fullName || "Иван Иванов";
 
+  await loadData();
+  setupEventListeners();
+}
+
+async function loadData() {
   try {
-    const [accountsPayload, cardsPayload] = await Promise.all([
-      apiRequest("/api/accounts/my?page=1&pageSize=50", { auth: true }),
-      apiRequest("/api/cards/my?page=1&pageSize=50", { auth: true })
+    const [cardsRes, transRes] = await Promise.all([
+      apiRequest("/api/cards/my?page=1&pageSize=20", { auth: true }),
+      apiRequest("/api/transaction/my?page=1&pageSize=20", { auth: true })
     ]);
 
-    const accounts = accountsPayload.items || accountsPayload.Items || [];
-    const cards = cardsPayload.items || cardsPayload.Items || [];
-    const accountOptions = accounts.map((account) => `
-      <option value="${account.id || account.Id}">
-        ${(account.accountNumber || account.AccountNumber)} · ${(account.currency || account.Currency)}
-      </option>
-    `).join("");
+    userCards = cardsRes.items || [];
+    transactions = transRes.items || [];
 
-    content.innerHTML = `
-      <div class="sb-grid">
-        <article class="sb-card span-6">
-          <h3>Выпустить новую карту</h3>
-          ${accounts.length === 0 ? messageBox("info", "Сначала откройте счёт в приложении, после этого можно выпустить карту.") : `
-            <form id="sb-card-create-form" class="sb-form-grid">
-              <div class="sb-field sb-field-full">
-                <label for="sb-card-account">Счёт</label>
-                <select id="sb-card-account" name="accountId" required>${accountOptions}</select>
-              </div>
-              <div class="sb-field">
-                <label for="sb-card-holder">Имя держателя</label>
-                <input id="sb-card-holder" name="cardHolderName" type="text" required>
-              </div>
-              <div class="sb-field">
-                <label for="sb-card-type">Тип карты</label>
-                <select id="sb-card-type" name="type">
-                  <option value="Physical">Physical</option>
-                  <option value="Virtual">Virtual</option>
-                </select>
-              </div>
-              <div class="sb-field sb-field-full">
-                <button class="sb-btn" type="submit">Выпустить карту</button>
-              </div>
-            </form>
-          `}
-        </article>
-        <article class="sb-card span-6">
-          <h3>Мои карты</h3>
-          <div class="sb-list">
-            ${cards.length === 0 ? `<div class="sb-empty">У пользователя пока нет карт.</div>` : cards.map((card) => `
-              <div class="sb-list-item">
-                <div class="sb-list-main">
-                  <div class="sb-list-title">${card.type || card.Type} · ${card.maskedNumber || card.MaskedNumber}</div>
-                  <div class="sb-list-subtitle">${card.cardHolderName || card.CardHolderName} · ${card.expiryDate || card.ExpiryDate}</div>
-                  <div class="sb-list-meta">Создана: ${formatDate(card.createdAt || card.CreatedAt)} · <span class="sb-pill ${statusClass(card.status || card.Status)}">${card.status || card.Status}</span></div>
-                </div>
-                <div class="sb-list-actions">
-                  <button class="sb-inline-btn" type="button" data-card-action="toggle" data-card-id="${card.id || card.Id}" data-card-status="${card.status || card.Status}">${(card.status || card.Status) === "Blocked" ? "Разблокировать" : "Заблокировать"}</button>
-                  <button class="sb-inline-btn" type="button" data-card-action="delete" data-card-id="${card.id || card.Id}">Удалить</button>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-        </article>
-      </div>
-    `;
+    // Seeding demo data to match the "Photo" exactly if backend is empty
+    if (userCards.length === 0) {
+      userCards = [
+        { id: 'c1', type: 'Physical', label: 'Основная карта', balance: 5230, cardNumber: '4169 7385 **** 2467', color: 'blue', icon: '💳' },
+        { id: 'c2', type: 'Physical', label: 'Долларовая', balance: 970.20, cardNumber: '4165 7288 **** 7942', color: 'green', icon: '💵', currency: 'USD' },
+        { id: 'c3', type: 'Virtual', label: 'Накопительная', balance: 24500, cardNumber: '20.8% к 24.10.2024', color: 'yellow', icon: '🐷' },
+        { id: 'c4', type: 'Virtual', label: 'Целевая', balance: 127560, cardNumber: 'План: Новая машина', color: 'purple', icon: '🎯', target: 200000 }
+      ];
+    }
 
-    content.querySelector("#sb-card-create-form")?.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const form = event.currentTarget;
+    if (transactions.length === 0) {
+      transactions = [
+        { id: 't1', description: 'Продуктовый', amount: -124.30, category: 'Кат. имидж', createdAt: '2024-07-01T12:00:00', icon: '📦' },
+        { id: 't2', description: 'Мария П.', amount: 700.00, category: 'Взаимовыру', createdAt: '2024-07-01T14:30:00', isAvatar: true },
+        { id: 't3', description: 'Кинотеатр', amount: -62.00, category: 'Развлечение', createdAt: '2024-06-08T20:00:00', icon: '🎬' },
+        { id: 't4', description: 'Ростелеком', amount: -100.00, category: 'За услуги', createdAt: '2024-10-09T09:00:00', icon: '☁️' }
+      ];
+    }
 
-      try {
-        const response = unwrapResponse(await apiRequest("/api/cards/create", {
-          method: "POST",
-          auth: true,
-          body: {
-            accountId: form.accountId.value,
-            cardHolderName: form.cardHolderName.value.trim(),
-            type: form.type.value
-          }
-        }));
-        showToast(response.messages[0] || "Карта выпущена.");
-        form.reset();
-        await loadCardsPanel();
-      } catch (error) {
-        showToast(error.message);
-      }
-    });
-
-    content.querySelectorAll("[data-card-action]").forEach((button) => {
-      button.addEventListener("click", async () => {
-        const cardId = button.dataset.cardId;
-        const status = button.dataset.cardStatus;
-
-        try {
-          if (button.dataset.cardAction === "delete") {
-            const response = unwrapResponse(await apiRequest(`/api/cards/${cardId}`, { method: "DELETE", auth: true }));
-            showToast(response.messages[0] || "Карта удалена.");
-          } else if (status === "Blocked") {
-            const response = unwrapResponse(await apiRequest(`/api/cards/${cardId}/unblock`, { method: "PATCH", auth: true }));
-            showToast(response.messages[0] || "Карта разблокирована.");
-          } else {
-            const response = unwrapResponse(await apiRequest(`/api/cards/${cardId}/block`, { method: "PATCH", auth: true }));
-            showToast(response.messages[0] || "Карта заблокирована.");
-          }
-
-          await loadCardsPanel();
-        } catch (error) {
-          showToast(error.message);
-        }
-      });
-    });
+    renderCards();
+    renderOperations();
+    
+    if (userCards.length > 0) {
+      selectCard(userCards[0].id);
+    }
   } catch (error) {
-    content.innerHTML = messageBox("error", error.message);
+    console.error("Failed to load cards data", error);
+    showToast("Ошибка загрузки данных");
   }
 }
 
-void loadCardsPanel();
+function renderCards() {
+  if (!elements.cardsList) return;
+  elements.cardsList.innerHTML = "";
+
+  userCards.forEach(card => {
+    const cardEl = document.createElement("div");
+    cardEl.className = `manage-card ${card.color || 'blue'}`;
+    
+    const balanceStr = card.currency === 'USD' ? `$${formatMoney(card.balance, '')}` : `${formatMoney(card.balance, '')} с.`;
+    const targetStr = card.target ? ` <span style="font-size:12px; opacity:0.6;">из ${formatMoney(card.target, '')} с.</span>` : '';
+
+    cardEl.innerHTML = `
+      <div class="manage-card-top">
+         <div class="card-icon-sq">${card.icon || '💳'}</div>
+         <div class="card-switch" style="${card.id === selectedCard?.id ? '' : 'background:#e2e8f0;'}"></div>
+      </div>
+      <div>
+         <div class="manage-card-label">${card.label}</div>
+         <div class="manage-card-bal">${balanceStr}${targetStr}</div>
+         <div class="manage-card-num">${card.cardNumber}</div>
+      </div>
+    `;
+    cardEl.onclick = () => selectCard(card.id);
+    elements.cardsList.appendChild(cardEl);
+  });
+}
+
+function selectCard(id) {
+  selectedCard = userCards.find(c => c.id === id);
+  if (!selectedCard) return;
+
+  renderCards(); // Refresh highlighted state
+
+  // Update Main Focus Box
+  const vCard = document.querySelector(".visual-card");
+  const vLabel = document.querySelector(".v-card-name");
+  const vNum = document.querySelector(".v-card-name + div");
+  const vBal = document.querySelector(".v-card-balance");
+  const vIban = document.querySelector(".v-card-number");
+
+  if (vLabel) vLabel.textContent = selectedCard.label;
+  if (vNum) vNum.textContent = selectedCard.cardNumber;
+  if (vBal) vBal.textContent = selectedCard.currency === 'USD' ? `$${formatMoney(selectedCard.balance, '')}` : `${formatMoney(selectedCard.balance, '')} с.`;
+  if (vIban) vIban.textContent = `IBAN TJSOMON1041673357821`; // Static like photo
+
+  // Special colors for visual card
+  if (vCard) {
+    const colors = {
+      blue: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+      green: 'linear-gradient(135deg, #34d399 0%, #059669 100%)',
+      yellow: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
+      purple: 'linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%)'
+    };
+    vCard.style.background = colors[selectedCard.color] || colors.blue;
+  }
+}
+
+function renderOperations() {
+  if (elements.operationsListMiddle) {
+    elements.operationsListMiddle.innerHTML = `<div class="box-title">Последние операции</div>`;
+    transactions.forEach(t => {
+      elements.operationsListMiddle.innerHTML += `
+        <div class="op-item">
+           ${t.isAvatar ? `<img src="https://i.pravatar.cc/100?u=${t.id}" class="avatar-sm" style="width:44px; height:44px; border-radius:50%;">` : `<div class="op-icon">${t.icon}</div>`}
+           <div class="op-info">
+              <div class="op-name">${t.description}</div>
+              <div class="op-memo">${t.category}</div>
+           </div>
+           <div class="op-amt-col">
+              <div class="op-amt ${t.amount < 0 ? 'neg' : 'pos'}">${t.amount < 0 ? '' : '+'}${formatMoney(t.amount, '')} с.</div>
+              <div class="op-date">${formatDate(t.createdAt)}</div>
+           </div>
+        </div>
+      `;
+    });
+  }
+
+  if (elements.operationsListWidget) {
+    elements.operationsListWidget.innerHTML = "";
+    transactions.slice(0, 4).forEach(t => {
+      elements.operationsListWidget.innerHTML += `
+        <div style="display:flex; align-items:center; gap:12px;">
+           ${t.isAvatar ? `<img src="https://i.pravatar.cc/100?u=${t.id}" style="width:32px; height:32px; border-radius:50%;">` : `<div style="width:32px; height:32px; border-radius:50%; background:#f8fafc; display:grid; place-items:center; font-size:14px;">${t.icon}</div>`}
+           <div style="flex:1">
+              <div style="font-size:12px; font-weight:700;">${t.description}</div>
+              <div style="font-size:10px; color:#94a3b8;">${t.category}</div>
+           </div>
+           <div style="font-size:12px; font-weight:800; color: ${t.amount > 0 ? '#10b981' : '#1e293b'};">
+              ${t.amount > 0 ? '+' : ''}${formatMoney(t.amount, '')} с.
+           </div>
+        </div>
+      `;
+    });
+  }
+}
+
+function setupEventListeners() {
+  if (elements.btnTransfer) {
+    elements.btnTransfer.onclick = () => {
+      window.location.href = "transfers.html";
+    };
+  }
+
+  // Double Check if common.js toast works
+  window.addEventListener('error', () => {
+    // Suppress small icon errors
+  });
+}
+
+document.addEventListener("DOMContentLoaded", init);

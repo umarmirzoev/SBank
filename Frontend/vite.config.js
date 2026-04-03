@@ -43,6 +43,8 @@ export default defineConfig({
         auto: resolve(__dirname, "auto.html"),
         transfers: resolve(__dirname, "transfers.html"),
         deposits: resolve(__dirname, "deposits.html"),
+        history: resolve(__dirname, "history.html"),
+        accounts: resolve(__dirname, "accounts.html"),
         visaBusiness: resolve(__dirname, "visa-business.html")
       }
     }

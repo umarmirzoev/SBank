@@ -15,6 +15,7 @@ public class AccountGetDto
 {
     public Guid Id { get; set; }
     public string AccountNumber { get; set; } = null!;
+    public string Iban { get; set; } = null!;
     public string Type { get; set; } = null!;
     public string Status { get; set; } = null!;
     public string Currency { get; set; } = null!;

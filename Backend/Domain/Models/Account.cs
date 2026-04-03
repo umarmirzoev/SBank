@@ -7,6 +7,7 @@ public class Account
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid UserId { get; set; }
     public string AccountNumber { get; set; } = null!;
+    public string Iban { get; set; } = null!;
     public AccountType Type { get; set; }
     public AccountStatus Status { get; set; } = AccountStatus.Active;
     public Currency Currency { get; set; }

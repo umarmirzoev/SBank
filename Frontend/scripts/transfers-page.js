@@ -18,6 +18,11 @@ async function initTransfersPage(session) {
   const sumTotal = document.getElementById('summaryTotal');
   const submitBtn = document.getElementById('submitBtn');
 
+  // Parse Query Parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const preSelectedAccountId = urlParams.get('from');
+  const preSelectedType = urlParams.get('type');
+
   // Hardcode options UI visually
   const transferOptions = [
     {
@@ -40,6 +45,13 @@ async function initTransfersPage(session) {
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>'
     }
   ];
+
+  if (preSelectedType) {
+    transferOptions.forEach(opt => opt.active = opt.id === preSelectedType);
+    if (!transferOptions.some(opt => opt.active)) {
+        transferOptions[0].active = true;
+    }
+  }
 
   function renderOptions() {
     optionsGrid.innerHTML = transferOptions.map(opt => `
@@ -107,8 +119,11 @@ async function initTransfersPage(session) {
       if (accountsData && accountsData.items && accountsData.items.length > 0) {
         accountsData.items.forEach(acc => {
           const opt = document.createElement('option');
-          opt.value = acc.id;
-          opt.textContent = `Счёт ${acc.accountNumber} • ${formatMoney(acc.balance, acc.currency)}`;
+          opt.value = acc.id || acc.Id;
+          opt.textContent = `Счёт ${acc.accountNumber || acc.AccountNumber} • ${formatMoney(acc.balance || acc.Balance, acc.currency || acc.Currency)}`;
+          if (preSelectedAccountId && (acc.id === preSelectedAccountId || acc.Id === preSelectedAccountId)) {
+            opt.selected = true;
+          }
           fromSelect.appendChild(opt);
         });
       } else {

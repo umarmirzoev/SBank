@@ -1,97 +1,179 @@
-import { formatMoney, mountHeaderAuth, requireAuth, showToast } from "./common.js";
+import {
+  apiRequest,
+  formatMoney,
+  formatDate,
+  getSession,
+  showToast,
+  isAuthenticated
+} from "./common.js";
 
-mountHeaderAuth();
+let credits = [];
+let selectedCredit = null;
 
-const amountInput = document.getElementById("finance-amount");
-const termInput = document.getElementById("finance-term");
-const amountValue = document.getElementById("finance-amount-value");
-const termValue = document.getElementById("finance-term-value");
-const monthlyValue = document.getElementById("finance-monthly");
-const overpayValue = document.getElementById("finance-overpay");
-const rateValue = document.getElementById("finance-rate");
+const elements = {
+  profileName: document.querySelector(".user-name"),
+  creditsOverview: document.getElementById("creditsOverview"),
+  middleList: document.querySelector(".credit-list"),
+  mainFocusBox: document.querySelector(".focus-box"),
+};
 
-function updateRangeBackground(input) {
-  const min = Number(input.min || 0);
-  const max = Number(input.max || 100);
-  const value = Number(input.value || min);
-  const percent = ((value - min) / (max - min)) * 100;
-  input.style.background = `linear-gradient(90deg, #2f8ef2 ${percent}%, #d6e4f7 ${percent}%)`;
+async function init() {
+  if (!isAuthenticated()) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  const session = getSession();
+  if (elements.profileName) elements.profileName.textContent = session.fullName || "Иван Иванов";
+
+  await loadData();
+  setupEventListeners();
 }
 
-function getSelectedCurrency() {
-  return document.querySelector('input[name="fin-currency"]:checked')?.value || "TJS";
-}
+async function loadData() {
+  try {
+    // In a real app, we'd fetch from /api/credits/my
+    // seeding demo data to match the "Photo" exactly
+    credits = [
+      { 
+        id: 'c1', 
+        label: 'Ипотечный кредит', 
+        balance: 523000, 
+        rate: 18, 
+        endDate: '2026-12-24', 
+        total: 890000, 
+        paid: 323000, 
+        monthly: -7280, 
+        nextDate: '2024-04-24', 
+        color: 'blue', 
+        icon: '🏠', 
+        iban: 'TJSOMON104169733592467' 
+      },
+      { 
+        id: 'c2', 
+        label: 'Автокредит', 
+        balance: 71200, 
+        rate: 20, 
+        endDate: '2026-03-15', 
+        trend: '+4,990 с.', 
+        color: 'green', 
+        icon: '🚗', 
+        iban: 'TJSOMON104169733591111' 
+      },
+      { 
+        id: 'c3', 
+        label: 'Потребительский кредит', 
+        balance: 'Погашен досрочно', 
+        rate: 25, 
+        term: '9 месяцев', 
+        color: 'yellow', 
+        icon: '💵', 
+        status: 'Погашен' 
+      }
+    ];
 
-function calculateFinance() {
-  const amount = Number(amountInput.value || 0);
-  const months = Number(termInput.value || 12);
-  const currency = getSelectedCurrency();
-  const yearlyRate = currency === "USD" ? 13 : 22;
-  const monthlyRate = yearlyRate / 100 / 12;
-  const monthlyPayment = (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months));
-  const totalPaid = monthlyPayment * months;
-  const overpay = totalPaid - amount;
-  const suffix = currency === "USD" ? "$" : "с.";
-
-  amountValue.textContent = `${formatMoney(amount)} ${suffix}`;
-  termValue.textContent = String(months);
-  monthlyValue.textContent = `${formatMoney(monthlyPayment)} ${suffix}`;
-  overpayValue.textContent = `${formatMoney(overpay)} ${suffix}`;
-  rateValue.textContent = `${yearlyRate}%`;
-
-  updateRangeBackground(amountInput);
-  updateRangeBackground(termInput);
-}
-
-document.querySelectorAll("[data-toast]").forEach((element) => {
-  element.addEventListener("click", (event) => {
-    if (element.getAttribute("href") === "#") {
-      event.preventDefault();
+    renderOverview();
+    renderMiddleList();
+    
+    if (credits.length > 0) {
+      selectCredit(credits[0].id);
     }
-    showToast(element.dataset.toast);
-  });
-});
+  } catch (error) {
+    console.error("Failed to load credits data", error);
+    showToast("Ошибка загрузки данных");
+  }
+}
 
-document.querySelectorAll("[data-scroll-target]").forEach((element) => {
-  element.addEventListener("click", () => {
-    document.getElementById(element.dataset.scrollTarget)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
-});
+function renderOverview() {
+  if (!elements.creditsOverview) return;
+  elements.creditsOverview.innerHTML = "";
 
-document.querySelectorAll("[data-mini]").forEach((card) => {
-  card.addEventListener("click", () => {
-    document.querySelectorAll("[data-mini]").forEach((item) => {
-      item.classList.toggle("active", item === card);
+  credits.forEach(credit => {
+    const cardEl = document.createElement("div");
+    cardEl.className = `row-card ${credit.color || 'blue'}`;
+    
+    const balanceText = typeof credit.balance === 'number' ? `${formatMoney(credit.balance, '')} с.` : credit.balance;
+    const detailText = credit.endDate ? `До ${formatDate(credit.endDate)} ${credit.trend || ''}` : `Срок: ${credit.term}`;
+    const btnText = credit.status || 'Погасить >';
+
+    cardEl.innerHTML = `
+      <div class="row-card-top">
+         <div class="card-icon-sq">${credit.icon}</div>
+         <div class="card-rate">${credit.rate}%</div>
+      </div>
+      <div>
+         <div class="card-label">${credit.label}</div>
+         <div class="card-bal">${balanceText}</div>
+         <div class="card-details">${detailText}</div>
+      </div>
+      <div class="card-btn">${btnText}</div>
+    `;
+    cardEl.onclick = () => selectCredit(credit.id);
+    elements.creditsOverview.appendChild(cardEl);
+  });
+}
+
+function renderMiddleList() {
+  if (!elements.middleList) return;
+  elements.middleList.innerHTML = `<div class="box-header"><span class="box-title">Ваши кредиты</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#94a3b8" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></div>`;
+
+  credits.slice(0, 2).forEach(credit => {
+    elements.middleList.innerHTML += `
+      <div class="credit-item" style="cursor:pointer;" onclick="window.selectCredit('${credit.id}')">
+        <div class="item-icon">${credit.icon}</div>
+        <div class="item-info">
+           <div class="item-name">${credit.label}</div>
+           <div class="item-sub">Срок: ${credit.id === 'c1' ? '15 лет' : 'Свой автомобиль'}</div>
+        </div>
+        <div class="item-val-col">
+           <div class="item-val">${formatMoney(credit.balance, '')} с.</div>
+           <div class="item-date">${formatDate(credit.endDate)}, Сомони</div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+window.selectCredit = selectCredit;
+
+function selectCredit(id) {
+  selectedCredit = credits.find(c => c.id === id);
+  if (!selectedCredit || selectedCredit.id === 'c3') return;
+
+  // Update Visual Box
+  const vTitle = document.querySelector(".v-loan-title");
+  const vIban = document.querySelector(".v-loan-title + div");
+  const vBal = document.querySelector(".v-loan-bal");
+  const vRateTrend = document.querySelector(".v-loan-trend");
+  const vSummary = document.querySelector(".visual-loan > div:nth-child(2)");
+
+  if (vTitle) vTitle.innerHTML = `${selectedCredit.icon} ${selectedCredit.label}`;
+  if (vIban) vIban.textContent = `IBAN: ${selectedCredit.iban}`;
+  if (vBal) vBal.textContent = `${formatMoney(selectedCredit.balance, '')} с.`;
+  if (vRateTrend) vRateTrend.textContent = `+ ${selectedCredit.rate}%`;
+  
+  if (vSummary && selectedCredit.total) {
+    vSummary.innerHTML = `+ ${formatMoney(selectedCredit.paid, '')} c. | сумма кредит ${formatMoney(selectedCredit.total, '')} c. <span style="float:right; color:#dcfce7;">+13.0% ⏱️ 220 с.</span>`;
+  }
+
+  // Update Stats
+  const statVal = document.querySelector(".loan-stat-val");
+  if (statVal && selectedCredit.monthly) {
+    statVal.innerHTML = `${formatMoney(selectedCredit.monthly, '')} c. <span style="font-size:12px; color:#94a3b8; font-weight:700;">до ${formatDate(selectedCredit.nextDate)}</span>`;
+  }
+}
+
+function setupEventListeners() {
+  document.querySelectorAll(".btn-new-loan, .action-btn.primary").forEach(btn => {
+    btn.onclick = () => showToast("Переход к оформлению/погашению...");
+  });
+
+  document.querySelectorAll(".knowledge-card, .offer-item").forEach(item => {
+    item.addEventListener("click", () => {
+        const title = item.querySelector(".k-title")?.textContent || item.querySelector(".o-name")?.textContent;
+        showToast(`Открываем: ${title}`);
     });
   });
-});
+}
 
-document.querySelectorAll(".faq-item").forEach((item) => {
-  item.querySelector(".faq-button")?.addEventListener("click", () => {
-    item.classList.toggle("open");
-  });
-});
-
-document.querySelectorAll('input[name="fin-currency"]').forEach((input) => {
-  input.addEventListener("change", calculateFinance);
-});
-
-amountInput?.addEventListener("input", calculateFinance);
-termInput?.addEventListener("input", calculateFinance);
-
-document.querySelector("[data-submit-financing]")?.addEventListener("click", () => {
-  requireAuth(() => {
-    const company = document.getElementById("fin-company")?.value.trim();
-    const inn = document.getElementById("fin-inn")?.value.trim();
-    const phone = document.getElementById("fin-phone")?.value.trim();
-
-    if (!company || !inn || !phone) {
-      showToast("Заполните название компании, ИНН и телефон.");
-      return;
-    }
-
-    showToast("Заявка на финансирование отправлена.");
-  });
-});
-
-calculateFinance();
+document.addEventListener("DOMContentLoaded", init);
