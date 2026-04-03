@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Эквайринг — Сомонибонк</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #10b981;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header */
+    .sb-header {
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .sb-header-top {
+      border-bottom: 1px solid var(--border);
+      padding: 12px 48px;
+    }
+
+    .sb-header-bottom {
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px;
+    }
+
+    .sb-header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .sb-nav-top {
+      display: flex;
+      gap: 40px;
+    }
+
+    .sb-nav-top a {
+      color: #4b5563;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      padding: 8px 0;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    .sb-nav-top a.active {
+      color: var(--text);
+    }
+
+    .sb-nav-top a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--secondary);
+      border-radius: 2px;
+    }
+
+    .sb-nav-bottom {
+      display: flex;
+      gap: 32px;
+      padding: 12px 0;
+    }
+
+    .sb-nav-bottom a {
+      color: #4b5563;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .sb-nav-bottom a.active {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .sb-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .sb-location-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #4b5563;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sb-lang-btn {
+      background: transparent;
+      border: none;
+      font-size: 14px;
+      color: #4b5563;
+      cursor: pointer;
+    }
+
+    /* Main */
+    .sb-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* Hero */
+    .hero-section {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 48px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .hero-content {
+      padding: 60px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-title {
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      max-width: 400px;
+    }
+
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+      width: fit-content;
+      margin-right: 12px;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(37, 99, 235, 0.4);
+    }
+
+    .hero-btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: fit-content;
+    }
+
+    .hero-btn-outline:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0;
+      min-height: 320px;
+    }
+
+    /* Services Grid */
+    .services-section {
+      margin-bottom: 64px;
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      text-align: center;
+      font-family: Georgia, serif;
+      color: #1e3a5f;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .service-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease backwards;
+    }
+
+    .service-card:nth-child(1) { animation-delay: 0.1s; }
+    .service-card:nth-child(2) { animation-delay: 0.2s; }
+
+    .service-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .service-card-image {
+      height: 200px;
+      overflow: hidden;
+    }
+
+    .service-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .service-card:hover .service-card-image img {
+      transform: scale(1.05);
+    }
+
+    .service-card-body {
+      padding: 28px 24px;
+    }
+
+    .service-card-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .service-card-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* Why Grid */
+    .why-section {
+      margin-bottom: 64px;
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .why-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 32px 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      text-align: center;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease backwards;
+    }
+
+    .why-card:nth-child(1) { animation-delay: 0.1s; }
+    .why-card:nth-child(2) { animation-delay: 0.2s; }
+    .why-card:nth-child(3) { animation-delay: 0.3s; }
+
+    .why-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .why-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .why-icon svg {
+      width: 30px;
+      height: 30px;
+      color: var(--primary);
+    }
+
+    .why-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .why-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Steps Section */
+    .steps-section {
+      margin-bottom: 64px;
+    }
+
+    .steps-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 48px 40px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      animation: fadeInUp 0.6s ease;
+    }
+
+    .steps-card h2 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      text-align: center;
+      font-family: Georgia, serif;
+      color: #1e3a5f;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .step-item {
+      text-align: center;
+      animation: fadeInUp 0.6s ease backwards;
+    }
+
+    .step-item:nth-child(1) { animation-delay: 0.1s; }
+    .step-item:nth-child(2) { animation-delay: 0.2s; }
+    .step-item:nth-child(3) { animation-delay: 0.3s; }
+
+    .step-num {
+      font-size: 48px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      line-height: 1;
+    }
+
+    .step-item h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .step-item p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Consultation Form */
+    .consult-section {
+      margin-bottom: 64px;
+    }
+
+    .consult-card {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 24px;
+      padding: 48px 40px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 48px;
+      align-items: center;
+      animation: fadeInUp 0.6s ease;
+    }
+
+    .consult-header h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .consult-header p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .consult-contacts {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .contact-item strong {
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    .contact-item span {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .consult-form {
+      background: white;
+      border-radius: 20px;
+      padding: 36px 32px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      color: #4b5563;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 15px;
+      transition: all 0.2s ease;
+      background: #f8fafc;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      background: #fff;
+    }
+
+    .form-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .consent-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      max-width: 280px;
+      line-height: 1.5;
+    }
+
+    .form-btn {
+      padding: 14px 32px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .form-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+    }
+
+    /* Quote Card */
+    .quote-section {
+      margin-bottom: 64px;
+    }
+
+    .quote-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 48px 40px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.6s ease;
+    }
+
+    .quote-card::after {
+      content: '\201D';
+      position: absolute;
+      right: 28px;
+      top: 0;
+      color: rgba(37, 99, 235, 0.06);
+      font-family: Georgia, serif;
+      font-size: 200px;
+      line-height: 1;
+    }
+
+    .quote-text {
+      font-size: 18px;
+      color: #334155;
+      line-height: 1.7;
+      max-width: 700px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .quote-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .quote-author {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .quote-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .quote-author-info strong {
+      display: block;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .quote-author-info span {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .quote-nav {
+      display: flex;
+      gap: 10px;
+    }
+
+    .quote-nav button {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: white;
+      color: var(--text-muted);
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quote-nav button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      margin-bottom: 64px;
+    }
+
+    .faq-list {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-item:first-child {
+      border-top: 1px solid var(--border);
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: none;
+      border: none;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      color: var(--text);
+      transition: color 0.2s ease;
+    }
+
+    .faq-question:hover {
+      color: var(--primary);
+    }
+
+    .faq-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--secondary);
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 200px;
+    }
+
+    .faq-answer p {
+      padding-bottom: 24px;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .sb-footer {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 60px 48px 30px;
+    }
+
+    .sb-footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .sb-footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1fr;
+      gap: 60px;
+      margin-bottom: 50px;
+    }
+
+    .sb-footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .sb-footer-address {
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .sb-footer-link {
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sb-contact-item {
+      margin-bottom: 24px;
+    }
+
+    .sb-contact-number {
+      font-size: 24px;
+      font-weight: 600;
+      color: #fbbf24;
+      margin-bottom: 4px;
+    }
+
+    .sb-contact-email {
+      font-size: 18px;
+      font-weight: 500;
+      color: #e2e8f0;
+    }
+
+    .sb-contact-label {
+      color: #94a3b8;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .sb-footer-section h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .sb-app-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .sb-app-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #e2e8f0;
+      text-decoration: none;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+
+    .sb-app-btn:hover {
+      background: #334155;
+    }
+
+    .sb-social-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .sb-social-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e293b;
+      border-radius: 50%;
+      color: #94a3b8;
+      transition: all 0.2s ease;
+    }
+
+    .sb-social-icon:hover {
+      background: #334155;
+      color: #e2e8f0;
+    }
+
+    .sb-footer-bottom {
+      border-top: 1px solid #1e293b;
+      padding: 24px 0;
+      margin-bottom: 24px;
+    }
+
+    .sb-footer-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .sb-footer-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .sb-footer-links a:hover {
+      color: #e2e8f0;
+    }
+
+    .sb-footer-copyright {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid #1e293b;
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: rgba(15, 23, 42, 0.94);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-section,
+      .consult-card {
+        grid-template-columns: 1fr;
+      }
+
+      .services-grid,
+      .why-grid,
+      .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .sb-footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sb-header-top,
+      .sb-header-bottom {
+        padding: 12px 20px;
+      }
+
+      .sb-nav-top,
+      .sb-nav-bottom {
+        display: none;
+      }
+
+      .hero-title {
+        font-size: 32px;
+      }
+
+      .hero-section {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        order: -1;
+      }
+
+      .services-grid,
+      .why-grid,
+      .steps-grid,
+      .sb-footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sb-main {
+        padding: 20px 16px;
+      }
+
+      .consult-form {
+        padding: 24px;
+      }
+
+      .form-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .hero-btn,
+      .hero-btn-outline {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/acquiring-E4I4jQy1.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/common-B9vdsGd4.js">
+</head>
+<body>
+  <!-- Header -->
+  <header class="sb-header">
+    <div class="sb-header-top">
+      <div class="sb-header-inner">
+        <a href="index.html" class="sb-logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="3"/>
+            <circle cx="22" cy="10" r="4" fill="#2563eb"/>
+          </svg>
+          <span>Сомонибонк</span>
+        </a>
+        <nav class="sb-nav-top">
+          <a href="index.html">Частным лицам</a>
+          <a href="business.html" class="active">Бизнесу</a>
+          <a href="somonibank.html">Сомонибонк</a>
+        </nav>
+        <div class="sb-header-actions">
+          <a href="#" class="sb-location-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Интернет-банк
+          </a>
+          <button class="sb-lang-btn">Рус ▾</button>
+        </div>
+      </div>
+    </div>
+    <div class="sb-header-bottom">
+      <div class="sb-header-inner">
+        <nav class="sb-nav-bottom">
+          <a href="business.html">Сомонибонк Business</a>
+          <a href="salary-project.html">Зарплатный проект</a>
+          <a href="financing.html">Финансирование</a>
+          <a href="installment-sales.html">Продажи в рассрочку</a>
+          <a href="acquiring.html" class="active">Эквайринг</a>
+          <a href="business.html#services">Расчётный счёт</a>
+          <a href="transfers.html">Переводы</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="sb-main">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Увеличьте продажи в разы</h1>
+        <p class="hero-desc">Предоставьте клиентам больше способов оплаты и наблюдайте, как ваш бизнес будет стремительно расти.</p>
+        <div class="hero-actions">
+          <button class="hero-btn" onclick="scrollToForm()">Подключить</button>
+          <button class="hero-btn-outline" onclick="document.getElementById('faq').scrollIntoView({behavior:'smooth'})">Как стать клиентом</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img
+          class="hero-img"
+          alt="Эквайринг — Сомонибонк"
+          src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        />
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section">
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-card-image">
+            <img
+              alt="Торговый эквайринг"
+              src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+          </div>
+          <div class="service-card-body">
+            <h3 class="service-card-title">Торговый эквайринг</h3>
+            <p class="service-card-desc">Принимайте оплату через POS-терминалы, QR-коды, карты «Корти милли», Visa, Mastercard и другие.</p>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card-image">
+            <img
+              alt="Интернет-эквайринг"
+              src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=900&q=80"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+          </div>
+          <div class="service-card-body">
+            <h3 class="service-card-title">Интернет-эквайринг</h3>
+            <p class="service-card-desc">Получайте платежи на своём сайте, а для большего удобства подключите услугу в приложении Сомонибонк.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Us Section -->
+    <section class="why-section">
+      <h2 class="section-title">Почему выбирают нас?</h2>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12,6 12,12 16,14"/>
+            </svg>
+          </div>
+          <h3>Быстрое зачисление</h3>
+          <p>Получайте свои средства на следующий день после оплаты.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+          </div>
+          <h3>Снижение нагрузки</h3>
+          <p>Ваш бухгалтер будет тратить меньше времени на расчёты и сверки.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <h3>Онлайн-управление</h3>
+          <p>Будьте в курсе своих продаж с любого устройства 24/7.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Steps Section -->
+    <section class="steps-section">
+      <div class="steps-card">
+        <h2>Рост продаж за 3 шага</h2>
+        <div class="steps-grid">
+          <div class="step-item">
+            <div class="step-num">1</div>
+            <h4>Покажите QR-код своего заведения</h4>
+            <p>Наша система ведёт учёт через QR-код, терминал, AlifPos, TPay и приложение.</p>
+          </div>
+          <div class="step-item">
+            <div class="step-num">2</div>
+            <h4>Клиент оплатит через приложение Сомонибонк</h4>
+            <p>Клиенту не сложно открыть приложение и сразу завершить покупку.</p>
+          </div>
+          <div class="step-item">
+            <div class="step-num">3</div>
+            <h4>Вам придёт СМС об оплате</h4>
+            <p>Сразу же получите уведомление о совершённой оплате в самый короткий срок.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Consultation Form -->
+    <section class="consult-section" id="consult">
+      <div class="consult-card">
+        <div class="consult-header">
+          <h2>Консультация по продукту</h2>
+          <p>Оставьте заявку и мы поможем подключить эквайринг для вашего бизнеса.</p>
+          <div class="consult-contacts">
+            <div class="contact-item">
+              <strong>4 888 5153</strong>
+              <span>Линия поддержки</span>
+            </div>
+            <div class="contact-item">
+              <strong>@smonen_bonix</strong>
+              <span>Telegram-бот</span>
+            </div>
+          </div>
+        </div>
+        <div class="consult-form">
+          <div class="form-group">
+            <label for="acq-name">Имя и фамилия</label>
+            <input id="acq-name" class="form-input" type="text" placeholder="Введите имя и фамилию">
+          </div>
+          <div class="form-group">
+            <label for="acq-phone">Номер телефона</label>
+            <input id="acq-phone" class="form-input" type="tel" placeholder="Введите номер телефона">
+          </div>
+          <div class="form-footer">
+            <p class="consent-text">Нажимая кнопку «Отправить», вы соглашаетесь с условиями обработки персональных данных.</p>
+            <button class="form-btn" type="button" data-submit-acquiring>Отправить</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote Section -->
+    <section class="quote-section">
+      <div class="quote-card">
+        <p class="quote-text">Наши компании сотрудничают уже долгое время, и мы ни разу не усомнились в профессионализме Сомонибонк. За этот период банк доказал, что является одним из первых финансовых учреждений, которым предоставляется современная технология для достижения роста страны.</p>
+        <div class="quote-footer">
+          <div class="quote-author">
+            <div class="quote-badge">SB</div>
+            <div class="quote-author-info">
+              <strong>ЗАО «Сомонибонк»</strong>
+              <span>Надёжный банк Таджикистана</span>
+            </div>
+          </div>
+          <div class="quote-nav">
+            <button type="button">&#8592;</button>
+            <button type="button">&#8594;</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+      <h2 class="section-title">Как стать клиентом Сомонибонк</h2>
+      <div class="faq-list">
+        <div class="faq-item active">
+          <button class="faq-question" type="button">
+            <span>Для юридических лиц</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Оригинал свидетельства о регистрации юридического лица, оригинал выписки из реестра, ИНН, паспорт руководителя и главного бухгалтера, а также заверенные копии устава и внутренних документов.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            <span>Для индивидуальных предпринимателей</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Паспорт, регистрационные данные ИП, ИНН, контактные данные и базовый пакет документов для подключения торгового или интернет-эквайринга.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            <span>Дополнительные требования в определённых ситуациях</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>В зависимости от канала продаж, модели бизнеса и оборота банк может запросить дополнительные документы и данные по торговой точке.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="sb-footer">
+    <div class="sb-footer-inner">
+      <div class="sb-footer-grid">
+        <div class="sb-footer-col">
+          <div class="sb-footer-logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="#fbbf24" stroke-width="2" fill="none"/>
+              <path d="M16 6L24 10V22L16 26L8 22V10L16 6Z" fill="#fbbf24"/>
+            </svg>
+            <span>Сомонибонк</span>
+          </div>
+          <p class="sb-footer-address">
+            ул. Рудаки, 46<br>
+            Душанбе, Таджикистан
+          </p>
+          <a href="#" class="sb-footer-link">Филиалы и банкоматы</a>
+        </div>
+
+        <div class="sb-footer-col">
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">900</div>
+            <div class="sb-contact-label">Для звонков с мобильных<br>в Таджикистане</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">+992 44 600 1111</div>
+            <div class="sb-contact-label">Для звонков из любой<br>точки мира</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">+992 44 600 1520</div>
+            <div class="sb-contact-label">Телефон доверия</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-email">support@somoni.tj</div>
+            <div class="sb-contact-label">Для онлайн-обращений</div>
+          </div>
+        </div>
+
+        <div class="sb-footer-col">
+          <div class="sb-footer-section">
+            <h4>Приложения</h4>
+            <div class="sb-app-buttons">
+              <a href="#" class="sb-app-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                </svg>
+                Google Play
+              </a>
+              <a href="#" class="sb-app-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.37 12.36,4.26 13,3.5Z"/>
+                </svg>
+                App Store
+              </a>
+            </div>
+          </div>
+          <div class="sb-footer-section">
+            <h4>Социальные сети</h4>
+            <div class="sb-social-grid">
+              <a href="#" class="sb-social-icon" aria-label="Telegram">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.04C20.54,3.74 21.21,4.22 20.94,5.32L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.66,16.27L10.65,18.23C10.43,18.45 10.25,18.65 9.78,18.65Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M12,2C6.48,2 2,6.48 2,12C2,16.84 5.44,20.87 10,21.8V15H8V12H10V9.5C10,7.57 11.57,6 13.5,6H16V9H14C13.45,9 13,9.45 13,10V12H16L15.5,15H13V21.8C18.56,20.87 22,16.84 22,12C22,6.48 17.52,2 12,2Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19M18.5,18.5V13.2A3.26,3.26 0 0,0 15.24,9.94C14.39,9.94 13.4,10.46 12.92,11.24V10.13H10.13V18.5H12.92V13.57C12.92,12.8 13.54,12.17 14.31,12.17A1.4,1.4 0 0,1 15.71,13.57V18.5H18.5M6.88,8.56A1.68,1.68 0 0,0 8.56,6.88C8.56,5.95 7.81,5.19 6.88,5.19A1.69,1.69 0 0,0 5.19,6.88C5.19,7.81 5.95,8.56 6.88,8.56M8.27,18.5V10.13H5.5V18.5H8.27Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon" aria-label="YouTube">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon" aria-label="VK">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                  <path d="M15.07,2H8.93C3.33,2 2,3.33 2,8.93V15.07C2,20.67 3.33,22 8.93,22H15.07C20.67,22 22,20.67 22,15.07V8.93C22,3.33 20.67,2 15.07,2M18.15,16.27H16.69C16.14,16.27 15.97,15.82 15.07,14.91C14.21,14.06 13.84,13.9 13.59,13.9C13.23,13.9 13.07,14.06 13.07,14.53V15.77C13.07,16.09 12.91,16.27 12.28,16.27C11.07,16.27 9.67,15.39 8.65,13.67C8.07,12.73 7.63,11.67 7.63,11.31C7.63,11.14 7.76,10.98 8.07,10.98H9.53C9.86,10.98 10,11.14 10.16,11.53C10.93,13.33 12.1,14.27 13.11,14.27C13.55,14.27 13.71,14.1 13.71,13.55V11.56C13.64,11.15 13.5,10.98 13.64,10.77C13.76,10.62 13.93,10.58 14.18,10.58H15.64C15.92,10.58 16.07,10.73 16.07,11.05V13.24C16.07,13.51 16.2,13.68 16.35,13.68C16.61,13.68 16.78,13.51 17.07,13.23C17.86,12.33 18.39,11.15 18.39,10.8C18.39,10.63 18.26,10.47 18.53,10.47H19.97C20.26,10.47 20.39,10.63 20.39,10.91C20.39,11.55 19.76,12.85 18.89,13.74C18.45,14.21 18.15,14.55 18.15,14.82C18.15,15.07 18.3,15.22 18.69,15.43C19.05,15.63 19.23,15.83 19.3,16.06C19.39,16.27 19.22,16.44 18.84,16.44L18.15,16.27Z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sb-footer-bottom">
+        <div class="sb-footer-links">
+          <a href="#">О банке</a>
+          <a href="#">Адреса</a>
+          <a href="#">Документы и тарифы</a>
+          <a href="#">Вакансии</a>
+          <a href="#">Связь с нами</a>
+        </div>
+      </div>
+      <div class="sb-footer-copyright">
+        <span>&copy; 2024 ЗАО «Сомонибонк». Все права защищены.</span>
+        <span>Лицензия НБТ №??? от ??.??.????</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+  <script>
+    function scrollToForm() {
+      document.getElementById('consult').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        item.classList.toggle('active');
+      });
+    });
+
+    document.querySelectorAll('[data-toast]').forEach(el => {
+      el.addEventListener('click', e => {
+        e.preventDefault();
+        const msg = el.getAttribute('data-toast');
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      });
+    });
+  </script>
+</body>
+</html>

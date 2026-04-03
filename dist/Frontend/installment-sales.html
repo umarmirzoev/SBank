@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Продажи в рассрочку — Сомонибонк</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #10b981;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --bg: #f1f5f9;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    a { text-decoration: none; color: inherit; }
+    button, input { font: inherit; }
+
+    /* Header */
+    .sb-header {
+      background: #ffffff;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .sb-header-top {
+      border-bottom: 1px solid var(--border);
+      padding: 12px 48px;
+    }
+
+    .sb-header-bottom {
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px;
+    }
+
+    .sb-header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sb-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .sb-nav-top {
+      display: flex;
+      gap: 40px;
+    }
+
+    .sb-nav-top a {
+      color: #4b5563;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      padding: 8px 0;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    .sb-nav-top a.active {
+      color: var(--text);
+    }
+
+    .sb-nav-top a.active::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--secondary);
+      border-radius: 2px;
+    }
+
+    .sb-nav-bottom {
+      display: flex;
+      gap: 32px;
+      padding: 12px 0;
+    }
+
+    .sb-nav-bottom a {
+      color: #4b5563;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .sb-nav-bottom a.active {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .sb-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .sb-location-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #4b5563;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sb-lang-btn {
+      background: transparent;
+      border: none;
+      font-size: 14px;
+      color: #4b5563;
+      cursor: pointer;
+    }
+
+    /* Main */
+    .sb-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 48px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .hero-content {
+      padding: 60px 48px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-title {
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      max-width: 400px;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+      width: fit-content;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(37, 99, 235, 0.4);
+    }
+
+    .hero-btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 32px;
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: fit-content;
+    }
+
+    .hero-btn-outline:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .hero-img {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+      object-fit: cover;
+      aspect-ratio: 16 / 9;
+    }
+
+    /* Info Card Section */
+    .info-section {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 48px;
+      margin-bottom: 48px;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 48px;
+      align-items: center;
+      box-shadow: var(--shadow);
+      animation: fadeInUp 0.8s ease backwards;
+      animation-delay: 0.1s;
+    }
+
+    .info-content h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #1e3a5f;
+    }
+
+    .info-content p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .info-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .info-visual img {
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.1);
+      object-fit: cover;
+      aspect-ratio: 4 / 3;
+    }
+
+    /* Benefits Section */
+    .benefits-section {
+      margin-bottom: 64px;
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      text-align: center;
+      font-family: Georgia, serif;
+      color: #1e3a5f;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .benefit-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 32px 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease backwards;
+    }
+
+    .benefit-card:nth-child(1) { animation-delay: 0.1s; }
+    .benefit-card:nth-child(2) { animation-delay: 0.2s; }
+    .benefit-card:nth-child(3) { animation-delay: 0.3s; }
+
+    .benefit-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .benefit-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .benefit-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--primary);
+    }
+
+    .benefit-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .benefit-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Steps Section */
+    .steps-section {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 48px;
+      margin-bottom: 64px;
+      box-shadow: var(--shadow);
+      animation: fadeInUp 0.8s ease backwards;
+      animation-delay: 0.2s;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 32px;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      animation: fadeInUp 0.6s ease backwards;
+    }
+
+    .step-item:nth-child(1) { animation-delay: 0.1s; }
+    .step-item:nth-child(2) { animation-delay: 0.2s; }
+    .step-item:nth-child(3) { animation-delay: 0.3s; }
+
+    .step-number {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .step-item h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .step-item p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .step-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--primary);
+    }
+
+    .step-icon-row {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    /* Consultation Form Section */
+    .consult-section {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 24px;
+      padding: 60px 40px;
+      margin-bottom: 64px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease backwards;
+      animation-delay: 0.3s;
+    }
+
+    .consult-section::before,
+    .consult-section::after {
+      content: '';
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), transparent);
+      border-radius: 50%;
+    }
+
+    .consult-section::before { top: -100px; right: -50px; }
+    .consult-section::after { bottom: -100px; left: -50px; }
+
+    .consult-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .consult-info h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .consult-info p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .contact-items {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .contact-item strong {
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .contact-item span {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .form-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 15px;
+      transition: all 0.2s ease;
+      background: #fff;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    .consent-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      max-width: 300px;
+    }
+
+    .form-btn {
+      padding: 14px 32px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .form-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+    }
+
+    /* Quote/Info Card */
+    .promo-section {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 48px;
+      margin-bottom: 64px;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 48px;
+      align-items: center;
+      box-shadow: var(--shadow);
+      animation: fadeInUp 0.8s ease backwards;
+      animation-delay: 0.35s;
+    }
+
+    .promo-content h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #1e3a5f;
+    }
+
+    .promo-content p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* Testimonial Section */
+    .testimonial-section {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 48px;
+      margin-bottom: 64px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease backwards;
+      animation-delay: 0.4s;
+    }
+
+    .testimonial-section::after {
+      content: '\201D';
+      position: absolute;
+      right: 28px;
+      top: -10px;
+      color: rgba(37, 99, 235, 0.06);
+      font-family: Georgia, serif;
+      font-size: 200px;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .testimonial-text {
+      font-size: 18px;
+      color: #334155;
+      line-height: 1.7;
+      max-width: 700px;
+      margin-bottom: 28px;
+    }
+
+    .testimonial-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+    }
+
+    .brand-info strong {
+      display: block;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .brand-info span {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .quote-nav {
+      display: flex;
+      gap: 10px;
+    }
+
+    .quote-nav button {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: white;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quote-nav button:last-child {
+      color: var(--primary);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+
+    .quote-nav button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      margin-bottom: 64px;
+    }
+
+    .faq-section .section-title {
+      margin-bottom: 12px;
+    }
+
+    .faq-section .section-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 40px;
+    }
+
+    .faq-list {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-item:first-child {
+      border-top: 1px solid var(--border);
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: none;
+      border: none;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      color: var(--text);
+      transition: color 0.2s ease;
+    }
+
+    .faq-question:hover {
+      color: var(--primary);
+    }
+
+    .faq-icon {
+      width: 24px;
+      height: 24px;
+      color: #06b6d4;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 200px;
+    }
+
+    .faq-answer p {
+      padding-bottom: 24px;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    .sb-footer {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 60px 48px 30px;
+    }
+
+    .sb-footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .sb-footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr 1fr;
+      gap: 60px;
+      margin-bottom: 50px;
+    }
+
+    .sb-footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .sb-footer-address {
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .sb-footer-link {
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .sb-contact-item {
+      margin-bottom: 24px;
+    }
+
+    .sb-contact-number {
+      font-size: 24px;
+      font-weight: 600;
+      color: #fbbf24;
+      margin-bottom: 4px;
+    }
+
+    .sb-contact-email {
+      font-size: 18px;
+      font-weight: 500;
+      color: #e2e8f0;
+    }
+
+    .sb-contact-label {
+      color: #94a3b8;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .sb-footer-section h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .sb-app-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .sb-app-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #e2e8f0;
+      text-decoration: none;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+
+    .sb-app-btn:hover {
+      background: #334155;
+    }
+
+    .sb-social-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .sb-social-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e293b;
+      border-radius: 50%;
+      color: #94a3b8;
+      transition: all 0.2s ease;
+    }
+
+    .sb-social-icon:hover {
+      background: #334155;
+      color: #e2e8f0;
+    }
+
+    .sb-footer-bottom {
+      border-top: 1px solid #1e293b;
+      padding: 24px 0;
+      margin-bottom: 24px;
+    }
+
+    .sb-footer-links {
+      display: flex;
+      gap: 32px;
+    }
+
+    .sb-footer-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    .sb-footer-links a:hover {
+      color: #e2e8f0;
+    }
+
+    .sb-footer-copyright {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid #1e293b;
+      color: #64748b;
+      font-size: 12px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: rgba(15, 23, 42, 0.94);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-section,
+      .info-section,
+      .consult-layout,
+      .promo-section {
+        grid-template-columns: 1fr;
+      }
+
+      .benefits-grid,
+      .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .sb-footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sb-header-top,
+      .sb-header-bottom {
+        padding: 12px 20px;
+      }
+
+      .sb-nav-top,
+      .sb-nav-bottom {
+        display: none;
+      }
+
+      .hero-title {
+        font-size: 32px;
+      }
+
+      .hero-section {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        order: -1;
+      }
+
+      .benefits-grid,
+      .steps-grid,
+      .sb-footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sb-main {
+        padding: 20px 16px;
+      }
+
+      .info-section,
+      .steps-section,
+      .consult-section,
+      .promo-section,
+      .testimonial-section {
+        padding: 28px 20px;
+      }
+
+      .form-card {
+        padding: 24px;
+      }
+
+      .hero-btns {
+        flex-direction: column;
+      }
+
+      .hero-btn,
+      .hero-btn-outline {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .form-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .testimonial-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/installmentSales-GSJt_0lO.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/common-B9vdsGd4.js">
+</head>
+<body>
+  <!-- Header -->
+  <header class="sb-header">
+    <div class="sb-header-top">
+      <div class="sb-header-inner">
+        <a href="index.html" class="sb-logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="3"/>
+            <circle cx="22" cy="10" r="4" fill="#2563eb"/>
+          </svg>
+          <span>Сомонибонк</span>
+        </a>
+        <nav class="sb-nav-top">
+          <a href="index.html">Частным лицам</a>
+          <a href="business.html" class="active">Бизнесу</a>
+          <a href="somonibank.html">Сомонибонк</a>
+        </nav>
+        <div class="sb-header-actions">
+          <a href="#" class="sb-location-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Интернет-банк
+          </a>
+          <button class="sb-lang-btn">Рус ▾</button>
+        </div>
+      </div>
+    </div>
+    <div class="sb-header-bottom">
+      <div class="sb-header-inner">
+        <nav class="sb-nav-bottom">
+          <a href="business.html">Сомонибонк Business</a>
+          <a href="salary-project.html">Зарплатный проект</a>
+          <a href="financing.html">Финансирование</a>
+          <a href="installment-sales.html" class="active">Продажи в рассрочку</a>
+          <a href="business.html#services">Эквайринг</a>
+          <a href="business.html#services">Расчётный счёт</a>
+          <a href="transfers.html">Переводы</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="sb-main">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Извлеките максимум выгоды</h1>
+        <p class="hero-desc">Подключите моментальные покупки в рассрочку, увеличьте объём продаж и максимизируйте эффективность бизнеса.</p>
+        <div class="hero-btns">
+          <button class="hero-btn" type="button" data-scroll-target="consult">Стать партнёром</button>
+          <button class="hero-btn-outline" type="button" data-scroll-target="faq">Как это работает</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img
+          class="hero-img"
+          alt="Продажи в рассрочку"
+          src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        />
+      </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="info-section">
+      <div class="info-content">
+        <h2>Что такое карта «Сомонибонк»?</h2>
+        <p>С ней клиенты смогут покупать ваши товары и услуги в рассрочку, а вы получите всю сумму за короткое время. Карта открывает доступ к гибким условиям оплаты и помогает привлечь больше покупателей в ваш бизнес.</p>
+      </div>
+      <div class="info-visual">
+        <img
+          alt="Карта Сомонибонк"
+          src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=600&q=80"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        />
+      </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits-section">
+      <h2 class="section-title">Что вы получите</h2>
+      <div class="benefits-grid">
+        <article class="benefit-card">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3>Больше клиентов</h3>
+          <p>Удержание текущих покупателей и увеличение количества новых каждый день.</p>
+        </article>
+
+        <article class="benefit-card">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <h3>Продвижение бизнеса</h3>
+          <p>Увеличьте продажи с помощью совместной рекламы и акций.</p>
+        </article>
+
+        <article class="benefit-card">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <h3>Удобное обслуживание</h3>
+          <p>У вас будет финансовый консультант, который ответит на все вопросы бесплатно.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Steps Section -->
+    <section class="steps-section">
+      <h2 class="section-title" style="margin-bottom: 0;">Как это работает</h2>
+      <div class="steps-grid">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-icon-row">
+            <div class="step-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </div>
+            <div>
+              <h4>Станьте ещё известнее</h4>
+              <p>Ваши клиенты смогут узнать о вас через наш сайт или alifshop.tj, а также предложения с QR-кодом.</p>
+            </div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-icon-row">
+            <div class="step-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="4" width="22" height="16" rx="2"/>
+                <line x1="1" y1="10" x2="23" y2="10"/>
+              </svg>
+            </div>
+            <div>
+              <h4>Получите деньги в ближайшее время</h4>
+              <p>После продажи мы получим всю сумму полностью в течение 24 часов на карту или расчётный счёт.</p>
+            </div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-icon-row">
+            <div class="step-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                <polyline points="17 6 23 6 23 12"/>
+              </svg>
+            </div>
+            <div>
+              <h4>Улучшите ход продаж</h4>
+              <p>Клиенты будут оплачивать нам по частям и покупать у вас больше.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Consultation Form Section -->
+    <section class="consult-section" id="consult">
+      <div class="consult-layout">
+        <div class="consult-info">
+          <h2>Консультация по продукту</h2>
+          <p>Заполните форму, чтобы мы могли с вами связаться и всё подробнее рассказать.</p>
+          <div class="contact-items">
+            <div class="contact-item">
+              <strong>4 8888 5353</strong>
+              <span>Линия поддержки</span>
+            </div>
+            <div class="contact-item">
+              <strong>@Somonibank_partners</strong>
+              <span>Telegram-бот</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-card">
+          <form id="consultForm">
+            <div class="form-group">
+              <label for="inst-name">Имя и фамилия</label>
+              <input id="inst-name" class="form-input" type="text" placeholder="Введите имя и фамилию">
+            </div>
+            <div class="form-group">
+              <label for="inst-phone">Номер телефона</label>
+              <input id="inst-phone" class="form-input" type="tel" placeholder="Введите номер телефона">
+            </div>
+            <div class="form-footer">
+              <p class="consent-text">Нажимая кнопку «Отправить», вы соглашаетесь с условиями обработки персональных данных.</p>
+              <button class="form-btn" type="button" data-submit-installment>Отправить</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Promo Section -->
+    <section class="promo-section">
+      <div class="promo-content">
+        <h2>Продвигайте бизнес даже из дома</h2>
+        <p>Принимайте оплату через POS-терминалы или его мобильную версию. Продажи будут под вашим наблюдением 24/7. Удобный интерфейс и быстрая интеграция помогут вам начать работу за считанные дни.</p>
+      </div>
+      <div class="info-visual">
+        <img
+          alt="POS-терминал"
+          src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=600&q=80"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        />
+      </div>
+    </section>
+
+    <!-- Testimonial Section -->
+    <section class="testimonial-section">
+      <p class="testimonial-text">Современные технологии, которые Сомонибонк внедряет в сферу банковских услуг, делают обслуживание клиентов удобным и быстрым.</p>
+      <div class="testimonial-footer">
+        <div class="brand-row">
+          <div class="brand-badge">SB</div>
+          <div class="brand-info">
+            <strong>ЗАО «Сомонибонк»</strong>
+            <span>Банк Таджикистана</span>
+          </div>
+        </div>
+        <div class="quote-nav">
+          <button type="button">&#8592;</button>
+          <button type="button">&#8594;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+      <h2 class="section-title">Как стать нашим партнёром?</h2>
+      <p class="section-subtitle">Вам нужно подготовить следующие документы.</p>
+      <div class="faq-list">
+        <div class="faq-item active">
+          <button class="faq-question" type="button">
+            <span>Для юридических лиц</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Оригинал свидетельства о регистрации юридического лица, выписка из ЕГРЮЛ, ИНН, паспорт руководителя и пакет внутренних документов компании.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            <span>Для индивидуальных предпринимателей</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>Паспорт, свидетельство ИП, ИНН, контактные данные и документы, которые подтверждают вид деятельности.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button">
+            <span>Дополнительные требования в определённых случаях</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <div class="faq-answer">
+            <p>В зависимости от типа бизнеса и модели продаж может потребоваться дополнительная проверка торговой точки и пакета документов.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="sb-footer">
+    <div class="sb-footer-inner">
+      <div class="sb-footer-grid">
+        <div class="sb-footer-col">
+          <div class="sb-footer-logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="#fbbf24" stroke-width="2" fill="none"/>
+              <path d="M16 6L24 10V22L16 26L8 22V10L16 6Z" fill="#fbbf24"/>
+            </svg>
+            <span>Сомонибонк</span>
+          </div>
+          <p class="sb-footer-address">
+            ул. Рудаки, 48<br>
+            Душанбе, Таджикистан
+          </p>
+          <a href="#" class="sb-footer-link">Филиалы и точки обслуживания</a>
+        </div>
+
+        <div class="sb-footer-col">
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">900</div>
+            <div class="sb-contact-label">Для звонков с мобильных<br>в Таджикистане</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">+992 44 600 1111</div>
+            <div class="sb-contact-label">Для звонков из любой<br>точки мира</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">+992 44 600 1520</div>
+            <div class="sb-contact-label">Техническая поддержка</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-email">support@somoni.tj</div>
+            <div class="sb-contact-label">Для онлайн-обращений</div>
+          </div>
+        </div>
+
+        <div class="sb-footer-col">
+          <div class="sb-footer-section">
+            <h4>Приложения</h4>
+            <div class="sb-app-buttons">
+              <a href="#" class="sb-app-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                </svg>
+                Google Play
+              </a>
+              <a href="#" class="sb-app-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.37 12.36,4.26 13,3.5Z"/>
+                </svg>
+                App Store
+              </a>
+            </div>
+          </div>
+          <div class="sb-footer-section">
+            <h4>Социальные сети</h4>
+            <div class="sb-social-grid">
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.04C20.54,3.74 21.21,4.22 20.94,5.32L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.66,16.27L10.65,18.23C10.43,18.45 10.25,18.65 9.78,18.65Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M12,2C6.48,2 2,6.48 2,12C2,16.84 5.44,20.87 10,21.8V15H8V12H10V9.5C10,7.57 11.57,6 13.5,6H16V9H14C13.45,9 13,9.45 13,10V12H16L15.5,15H13V21.8C18.56,20.87 22,16.84 22,12C22,6.48 17.52,2 12,2Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19M18.5,18.5V13.2A3.26,3.26 0 0,0 15.24,9.94C14.39,9.94 13.4,10.46 12.92,11.24V10.13H10.13V18.5H12.92V13.57C12.92,12.8 13.54,12.17 14.31,12.17A1.4,1.4 0 0,1 15.71,13.57V18.5H18.5M6.88,8.56A1.68,1.68 0 0,0 8.56,6.88C8.56,5.95 7.81,5.19 6.88,5.19A1.69,1.69 0 0,0 5.19,6.88C5.19,7.81 5.95,8.56 6.88,8.56M8.27,18.5V10.13H5.5V18.5H8.27Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M19.59,6.69A4.83,4.83 0 0,1 21.5,9.5C21.5,11.99 19.49,14 17,14V11A2,2 0 0,0 15,9H14V16.5A3.5,3.5 0 0,1 10.5,20A3.5,3.5 0 0,1 7,16.5A3.5,3.5 0 0,1 10.5,13C10.8,13 11.09,13.04 11.37,13.11V10.35C11.05,10.27 10.71,10.23 10.36,10.23A6.36,6.36 0 0,0 4,16.59A6.36,6.36 0 0,0 10.36,22.95C14.31,22.95 17.5,19.76 17.5,15.81V9.5H19.59Z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sb-footer-bottom">
+        <div class="sb-footer-links">
+          <a href="#">О нас</a>
+          <a href="#">Адреса</a>
+          <a href="#">Документы и тарифы</a>
+          <a href="#">Вакансии</a>
+          <a href="#">Связь с нами</a>
+        </div>
+      </div>
+
+      <div class="sb-footer-copyright">
+        <p>© 2024 ПАО Сомонибонк</p>
+        <p>Лицензия НБТ №0000114 от 3 января 2020 года</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- FAQ Toggle -->
+  <script>
+    document.querySelectorAll('.faq-question').forEach(button => {
+      button.addEventListener('click', () => {
+        button.parentElement.classList.toggle('active');
+      });
+    });
+
+    document.querySelectorAll('[data-scroll-target]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.dataset.scrollTarget);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>

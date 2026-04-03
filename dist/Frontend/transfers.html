@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Денежные переводы — Сомонибонк</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--primary:#2563eb;--primary-dark:#1d4ed8;--secondary:#10b981;--text:#1e293b;--text-muted:#64748b;--bg:#f1f5f9;--card-bg:#ffffff;--border:#e2e8f0;--shadow:0 4px 6px -1px rgba(0,0,0,.1);--shadow-lg:0 20px 25px -5px rgba(0,0,0,.1)}
+    body{font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    .sb-header{background:#fff;position:sticky;top:0;z-index:100}
+    .sb-header-top{border-bottom:1px solid var(--border);padding:12px 48px}
+    .sb-header-bottom{border-bottom:1px solid var(--border);padding:0 48px}
+    .sb-header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+    .sb-logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;color:var(--text);text-decoration:none}
+    .sb-nav-top{display:flex;gap:40px}
+    .sb-nav-top a{color:#4b5563;text-decoration:none;font-weight:500;font-size:15px;padding:8px 0;position:relative;transition:color .2s ease}
+    .sb-nav-top a.active{color:var(--text)}
+    .sb-nav-top a.active::after{content:'';position:absolute;bottom:-12px;left:0;right:0;height:3px;background:var(--secondary);border-radius:2px}
+    .sb-nav-bottom{display:flex;gap:32px;padding:12px 0}
+    .sb-nav-bottom a{color:#4b5563;text-decoration:none;font-weight:500;font-size:14px;transition:color .2s ease}
+    .sb-nav-bottom a.active{color:var(--text);font-weight:600}
+    .sb-header-actions{display:flex;align-items:center;gap:24px}
+    .sb-location-link{display:flex;align-items:center;gap:8px;color:#4b5563;text-decoration:none;font-size:14px}
+    .sb-lang-btn{background:transparent;border:none;font-size:14px;color:#4b5563;cursor:pointer}
+    .sb-main{max-width:1200px;margin:0 auto;padding:40px 24px}
+    .hero-section{background:linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%);border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;margin-bottom:48px;animation:fadeInUp .8s ease;min-height:400px}
+    .hero-content{padding:60px 48px;display:flex;flex-direction:column;justify-content:center}
+    .hero-title{font-size:42px;font-weight:700;line-height:1.2;margin-bottom:20px}
+    .hero-desc{font-size:16px;color:var(--text-muted);margin-bottom:32px;max-width:400px}
+    .hero-btn{display:inline-flex;align-items:center;gap:8px;padding:16px 32px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s ease;box-shadow:0 10px 20px rgba(37,99,235,.3);width:fit-content}
+    .hero-btn:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(37,99,235,.4)}
+    .hero-visual{position:relative;display:flex;align-items:center;justify-content:center;padding:40px;overflow:hidden}
+    .hero-visual img{width:100%;height:100%;object-fit:cover;border-radius:20px;box-shadow:0 18px 40px rgba(0,0,0,.12)}
+    .section-title{font-size:32px;font-weight:700;margin-bottom:40px;text-align:center;font-family:Georgia,serif;color:#1e3a5f}
+    .transfers-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-bottom:64px}
+    .transfer-card{background:var(--card-bg);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:200px 1fr;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .3s ease;animation:fadeInUp .6s ease backwards}
+    .transfer-card:nth-child(1){animation-delay:.1s}
+    .transfer-card:nth-child(2){animation-delay:.2s}
+    .transfer-card:nth-child(3){animation-delay:.3s}
+    .transfer-card:nth-child(4){animation-delay:.4s}
+    .transfer-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+    .transfer-card-img{overflow:hidden}
+    .transfer-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+    .transfer-card:hover .transfer-card-img img{transform:scale(1.05)}
+    .transfer-card-body{padding:28px;display:flex;flex-direction:column;justify-content:center}
+    .transfer-card-title{font-size:18px;font-weight:700;margin-bottom:8px}
+    .transfer-card-desc{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:16px}
+    .transfer-card-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .3s ease;width:fit-content}
+    .transfer-card-btn:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(37,99,235,.3)}
+    .transfer-badge{display:inline-block;padding:4px 12px;background:#ecfdf5;color:#065f46;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:12px}
+    .info-section{margin-bottom:64px}
+    .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .info-card{background:var(--card-bg);border-radius:20px;padding:32px 24px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .3s ease}
+    .info-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+    .info-icon{width:64px;height:64px;margin:0 auto 20px;border-radius:16px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);display:flex;align-items:center;justify-content:center}
+    .info-icon svg{width:28px;height:28px;color:var(--primary)}
+    .info-card h4{font-size:16px;font-weight:600;margin-bottom:8px}
+    .info-card p{font-size:13px;color:var(--text-muted);line-height:1.5}
+    .sb-footer{background:#0f172a;color:#e2e8f0;padding:60px 48px 30px}
+    .sb-footer-inner{max-width:1200px;margin:0 auto}
+    .sb-footer-grid{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:60px;margin-bottom:50px}
+    .sb-footer-logo{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:700;margin-bottom:20px}
+    .sb-footer-address{color:#94a3b8;font-size:14px;line-height:1.6;margin-bottom:16px}
+    .sb-footer-link{color:#60a5fa;text-decoration:none;font-size:14px}
+    .sb-contact-item{margin-bottom:24px}
+    .sb-contact-number{font-size:24px;font-weight:600;color:#fbbf24;margin-bottom:4px}
+    .sb-contact-email{font-size:18px;font-weight:500;color:#e2e8f0}
+    .sb-contact-label{color:#94a3b8;font-size:13px;line-height:1.5}
+    .sb-footer-section h4{font-size:16px;font-weight:600;margin-bottom:16px}
+    .sb-app-buttons{display:flex;gap:12px;margin-bottom:30px}
+    .sb-app-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#1e293b;border:1px solid #334155;border-radius:8px;color:#e2e8f0;text-decoration:none;font-size:13px;transition:all .2s ease}
+    .sb-app-btn:hover{background:#334155}
+    .sb-social-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .sb-social-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#1e293b;border-radius:50%;color:#94a3b8;transition:all .2s ease}
+    .sb-social-icon:hover{background:#334155;color:#e2e8f0}
+    .sb-footer-bottom{border-top:1px solid #1e293b;padding:24px 0;margin-bottom:24px}
+    .sb-footer-links{display:flex;gap:32px}
+    .sb-footer-links a{color:#94a3b8;text-decoration:none;font-size:14px;transition:color .2s ease}
+    .sb-footer-links a:hover{color:#e2e8f0}
+    .sb-footer-copyright{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid #1e293b;color:#64748b;font-size:12px}
+    @media(max-width:1024px){.hero-section{grid-template-columns:1fr}.transfers-grid{grid-template-columns:1fr}.transfer-card{grid-template-columns:1fr}.info-grid{grid-template-columns:repeat(2,1fr)}.sb-footer-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:768px){.sb-header-top,.sb-header-bottom{padding:12px 20px}.sb-nav-top,.sb-nav-bottom{display:none}.hero-title{font-size:32px}.hero-visual{order:-1}.info-grid,.sb-footer-grid{grid-template-columns:1fr}.sb-main{padding:20px 16px}}
+  </style>
+</head>
+<body>
+  <header class="sb-header">
+    <div class="sb-header-top"><div class="sb-header-inner">
+      <a href="index.html" class="sb-logo"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="3"/><circle cx="22" cy="10" r="4" fill="#2563eb"/></svg><span>Сомонибонк</span></a>
+      <nav class="sb-nav-top"><a href="index.html" class="active">Частным лицам</a><a href="business.html">Бизнесу</a><a href="somonibank.html">Сомонибонк</a></nav>
+      <div class="sb-header-actions"><a href="addresses.html" class="sb-location-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Адреса и банкоматы</a><button class="sb-lang-btn">Рус ▾</button></div>
+    </div></div>
+    <div class="sb-header-bottom"><div class="sb-header-inner">
+      <nav class="sb-nav-bottom"><a href="somonibank-app.html">Приложение Somoni</a><a href="cards.html">Карты</a><a href="#">Салом</a><a href="auto.html">Покупка авто</a><a href="#">Somoni Shop</a><a href="transfers.html" class="active">Переводы</a><a href="#">Депозиты</a><a href="#">Авиабилеты</a><a href="#">Ещё ▾</a></nav>
+    </div></div>
+  </header>
+
+  <main class="sb-main">
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Переводы по всему миру</h1>
+        <p class="hero-desc">Отправляйте деньги в 190+ стран мгновенно с минимальной комиссией через приложение Сомонибонк</p>
+        <button class="hero-btn">Начать перевод</button>
+      </div>
+      <div class="hero-visual">
+        <img alt="Международные переводы" src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80" loading="lazy"/>
+      </div>
+    </section>
+
+    <section class="transfers-grid">
+      <article class="transfer-card">
+        <div class="transfer-card-img"><img alt="Переводы в Европу" src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=600&q=80" loading="lazy"/></div>
+        <div class="transfer-card-body">
+          <span class="transfer-badge">0% комиссия</span>
+          <h3 class="transfer-card-title">Переводы в Европу</h3>
+          <p class="transfer-card-desc">35 стран Европы — переводите на карты и счета без комиссии через SEPA и Swift</p>
+          <button class="transfer-card-btn">Узнать больше →</button>
+        </div>
+      </article>
+      <article class="transfer-card">
+        <div class="transfer-card-img"><img alt="Переводы в Китай" src="https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&w=600&q=80" loading="lazy"/></div>
+        <div class="transfer-card-body">
+          <span class="transfer-badge">0% комиссия</span>
+          <h3 class="transfer-card-title">Переводы в Китай</h3>
+          <p class="transfer-card-desc">Alipay и WeChat Pay — отправляйте деньги без комиссии напрямую в приложении</p>
+          <button class="transfer-card-btn">Узнать больше →</button>
+        </div>
+      </article>
+      <article class="transfer-card">
+        <div class="transfer-card-img"><img alt="Переводы в США" src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=600&q=80" loading="lazy"/></div>
+        <div class="transfer-card-body">
+          <h3 class="transfer-card-title">Переводы в США</h3>
+          <p class="transfer-card-desc">ACH и Wire Transfer — быстрые переводы на банковские счета в США</p>
+          <button class="transfer-card-btn">Узнать больше →</button>
+        </div>
+      </article>
+      <article class="transfer-card">
+        <div class="transfer-card-img"><img alt="Переводы по Таджикистану" src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80" loading="lazy"/></div>
+        <div class="transfer-card-body">
+          <h3 class="transfer-card-title">Переводы по стране</h3>
+          <p class="transfer-card-desc">Мгновенные переводы по Таджикистану на карты Visa, Mastercard и национальные банки</p>
+          <button class="transfer-card-btn">Узнать больше →</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="info-section">
+      <h2 class="section-title">Международные переводы</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <h4>190+ стран</h4>
+          <p>Visa Direct и Mastercard MoneySend — переводы по всему миру</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <h4>Мгновенно</h4>
+          <p>Деньги поступают на счёт получателя в течение нескольких минут</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <h4>Безопасно</h4>
+          <p>Все переводы защищены и соответствуют международным стандартам</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="info-section">
+      <h2 class="section-title">Western Union и Ватан</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <h4>Western Union</h4>
+          <p>Из любой точки мира — деньги на счёту мгновенно</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+          <h4>Ватан</h4>
+          <p>Быстрая отправка денег по стране без открытия счёта</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <h4>SWIFT</h4>
+          <p>Международные переводы в любой уголок мира</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="sb-footer">
+    <div class="sb-footer-inner">
+      <div class="sb-footer-grid">
+        <div class="sb-footer-col">
+          <div class="sb-footer-logo"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="#fbbf24" stroke-width="2" fill="none"/><path d="M16 6L24 10V22L16 26L8 22V10L16 6Z" fill="#fbbf24"/></svg><span>Сомонибонк</span></div>
+          <p class="sb-footer-address">ул. Рудаки, 48<br>Душанбе, Таджикистан</p>
+          <a href="addresses.html" class="sb-footer-link">Филиалы и точки обслуживания</a>
+        </div>
+        <div class="sb-footer-col">
+          <div class="sb-contact-item"><div class="sb-contact-number">900</div><div class="sb-contact-label">Для звонков с мобильных в Таджикистане</div></div>
+          <div class="sb-contact-item"><div class="sb-contact-number">+992 44 600 1111</div><div class="sb-contact-label">Для звонков из любой точки мира</div></div>
+          <div class="sb-contact-item"><div class="sb-contact-email">support@somoni.tj</div><div class="sb-contact-label">Для онлайн-обращений</div></div>
+        </div>
+        <div class="sb-footer-col">
+          <div class="sb-footer-section"><h4>Приложения</h4><div class="sb-app-buttons"><a href="#" class="sb-app-btn">Google Play</a><a href="#" class="sb-app-btn">App Store</a></div></div>
+          <div class="sb-footer-section"><h4>Социальные сети</h4><div class="sb-social-grid"><a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.04C20.54,3.74 21.21,4.22 20.94,5.32L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.66,16.27L10.65,18.23C10.43,18.45 10.25,18.65 9.78,18.65Z"/></svg></a><a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12,2C6.48,2 2,6.48 2,12C2,16.84 5.44,20.87 10,21.8V15H8V12H10V9.5C10,7.57 11.57,6 13.5,6H16V9H14C13.45,9 13,9.45 13,10V12H16L15.5,15H13V21.8C18.56,20.87 22,16.84 22,12C22,6.48 17.52,2 12,2Z"/></svg></a><a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg></a><a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/></svg></a></div></div>
+        </div>
+      </div>
+      <div class="sb-footer-bottom"><div class="sb-footer-links"><a href="somonibank.html">О нас</a><a href="addresses.html">Адреса</a><a href="documents.html">Документы и тарифы</a><a href="#">Вакансии</a><a href="contact.html">Связь с нами</a></div></div>
+      <div class="sb-footer-copyright"><p>© 2024 ПАО Сомонибонк</p><p>Лицензия НБТ №0000114 от 3 января 2020 года</p><p>ПАО Сомонибонк является участником Фонда страхования вкладов</p></div>
+    </div>
+  </footer>
+</body>
+</html>

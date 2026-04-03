@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Депозиты и счета — Сомонибонк</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--primary:#2563eb;--primary-dark:#1d4ed8;--secondary:#10b981;--text:#1e293b;--text-muted:#64748b;--bg:#f1f5f9;--card-bg:#fff;--border:#e2e8f0;--shadow:0 4px 6px -1px rgba(0,0,0,.1);--shadow-lg:0 20px 25px -5px rgba(0,0,0,.1)}
+    body{font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    a{text-decoration:none;color:inherit}button,input,select{font:inherit}
+
+    .sb-header{background:#fff;position:sticky;top:0;z-index:100}
+    .sb-header-top{border-bottom:1px solid var(--border);padding:12px 48px}
+    .sb-header-bottom{border-bottom:1px solid var(--border);padding:0 48px}
+    .sb-header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+    .sb-logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;color:var(--text);text-decoration:none}
+    .sb-nav-top{display:flex;gap:40px}
+    .sb-nav-top a{color:#4b5563;text-decoration:none;font-weight:500;font-size:15px;padding:8px 0;position:relative;transition:color .2s ease}
+    .sb-nav-top a.active{color:var(--text)}
+    .sb-nav-top a.active::after{content:'';position:absolute;bottom:-12px;left:0;right:0;height:3px;background:var(--secondary);border-radius:2px}
+    .sb-nav-bottom{display:flex;gap:32px;padding:12px 0}
+    .sb-nav-bottom a{color:#4b5563;text-decoration:none;font-weight:500;font-size:14px;transition:color .2s ease}
+    .sb-nav-bottom a.active{color:var(--text);font-weight:600}
+    .sb-header-actions{display:flex;align-items:center;gap:14px}
+    .sb-location-link,.sb-lang-btn{display:none}
+    .sb-lang-select{min-height:40px;padding:0 14px;border:1px solid var(--border);border-radius:12px;background:#fff;color:#334155;font-size:14px;font-weight:600;cursor:pointer}
+    .sb-login-btn{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 8px 18px rgba(37,99,235,.2)}
+    .sb-login-btn svg{width:16px;height:16px}
+
+    .sb-main{max-width:1200px;margin:0 auto;padding:40px 24px}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+    .hero-section{border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;margin-bottom:48px;animation:fadeInUp .8s ease;background:linear-gradient(135deg,#f8fafc,#e2e8f0)}
+    .hero-content{padding:60px 48px;display:flex;flex-direction:column;justify-content:center}
+    .hero-title{font-size:42px;font-weight:700;line-height:1.2;margin-bottom:20px}
+    .hero-desc{font-size:16px;color:var(--text-muted);margin-bottom:32px;max-width:420px}
+    .hero-btn{display:inline-flex;align-items:center;gap:8px;padding:16px 32px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s ease;box-shadow:0 10px 20px rgba(37,99,235,.3);width:fit-content}
+    .hero-btn:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(37,99,235,.4)}
+    .hero-visual{position:relative;display:flex;align-items:center;justify-content:center;padding:30px}
+    .hero-visual img{width:100%;max-width:500px;border-radius:20px;box-shadow:0 18px 40px rgba(0,0,0,.12);object-fit:cover;aspect-ratio:16/10}
+
+    .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-bottom:64px}
+    .product-card{background:var(--card-bg);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .3s ease;animation:fadeInUp .6s ease backwards;display:grid;grid-template-columns:220px 1fr}
+    .product-card:nth-child(1){animation-delay:.1s}.product-card:nth-child(2){animation-delay:.2s}
+    .product-card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
+    .product-card.featured{grid-column:1/-1;grid-template-columns:1fr 1fr;background:linear-gradient(135deg,#0f53b8,#1768e8,#15baf4);color:#fff;border:none}
+    .product-img{height:100%;min-height:180px;overflow:hidden}
+    .product-img img{width:100%;height:100%;object-fit:cover}
+    .product-body{padding:28px 24px;display:flex;flex-direction:column;justify-content:center}
+    .product-name{font-size:20px;font-weight:700;margin-bottom:16px}
+    .product-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
+    .metric-label{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px}
+    .featured .metric-label{color:rgba(255,255,255,.74)}
+    .metric-value{font-size:20px;font-weight:700}
+    .product-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn-primary{padding:12px 24px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .3s ease}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(37,99,235,.3)}
+    .featured .btn-primary{background:#fff;color:#1857bf}
+    .btn-ghost{padding:12px 24px;background:transparent;color:var(--primary);border:1px solid rgba(37,99,235,.2);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s ease}
+    .btn-ghost:hover{background:rgba(37,99,235,.05)}
+    .featured .btn-ghost{color:#fff;border-color:rgba(255,255,255,.3)}
+    .featured .btn-ghost:hover{background:rgba(255,255,255,.1)}
+
+    .dashboard-section{background:var(--card-bg);border-radius:24px;padding:40px;margin-bottom:64px;box-shadow:var(--shadow)}
+    .dashboard-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:16px}
+    .dashboard-header h2{font-size:24px;font-weight:700}
+    .dashboard-header p{color:var(--text-muted);font-size:14px;margin-top:4px}
+    .dashboard-actions{display:flex;gap:10px}
+    .msg{padding:14px 16px;border-radius:14px;font-size:14px;line-height:1.5}
+    .msg.info{background:#edf4ff;border:1px solid #d4e5ff}
+    .msg.ok{background:#ebfff5;border:1px solid #c2f0d7}
+    .msg.err{background:#fff0f3;border:1px solid #ffd2da}
+    .dash{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .dash-box{padding:18px;border-radius:18px;background:#f9fbff;border:1px solid #dce6f4}
+    .dash-box h4{margin:0 0 14px;font-size:18px}
+    .dash-list{display:grid;gap:12px}
+    .dash-row{display:flex;justify-content:space-between;gap:12px;padding-top:12px;border-top:1px solid #e5edf8}
+    .dash-row:first-child{border-top:0;padding-top:0}
+    .dash-t1{margin:0 0 4px;font-weight:700}
+    .dash-t2,.dash-t3{margin:0;color:var(--text-muted);font-size:13px;line-height:1.5}
+    .pill{flex-shrink:0;padding:8px 12px;border-radius:999px;background:rgba(30,99,216,.08);color:var(--primary);font-size:13px;font-weight:700}
+
+    .banner-section{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;margin-bottom:64px;padding:40px;border-radius:24px;background:linear-gradient(135deg,#f8fbff,#eeff);border:1px solid var(--border)}
+    .banner-section h3{font-size:32px;margin-bottom:12px;line-height:1.1}
+    .banner-section p{color:var(--text-muted);margin-bottom:20px;line-height:1.6}
+    .banner-img{border-radius:20px;overflow:hidden}
+    .banner-img img{width:100%;height:220px;object-fit:cover;border-radius:20px}
+
+    .faq-section{margin-bottom:64px}
+    .section-title{font-size:32px;font-weight:700;margin-bottom:40px;text-align:center;font-family:Georgia,serif;color:#1e3a5f}
+    .faq-list{max-width:800px;margin:0 auto}
+    .faq-item{border-bottom:1px solid var(--border)}
+    .faq-question{width:100%;padding:24px 0;display:flex;justify-content:space-between;align-items:center;background:none;border:none;font-size:16px;font-weight:500;cursor:pointer;text-align:left;color:var(--text);transition:color .2s ease}
+    .faq-question:hover{color:var(--primary)}
+    .faq-icon{width:24px;height:24px;color:#06b6d4;transition:transform .3s ease}
+    .faq-item.active .faq-icon{transform:rotate(45deg)}
+    .faq-answer{max-height:0;overflow:hidden;transition:max-height .3s ease}
+    .faq-item.active .faq-answer{max-height:220px}
+    .faq-answer p{padding-bottom:24px;color:var(--text-muted);font-size:14px;line-height:1.6}
+
+    .sb-footer{background:#0f172a;color:#e2e8f0;padding:60px 48px 30px}
+    .sb-footer-inner{max-width:1200px;margin:0 auto}
+    .sb-footer-grid{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:60px;margin-bottom:50px}
+    .sb-footer-logo{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:700;margin-bottom:20px}
+    .sb-footer-address{color:#94a3b8;font-size:14px;line-height:1.6;margin-bottom:16px}
+    .sb-footer-link{color:#60a5fa;text-decoration:none;font-size:14px}
+    .sb-contact-item{margin-bottom:24px}
+    .sb-contact-number{font-size:24px;font-weight:600;color:#fbbf24;margin-bottom:4px}
+    .sb-contact-email{font-size:18px;font-weight:500;color:#e2e8f0}
+    .sb-contact-label{color:#94a3b8;font-size:13px;line-height:1.5}
+    .sb-footer-section h4{font-size:16px;font-weight:600;margin-bottom:16px}
+    .sb-app-buttons{display:flex;gap:12px;margin-bottom:30px}
+    .sb-app-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#1e293b;border:1px solid #334155;border-radius:8px;color:#e2e8f0;text-decoration:none;font-size:13px;transition:all .2s ease}
+    .sb-app-btn:hover{background:#334155}
+    .sb-social-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .sb-social-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#1e293b;border-radius:50%;color:#94a3b8;transition:all .2s ease}
+    .sb-social-icon:hover{background:#334155;color:#e2e8f0}
+    .sb-footer-bottom{border-top:1px solid #1e293b;padding:24px 0;margin-bottom:24px}
+    .sb-footer-links{display:flex;gap:32px}
+    .sb-footer-links a{color:#94a3b8;text-decoration:none;font-size:14px;transition:color .2s ease}
+    .sb-footer-links a:hover{color:#e2e8f0}
+    .sb-footer-copyright{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid #1e293b;color:#64748b;font-size:12px}
+
+    .modal-back{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(10,22,48,.48);z-index:200}
+    .modal-back.open{display:flex}
+    .modal{width:min(560px,100%);max-height:min(88vh,840px);overflow:auto;padding:24px;border-radius:24px;background:#fff;box-shadow:0 24px 70px rgba(10,22,48,.24)}
+    .modal-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:18px}
+    .modal h3{margin:0 0 6px;font-size:28px;line-height:1.1}
+    .modal p{margin:0;color:var(--text-muted);line-height:1.6}
+    .close{width:40px;height:40px;border:0;border-radius:50%;background:rgba(31,59,103,.08);font-size:22px;cursor:pointer}
+    .form{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .field{display:grid;gap:8px}
+    .full{grid-column:1/-1}
+    .field label{font-size:13px;font-weight:700;color:var(--text-muted)}
+    .field input,.field select{min-height:48px;padding:0 14px;border-radius:12px;border:1px solid #d9e4f3}
+    .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;flex-wrap:wrap}
+    .toast{position:fixed;right:20px;bottom:20px;padding:14px 18px;border-radius:14px;background:rgba(17,58,123,.96);color:#fff;box-shadow:0 18px 38px rgba(9,28,60,.24);opacity:0;pointer-events:none;transform:translateY(10px);transition:.2s;z-index:220}
+    .toast.show{opacity:1;transform:translateY(0)}
+
+    @media(max-width:1024px){
+      .hero-section,.product-card,.product-card.featured,.banner-section{grid-template-columns:1fr}
+      .product-grid{grid-template-columns:1fr}
+      .dash{grid-template-columns:1fr}
+      .sb-footer-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:768px){
+      .sb-header-top,.sb-header-bottom{padding:12px 20px}
+      .sb-nav-top,.sb-nav-bottom{display:none}
+      .hero-title{font-size:32px}
+      .hero-section{grid-template-columns:1fr}
+      .hero-visual{order:-1}
+      .product-metrics{grid-template-columns:1fr 1fr}
+      .sb-main{padding:20px 16px}
+      .sb-footer{padding:40px 20px 24px}
+      .sb-footer-grid{grid-template-columns:1fr}
+      .sb-footer-copyright{flex-direction:column;gap:8px;text-align:center}
+      .sb-footer-links{flex-wrap:wrap;gap:16px}
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/deposits-Ctg4lrSL.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/common-B9vdsGd4.js">
+</head>
+<body>
+  <header class="sb-header">
+    <div class="sb-header-top">
+      <div class="sb-header-inner">
+        <a href="index.html" class="sb-logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="3"/><circle cx="22" cy="10" r="4" fill="#2563eb"/></svg>
+          <span>Сомонибонк</span>
+        </a>
+        <nav class="sb-nav-top">
+          <a href="index.html" class="active">Частным лицам</a>
+          <a href="business.html">Бизнесу</a>
+          <a href="somonibank.html">Сомонибонк</a>
+        </nav>
+        <div class="sb-header-actions">
+          <a href="addresses.html" class="sb-location-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Адреса и банкоматы
+          </a>
+          <button class="sb-lang-btn">Рус ▾</button>
+        </div>
+      </div>
+    </div>
+    <div class="sb-header-bottom">
+      <div class="sb-header-inner">
+        <nav class="sb-nav-bottom">
+          <a href="somonibank-app.html">Приложение Somoni</a>
+          <a href="cards.html">Карты</a>
+          <a href="#">Салом</a>
+          <a href="auto.html">Покупка авто</a>
+          <a href="#">Somoni Shop</a>
+          <a href="transfers.html">Переводы</a>
+          <a href="deposits.html" class="active">Депозиты</a>
+          <a href="#">Авиабилеты</a>
+          <a href="#">Ещё ▾</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="sb-main">
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Депозиты и счета</h1>
+        <p class="hero-desc">Ваши сбережения в надёжных руках — выберите подходящий вклад с выгодной ставкой до 15% годовых</p>
+        <button class="hero-btn" onclick="document.querySelector('.product-grid').scrollIntoView({behavior:'smooth'})">Выбрать вклад</button>
+      </div>
+      <div class="hero-visual">
+        <svg width="100%" height="100%" viewBox="0 0 500 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:20px;box-shadow:0 18px 40px rgba(0,0,0,.12)">
+          <rect width="500" height="300" rx="20" fill="url(#hg1)"/>
+          <circle cx="400" cy="60" r="100" fill="rgba(37,99,235,0.08)"/>
+          <circle cx="80" cy="250" r="80" fill="rgba(16,185,129,0.06)"/>
+          <rect x="60" y="80" width="380" height="140" rx="16" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+          <circle cx="160" cy="140" r="40" fill="rgba(251,191,36,0.15)" stroke="#fbbf24" stroke-width="2"/>
+          <text x="160" y="135" text-anchor="middle" fill="#fbbf24" font-size="20" font-weight="bold">$</text>
+          <circle cx="250" cy="130" r="35" fill="rgba(37,99,235,0.12)" stroke="#60a5fa" stroke-width="2"/>
+          <text x="250" y="125" text-anchor="middle" fill="#60a5fa" font-size="18" font-weight="bold">$</text>
+          <circle cx="340" cy="145" r="30" fill="rgba(16,185,129,0.1)" stroke="#34d399" stroke-width="2"/>
+          <text x="340" y="140" text-anchor="middle" fill="#34d399" font-size="16" font-weight="bold">$</text>
+          <path d="M140 180 L180 160 L220 170 L260 140 L300 150 L340 120 L380 130" stroke="#60a5fa" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M140 180 L180 160 L220 170 L260 140 L300 150 L340 120 L380 130 L380 200 L140 200 Z" fill="url(#hg2)" opacity="0.3"/>
+          <text x="250" y="270" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="14" font-family="Segoe UI,sans-serif">РАСТИТЕ СВОИ СБЕРЕЖЕНИЯ</text>
+          <defs>
+            <linearGradient id="hg1" x1="0" y1="0" x2="500" y2="300"><stop stop-color="#0f172a"/><stop offset="1" stop-color="#1e3a5f"/></linearGradient>
+            <linearGradient id="hg2" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#60a5fa" stop-opacity="0.4"/><stop offset="1" stop-color="#60a5fa" stop-opacity="0"/></linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </section>
+
+    <section class="product-grid">
+      <article class="product-card">
+        <div class="product-img">
+          <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="min-height:180px">
+            <rect width="400" height="300" fill="url(#mg1)"/>
+            <circle cx="320" cy="50" r="80" fill="rgba(37,99,235,0.08)"/>
+            <rect x="80" y="60" width="240" height="180" rx="20" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+            <circle cx="200" cy="120" r="35" fill="rgba(251,191,36,0.2)" stroke="#fbbf24" stroke-width="2.5"/>
+            <path d="M190 120h20M200 110v20" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
+            <rect x="130" y="170" width="140" height="12" rx="6" fill="rgba(255,255,255,0.1)"/>
+            <rect x="150" y="190" width="100" height="10" rx="5" fill="rgba(255,255,255,0.07)"/>
+            <circle cx="100" cy="250" r="6" fill="rgba(251,191,36,0.3)"/>
+            <circle cx="300" cy="250" r="8" fill="rgba(37,99,235,0.15)"/>
+            <defs><linearGradient id="mg1" x1="0" y1="0" x2="400" y2="300"><stop stop-color="#0c2d48"/><stop offset="1" stop-color="#145374"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="product-body">
+          <h2 class="product-name">«Максад»</h2>
+          <div class="product-metrics">
+            <div><span class="metric-label">Ставка в сом.</span><span class="metric-value">до 11%</span></div>
+            <div><span class="metric-label">Ставка в дол.</span><span class="metric-value">до 5%</span></div>
+            <div><span class="metric-label">Срок</span><span class="metric-value">1 год</span></div>
+            <div><span class="metric-label">Сумма</span><span class="metric-value">от 1 сом.</span></div>
+          </div>
+          <div class="product-actions">
+            <button class="btn-primary" type="button" data-open-deposit="maksad">Открыть вклад</button>
+            <button class="btn-ghost" type="button" data-show-details="maksad">Подробнее</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card">
+        <div class="product-img">
+          <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="min-height:180px">
+            <rect width="400" height="300" fill="url(#mm1)"/>
+            <circle cx="60" cy="40" r="60" fill="rgba(16,185,129,0.08)"/>
+            <circle cx="200" cy="150" r="70" stroke="rgba(255,255,255,0.1)" stroke-width="10" fill="none"/>
+            <path d="M200 80a70 70 0 0 1 63 40l-35 17a33 33 0 0 0-28-19V80Z" fill="rgba(52,211,153,0.25)"/>
+            <path d="M266 122a70 70 0 1 1-114 5l33 18a33 33 0 1 0 54-3l27-20Z" fill="rgba(37,99,235,0.2)"/>
+            <circle cx="200" cy="150" r="35" fill="rgba(255,255,255,0.08)"/>
+            <text x="200" y="158" text-anchor="middle" fill="#34d399" font-size="28" font-weight="bold">15%</text>
+            <defs><linearGradient id="mm1" x1="0" y1="0" x2="400" y2="300"><stop stop-color="#064e3b"/><stop offset="1" stop-color="#065f46"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="product-body">
+          <h2 class="product-name">«Мухлатнок»</h2>
+          <div class="product-metrics">
+            <div><span class="metric-label">Ставка в сом.</span><span class="metric-value">до 15%</span></div>
+            <div><span class="metric-label">Ставка в дол.</span><span class="metric-value">до 7%</span></div>
+            <div><span class="metric-label">Срок</span><span class="metric-value">1 год</span></div>
+            <div><span class="metric-label">Сумма</span><span class="metric-value">от 1 сом.</span></div>
+          </div>
+          <div class="product-actions">
+            <button class="btn-primary" type="button" data-open-deposit="mukhlatnok">Открыть вклад</button>
+            <button class="btn-ghost" type="button" data-show-details="mukhlatnok">Подробнее</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="product-card featured">
+        <div class="product-body">
+          <h2 class="product-name">Расчётный счёт</h2>
+          <div class="product-metrics">
+            <div><span class="metric-label">Открытие</span><span class="metric-value">Бесплатно</span></div>
+            <div><span class="metric-label">Валюта</span><span class="metric-value">TJS, USD, RUB</span></div>
+            <div><span class="metric-label">Доступ</span><span class="metric-value">24/7</span></div>
+            <div><span class="metric-label">Тариф</span><span class="metric-value">0 сом.</span></div>
+          </div>
+          <div class="product-actions">
+            <button class="btn-primary" type="button" data-open-account="current">Открыть счёт</button>
+            <button class="btn-ghost" type="button" data-show-details="current">Подробнее</button>
+          </div>
+        </div>
+        <div class="product-img">
+          <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="min-height:180px">
+            <rect width="400" height="300" fill="url(#ma1)"/>
+            <rect x="60" y="50" width="280" height="200" rx="20" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+            <rect x="80" y="70" width="100" height="60" rx="10" fill="rgba(99,102,241,0.3)"/>
+            <rect x="90" y="85" width="30" height="6" rx="3" fill="rgba(255,255,255,0.4)"/>
+            <rect x="90" y="96" width="50" height="5" rx="2" fill="rgba(255,255,255,0.25)"/>
+            <rect x="90" y="106" width="40" height="5" rx="2" fill="rgba(255,255,255,0.2)"/>
+            <rect x="80" y="150" width="240" height="8" rx="4" fill="rgba(255,255,255,0.08)"/>
+            <rect x="80" y="168" width="200" height="8" rx="4" fill="rgba(255,255,255,0.06)"/>
+            <rect x="80" y="186" width="160" height="8" rx="4" fill="rgba(255,255,255,0.04)"/>
+            <rect x="200" y="70" width="120" height="60" rx="10" fill="rgba(16,185,129,0.2)"/>
+            <text x="260" y="100" text-anchor="middle" fill="#34d399" font-size="14" font-weight="bold">TJS</text>
+            <text x="260" y="118" text-anchor="middle" fill="#34d399" font-size="11">USD RUB</text>
+            <circle cx="340" cy="220" r="15" fill="rgba(251,191,36,0.2)" stroke="#fbbf24" stroke-width="1.5"/>
+            <defs><linearGradient id="ma1" x1="0" y1="0" x2="400" y2="300"><stop stop-color="#1e1b4b"/><stop offset="1" stop-color="#312e81"/></linearGradient></defs>
+          </svg>
+        </div>
+      </article>
+
+      <article class="product-card">
+        <div class="product-img">
+          <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg" style="min-height:180px">
+            <rect width="400" height="300" fill="url(#md1)"/>
+            <circle cx="320" cy="60" r="70" fill="rgba(37,99,235,0.06)"/>
+            <rect x="100" y="60" width="200" height="180" rx="16" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+            <circle cx="200" cy="130" r="50" stroke="rgba(255,255,255,0.15)" stroke-width="8" fill="none"/>
+            <line x1="200" y1="130" x2="200" y2="95" stroke="#60a5fa" stroke-width="3" stroke-linecap="round"/>
+            <line x1="200" y1="130" x2="230" y2="130" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="200" cy="130" r="4" fill="#60a5fa"/>
+            <circle cx="200" cy="80" r="3" fill="rgba(255,255,255,0.3)"/>
+            <circle cx="250" cy="130" r="3" fill="rgba(255,255,255,0.3)"/>
+            <circle cx="200" cy="180" r="3" fill="rgba(255,255,255,0.3)"/>
+            <circle cx="150" cy="130" r="3" fill="rgba(255,255,255,0.3)"/>
+            <rect x="130" y="200" width="140" height="10" rx="5" fill="rgba(255,255,255,0.08)"/>
+            <text x="200" y="265" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="11" font-family="Segoe UI,sans-serif">ДО 5 ЛЕТ</text>
+            <defs><linearGradient id="md1" x1="0" y1="0" x2="400" y2="300"><stop stop-color="#1a1a2e"/><stop offset="1" stop-color="#16213e"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="product-body">
+          <h2 class="product-name">«Дилхох вакт»</h2>
+          <div class="product-metrics">
+            <div><span class="metric-label">Ставка в сом.</span><span class="metric-value">до 13%</span></div>
+            <div><span class="metric-label">Ставка в дол.</span><span class="metric-value">до 3%</span></div>
+            <div><span class="metric-label">Срок</span><span class="metric-value">до 5 лет</span></div>
+            <div><span class="metric-label">Сумма</span><span class="metric-value">от 1 сом.</span></div>
+          </div>
+          <div class="product-actions">
+            <button class="btn-primary" type="button" data-open-deposit="dilkhokh">Открыть вклад</button>
+            <button class="btn-ghost" type="button" data-show-details="dilkhokh">Подробнее</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="dashboard-section">
+      <div class="dashboard-header">
+        <div>
+          <h2>Мои вклады и счета</h2>
+          <p>После входа здесь показываются активные счета и вклады</p>
+        </div>
+        <div class="dashboard-actions">
+          <button class="btn-ghost" type="button" data-auth-open>Войти</button>
+          <button class="btn-primary" type="button" data-refresh-dashboard>Обновить</button>
+        </div>
+      </div>
+      <div id="dashboardContent" class="msg info">Авторизуйтесь, чтобы увидеть свои счета и вклады.</div>
+    </section>
+
+    <section class="banner-section">
+      <div>
+        <h3>Ваш вклад в надёжных руках</h3>
+        <p>В 2016 году банк стал членом Фонда страхования вкладов Республики Таджикистан. Это означает дополнительную защиту средств клиентов и соответствие требованиям регулирующих органов.</p>
+        <button class="btn-primary" type="button" data-show-details="insurance">Подробнее</button>
+      </div>
+      <div class="banner-img">
+        <svg width="100%" height="100%" viewBox="0 0 400 220" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius:20px">
+          <rect width="400" height="220" rx="20" fill="url(#bi1)"/>
+          <circle cx="60" cy="40" r="30" fill="rgba(37,99,235,0.1)"/>
+          <circle cx="350" cy="180" r="40" fill="rgba(16,185,129,0.08)"/>
+          <path d="M200 30 L280 60 V120 C280 160 240 190 200 205 C160 190 120 160 120 120 V60 L200 30Z" fill="rgba(37,99,235,0.15)" stroke="#60a5fa" stroke-width="2"/>
+          <path d="M175 115 L190 130 L225 95" stroke="#34d399" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs><linearGradient id="bi1" x1="0" y1="0" x2="400" y2="220"><stop stop-color="#eff6ff"/><stop offset="1" stop-color="#dbeafe"/></linearGradient></defs>
+        </svg>
+      </div>
+    </section>
+
+    <section class="faq-section" id="faq">
+      <h2 class="section-title">Часто задаваемые вопросы</h2>
+      <div class="faq-list">
+        <div class="faq-item"><button class="faq-question"><span>Можно ли открыть вклад онлайн?</span><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button><div class="faq-answer"><p>Да. Нажмите «Открыть вклад», войдите в аккаунт, выберите счёт списания, сумму и срок.</p></div></div>
+        <div class="faq-item"><button class="faq-question"><span>Можно ли управлять операциями по вкладу онлайн?</span><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button><div class="faq-answer"><p>Да, после входа можно просматривать свои продукты и обновлять данные на этой странице.</p></div></div>
+        <div class="faq-item"><button class="faq-question"><span>В каких валютах можно открыть вклад?</span><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button><div class="faq-answer"><p>Поддержаны TJS, USD и RUB. Для вкладов лучше выбирать валюту, совпадающую со счётом списания.</p></div></div>
+        <div class="faq-item"><button class="faq-question"><span>Какова минимальная сумма для открытия вклада?</span><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button><div class="faq-answer"><p>Минимальный порог начинается от 1 сомони. В форме можно задать больше, если на счёте хватает средств.</p></div></div>
+        <div class="faq-item"><button class="faq-question"><span>Что будет, если снять деньги досрочно?</span><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button><div class="faq-answer"><p>Условия зависят от выбранного продукта. Кнопка «Подробнее» открывает правила каждого предложения.</p></div></div>
+        <div class="faq-item"><button class="faq-question"><span>Какой налог удерживается с дохода по вкладу?</span><svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button><div class="faq-answer"><p>Налоговый режим определяется действующими правилами банка и законодательства.</p></div></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="sb-footer">
+    <div class="sb-footer-inner">
+      <div class="sb-footer-grid">
+        <div class="sb-footer-col">
+          <div class="sb-footer-logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="#fbbf24" stroke-width="2" fill="none"/><path d="M16 6L24 10V22L16 26L8 22V10L16 6Z" fill="#fbbf24"/></svg>
+            <span>Сомонибонк</span>
+          </div>
+          <p class="sb-footer-address">ул. Рудаки, 48<br>Душанбе, Таджикистан</p>
+          <a href="addresses.html" class="sb-footer-link">Филиалы и точки обслуживания</a>
+        </div>
+        <div class="sb-footer-col">
+          <div class="sb-contact-item"><div class="sb-contact-number">900</div><div class="sb-contact-label">Для звонков с мобильных<br>в Таджикистане</div></div>
+          <div class="sb-contact-item"><div class="sb-contact-number">+992 44 600 1111</div><div class="sb-contact-label">Для звонков из любой<br>точки мира</div></div>
+          <div class="sb-contact-item"><div class="sb-contact-email">support@somoni.tj</div><div class="sb-contact-label">Для онлайн-обращений</div></div>
+        </div>
+        <div class="sb-footer-col">
+          <div class="sb-footer-section">
+            <h4>Приложения</h4>
+            <div class="sb-app-buttons">
+              <a href="#" class="sb-app-btn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>Google Play</a>
+              <a href="#" class="sb-app-btn"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.37 12.36,4.26 13,3.5Z"/></svg>App Store</a>
+            </div>
+          </div>
+          <div class="sb-footer-section">
+            <h4>Социальные сети</h4>
+            <div class="sb-social-grid">
+              <a href="#" class="sb-social-icon" aria-label="Telegram"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.04C20.54,3.74 21.21,4.22 20.94,5.32L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.66,16.27L10.65,18.23C10.43,18.45 10.25,18.65 9.78,18.65Z"/></svg></a>
+              <a href="#" class="sb-social-icon" aria-label="Facebook"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12,2C6.48,2 2,6.48 2,12C2,16.84 5.44,20.87 10,21.8V15H8V12H10V9.5C10,7.57 11.57,6 13.5,6H16V9H14C13.45,9 13,9.45 13,10V12H16L15.5,15H13V21.8C18.56,20.87 22,16.84 22,12C22,6.48 17.52,2 12,2Z"/></svg></a>
+              <a href="#" class="sb-social-icon" aria-label="Instagram"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg></a>
+              <a href="#" class="sb-social-icon" aria-label="YouTube"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/></svg></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sb-footer-bottom">
+        <div class="sb-footer-links">
+          <a href="somonibank.html">О нас</a>
+          <a href="addresses.html">Адреса</a>
+          <a href="documents.html">Документы и тарифы</a>
+          <a href="#">Вакансии</a>
+          <a href="contact.html">Связь с нами</a>
+        </div>
+      </div>
+      <div class="sb-footer-copyright">
+        <p>&copy; 2024 ПАО Сомонибонк</p>
+        <p>Лицензия НБТ №0000114 от 3 января 2020 года</p>
+        <p>ПАО Сомонибонк является участником Фонда страхования вкладов</p>
+      </div>
+    </div>
+  </footer>
+
+  <div class="modal-back" id="productModal">
+    <div class="modal">
+      <div class="modal-top">
+        <div><h3 id="modalTitle">Подробнее</h3><p id="modalSub">Описание продукта.</p></div>
+        <button class="close" type="button" data-close-modal>&times;</button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    document.querySelectorAll(".faq-item").forEach(item => {
+      item.querySelector(".faq-question")?.addEventListener("click", () => item.classList.toggle("active"));
+    });
+  </script>
+</body>
+</html>

@@ -3,212 +3,352 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Денежные переводы — Сомонибонк</title>
+  <title>Переводы — Сомонибанк</title>
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    :root{--primary:#2563eb;--primary-dark:#1d4ed8;--secondary:#10b981;--text:#1e293b;--text-muted:#64748b;--bg:#f1f5f9;--card-bg:#ffffff;--border:#e2e8f0;--shadow:0 4px 6px -1px rgba(0,0,0,.1);--shadow-lg:0 20px 25px -5px rgba(0,0,0,.1)}
-    body{font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
-    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-    .sb-header{background:#fff;position:sticky;top:0;z-index:100}
-    .sb-header-top{border-bottom:1px solid var(--border);padding:12px 48px}
-    .sb-header-bottom{border-bottom:1px solid var(--border);padding:0 48px}
-    .sb-header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-    .sb-logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;color:var(--text);text-decoration:none}
-    .sb-nav-top{display:flex;gap:40px}
-    .sb-nav-top a{color:#4b5563;text-decoration:none;font-weight:500;font-size:15px;padding:8px 0;position:relative;transition:color .2s ease}
-    .sb-nav-top a.active{color:var(--text)}
-    .sb-nav-top a.active::after{content:'';position:absolute;bottom:-12px;left:0;right:0;height:3px;background:var(--secondary);border-radius:2px}
-    .sb-nav-bottom{display:flex;gap:32px;padding:12px 0}
-    .sb-nav-bottom a{color:#4b5563;text-decoration:none;font-weight:500;font-size:14px;transition:color .2s ease}
-    .sb-nav-bottom a.active{color:var(--text);font-weight:600}
-    .sb-header-actions{display:flex;align-items:center;gap:24px}
-    .sb-location-link{display:flex;align-items:center;gap:8px;color:#4b5563;text-decoration:none;font-size:14px}
-    .sb-lang-btn{background:transparent;border:none;font-size:14px;color:#4b5563;cursor:pointer}
-    .sb-main{max-width:1200px;margin:0 auto;padding:40px 24px}
-    .hero-section{background:linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%);border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;margin-bottom:48px;animation:fadeInUp .8s ease;min-height:400px}
-    .hero-content{padding:60px 48px;display:flex;flex-direction:column;justify-content:center}
-    .hero-title{font-size:42px;font-weight:700;line-height:1.2;margin-bottom:20px}
-    .hero-desc{font-size:16px;color:var(--text-muted);margin-bottom:32px;max-width:400px}
-    .hero-btn{display:inline-flex;align-items:center;gap:8px;padding:16px 32px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s ease;box-shadow:0 10px 20px rgba(37,99,235,.3);width:fit-content}
-    .hero-btn:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(37,99,235,.4)}
-    .hero-visual{position:relative;display:flex;align-items:center;justify-content:center;padding:40px;overflow:hidden}
-    .hero-visual img{width:100%;height:100%;object-fit:cover;border-radius:20px;box-shadow:0 18px 40px rgba(0,0,0,.12)}
-    .section-title{font-size:32px;font-weight:700;margin-bottom:40px;text-align:center;font-family:Georgia,serif;color:#1e3a5f}
-    .transfers-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-bottom:64px}
-    .transfer-card{background:var(--card-bg);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:200px 1fr;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .3s ease;animation:fadeInUp .6s ease backwards}
-    .transfer-card:nth-child(1){animation-delay:.1s}
-    .transfer-card:nth-child(2){animation-delay:.2s}
-    .transfer-card:nth-child(3){animation-delay:.3s}
-    .transfer-card:nth-child(4){animation-delay:.4s}
-    .transfer-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
-    .transfer-card-img{overflow:hidden}
-    .transfer-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
-    .transfer-card:hover .transfer-card-img img{transform:scale(1.05)}
-    .transfer-card-body{padding:28px;display:flex;flex-direction:column;justify-content:center}
-    .transfer-card-title{font-size:18px;font-weight:700;margin-bottom:8px}
-    .transfer-card-desc{font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:16px}
-    .transfer-card-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .3s ease;width:fit-content}
-    .transfer-card-btn:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(37,99,235,.3)}
-    .transfer-badge{display:inline-block;padding:4px 12px;background:#ecfdf5;color:#065f46;border-radius:999px;font-size:12px;font-weight:600;margin-bottom:12px}
-    .info-section{margin-bottom:64px}
-    .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-    .info-card{background:var(--card-bg);border-radius:20px;padding:32px 24px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .3s ease}
-    .info-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
-    .info-icon{width:64px;height:64px;margin:0 auto 20px;border-radius:16px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);display:flex;align-items:center;justify-content:center}
-    .info-icon svg{width:28px;height:28px;color:var(--primary)}
-    .info-card h4{font-size:16px;font-weight:600;margin-bottom:8px}
-    .info-card p{font-size:13px;color:var(--text-muted);line-height:1.5}
-    .sb-footer{background:#0f172a;color:#e2e8f0;padding:60px 48px 30px}
-    .sb-footer-inner{max-width:1200px;margin:0 auto}
-    .sb-footer-grid{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:60px;margin-bottom:50px}
-    .sb-footer-logo{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:700;margin-bottom:20px}
-    .sb-footer-address{color:#94a3b8;font-size:14px;line-height:1.6;margin-bottom:16px}
-    .sb-footer-link{color:#60a5fa;text-decoration:none;font-size:14px}
-    .sb-contact-item{margin-bottom:24px}
-    .sb-contact-number{font-size:24px;font-weight:600;color:#fbbf24;margin-bottom:4px}
-    .sb-contact-email{font-size:18px;font-weight:500;color:#e2e8f0}
-    .sb-contact-label{color:#94a3b8;font-size:13px;line-height:1.5}
-    .sb-footer-section h4{font-size:16px;font-weight:600;margin-bottom:16px}
-    .sb-app-buttons{display:flex;gap:12px;margin-bottom:30px}
-    .sb-app-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#1e293b;border:1px solid #334155;border-radius:8px;color:#e2e8f0;text-decoration:none;font-size:13px;transition:all .2s ease}
-    .sb-app-btn:hover{background:#334155}
-    .sb-social-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-    .sb-social-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#1e293b;border-radius:50%;color:#94a3b8;transition:all .2s ease}
-    .sb-social-icon:hover{background:#334155;color:#e2e8f0}
-    .sb-footer-bottom{border-top:1px solid #1e293b;padding:24px 0;margin-bottom:24px}
-    .sb-footer-links{display:flex;gap:32px}
-    .sb-footer-links a{color:#94a3b8;text-decoration:none;font-size:14px;transition:color .2s ease}
-    .sb-footer-links a:hover{color:#e2e8f0}
-    .sb-footer-copyright{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid #1e293b;color:#64748b;font-size:12px}
-    @media(max-width:1024px){.hero-section{grid-template-columns:1fr}.transfers-grid{grid-template-columns:1fr}.transfer-card{grid-template-columns:1fr}.info-grid{grid-template-columns:repeat(2,1fr)}.sb-footer-grid{grid-template-columns:1fr 1fr}}
-    @media(max-width:768px){.sb-header-top,.sb-header-bottom{padding:12px 20px}.sb-nav-top,.sb-nav-bottom{display:none}.hero-title{font-size:32px}.hero-visual{order:-1}.info-grid,.sb-footer-grid{grid-template-columns:1fr}.sb-main{padding:20px 16px}}
+    :root{
+      --bg-gradient: linear-gradient(135deg, #f0f5ff 0%, #ffffff 50%, #e6f0ff 100%);
+      --mesh-bg: radial-gradient(at 40% 20%, hsla(210,100%,85%,0.5) 0px, transparent 50%),
+                 radial-gradient(at 80% 0%, hsla(220,100%,80%,0.4) 0px, transparent 50%),
+                 radial-gradient(at 0% 50%, hsla(200,100%,90%,0.6) 0px, transparent 50%);
+      --glass: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.9);
+      --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --brand: #2563eb;
+      --brand-hover: #1d4ed8;
+      --accent: #38bdf8;
+      --line: #e2e8f0;
+    }
+    *{box-sizing:border-box; margin:0; padding:0;}
+    html,body{height:100%;}
+    body{
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #f8fafc;
+      background-image: var(--mesh-bg);
+      background-attachment: fixed;
+      color: var(--text-main);
+      padding: 12px;
+      overflow-x: hidden;
+      animation: ambientBg 15s ease-in-out infinite alternate;
+    }
+    @keyframes ambientBg { 0% { background-position: 0% 0%; } 100% { background-position: 100% 100%; } }
+    button,input{font:inherit;}
+    a{text-decoration:none; color:inherit;}
+    
+    .app-shell{
+      display:grid; grid-template-columns: 240px minmax(0,1fr);
+      min-height: calc(100vh - 24px); border-radius: 32px; overflow: hidden;
+      background: var(--glass); backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border); box-shadow: 0 24px 64px rgba(15, 23, 42, 0.1);
+    }
+    
+    .sidebar{ display:flex; flex-direction:column; gap: 20px; padding: 24px 16px; background: rgba(255, 255, 255, 0.6); border-right: 1px solid var(--glass-border); }
+    .brand{ display:flex; align-items:center; gap: 16px; padding: 0 12px 12px; }
+    .brand-logo{
+      width: 44px; height: 44px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--brand)); color: white; display: grid; place-items: center; font-weight: 800; font-size: 24px; box-shadow: 0 12px 24px rgba(37, 99, 235, 0.3); position: relative;
+    }
+    .brand-logo::after { content: ''; position: absolute; inset: 0; border-radius: 14px; box-shadow: inset 0 2px 4px rgba(255,255,255,0.4); }
+    .brand-title{ font-size: 18px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(90deg, #1e3a8a, #2563eb); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    
+    .side-nav{ display:grid; gap: 8px; }
+    .nav-link{
+      display:flex; align-items:center; gap: 14px; height: 48px; padding: 0 16px; border-radius: 14px;
+      color: var(--text-muted); font-weight: 600; font-size: 14px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden;
+    }
+    .nav-link svg{ width: 20px; height: 20px; stroke-width: 2.2; z-index: 1; }
+    .nav-link span { z-index: 1; }
+    .nav-link:hover{ color: var(--brand); background: rgba(255, 255, 255, 0.8); transform: translateX(4px); }
+    .nav-link.active{ color: white; background: var(--brand); box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25); }
+    
+    .support{ margin-top:auto; padding: 16px; border-radius: 20px; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); text-align: center; transition: transform 0.3s; }
+    .support:hover { transform: translateY(-4px); }
+    .support strong{ display:block; font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+    .support span{ font-size: 11px; color: var(--text-muted); }
+    
+    .main{ padding: 24px 32px 32px; overflow-y: auto; perspective: 1000px; }
+    .frame{ animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(30px) rotateX(2deg); } to { opacity: 1; transform: translateY(0) rotateX(0); } }
+    
+    .topbar{ display:flex; align-items:center; gap: 24px; margin-bottom: 32px; }
+    .search{
+      display:flex; align-items:center; gap: 12px; flex: 1; height: 52px; padding: 0 20px;
+      background: rgba(255, 255, 255, 0.8); border: 1px solid var(--glass-border); border-radius: 999px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: all 0.3s;
+    }
+    .search:focus-within { background: white; border-color: #cbd5e1; box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1); transform: translateY(-1px); }
+    .search svg { width: 22px; height: 22px; color: #94a3b8; }
+    .search input{ width:100%; border:none; outline:none; background:transparent; font-size: 15px; color: var(--text-main); font-weight: 500; }
+    
+    .top-actions{ display:flex; align-items:center; gap: 16px; margin-left:auto; }
+    .icon-btn{
+      position:relative; width: 48px; height: 48px; border-radius: 50%; border:none; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow); cursor:pointer; display:grid; place-items:center; transition: all 0.3s; color: var(--text-muted);
+    }
+    .icon-btn svg { width: 22px; height: 22px; }
+    .icon-btn:hover{ transform: translateY(-3px) scale(1.05); color: var(--brand); box-shadow: 0 12px 24px rgba(37, 99, 235, 0.15); }
+    
+    .badge{ position:absolute; top: 8px; right: 8px; width: 10px; height: 10px; border-radius: 50%; background: #ef4444; border: 2px solid white; animation: pulse 2s infinite; font-size:0; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+    
+    .profile{
+      display:flex; align-items:center; gap: 14px; padding: 6px 16px 6px 6px; background: rgba(255, 255, 255, 0.8); border: 1px solid var(--glass-border);
+      border-radius: 30px; box-shadow: var(--glass-shadow); cursor:pointer; transition: all 0.3s;
+    }
+    .profile:hover { background: white; transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,0.06); }
+    .avatar{ width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 700; font-size: 16px; display:grid; place-items:center; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    .profile strong{ font-size: 14px; font-weight: 700; color: var(--text-main); }
+    .chevron{ width: 18px; height: 18px; color: var(--text-muted); }
+    
+    /* Layout specific to Transfers Page */
+    .th-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; animation: slideRight 0.6s ease-out; }
+    .page-title{ margin: 0; font-size: 34px; font-weight: 900; letter-spacing: -1px; color: var(--text-main); background: linear-gradient(90deg, #0f172a, #334155); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+    .subtitle { margin-top: 8px; font-size: 16px; color: var(--text-muted); font-weight: 500; }
+    
+    @keyframes slideRight { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+    
+    .limits-btn {
+      display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 20px; border:none; border-radius: 22px;
+      background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); box-shadow: 0 8px 16px rgba(0,0,0,0.05); color: #3b82f6; font-weight: 600; cursor:pointer;
+      transition: all 0.3s; font-size: 14px; border: 1px solid white;
+    }
+    .limits-btn:hover { background: white; box-shadow: 0 12px 24px rgba(37,99,235,0.1); transform: translateY(-2px); }
+    .limits-btn svg { width: 18px; height: 18px; }
+    
+    .t-layout { display: grid; grid-template-columns: 1fr 360px; gap: 32px; align-items: start; }
+    
+    .t-options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+    .t-option {
+      background: rgba(255, 255, 255, 0.7); border-radius: 20px; padding: 20px 16px; border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.03); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column; align-items: flex-start; text-align: left; position: relative; overflow: hidden;
+    }
+    .t-option:hover { transform: translateY(-4px); background: white; box-shadow: 0 16px 40px rgba(37,99,235,0.08); }
+    .t-option.active {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+      border-color: #7dd3fc; box-shadow: 0 12px 32px rgba(2, 132, 199, 0.15);
+    }
+    .t-icon { width: 56px; height: 56px; border-radius: 16px; background: linear-gradient(135deg, #f8fafc, #e2e8f0); box-shadow: inset 0 2px 4px white, 0 8px 16px rgba(0,0,0,0.05); display:grid; place-items:center; margin-bottom: 20px; }
+    .t-option.active .t-icon { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 8px 16px rgba(29, 78, 216, 0.3); }
+    .t-icon svg { width: 28px; height: 28px; filter: drop-shadow(0 4px 6px rgba(59,130,246,0.2)); }
+    .t-option.active .t-icon svg { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+    .t-option strong { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+    .t-option.active strong { color: #0284c7; }
+    .t-option span { font-size: 12px; color: #64748b; font-weight: 500; line-height: 1.4; }
+    
+    .section-title { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 16px; }
+    
+    .card { background: rgba(255,255,255,0.8); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; backdrop-filter: blur(12px); box-shadow: 0 12px 32px rgba(0,0,0,0.04); }
+    
+    .t-form { display: flex; flex-direction: column; gap: 16px; }
+    .input-group { background: white; border-radius: 14px; border: 1px solid #e2e8f0; display:flex; align-items:center; padding: 0 16px; height: 56px; transition: all 0.2s; position: relative; }
+    .input-group:focus-within { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    .input-group label { position: absolute; left: 16px; font-size: 11px; color: #64748b; font-weight: 600; top: 8px; }
+    .input-group input, .input-group .val { width: 100%; border: none; outline: none; background: transparent; font-size: 15px; font-weight: 600; color: #0f172a; padding-top: 14px; }
+    .input-group .arrow { color: #94a3b8; margin-left: auto; width: 18px; height: 18px; }
+    
+    .summary-box { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; align-items: flex-end; }
+    .summary-row { display: flex; justify-content: space-between; width: 220px; font-size: 14px; font-weight: 500; color: #475569; }
+    .summary-row.total { font-weight: 800; font-size: 16px; color: #0f172a; margin-top: 4px; }
+    
+    .btn-primary {
+      height: 56px; background: linear-gradient(135deg, #3b82f6, #2563eb); border:none; border-radius: 14px;
+      color: white; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 12px 24px rgba(37,99,235,0.3); transition: all 0.3s; width: 100%;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(37,99,235,0.4); }
+    
+    .widget { background: rgba(255,255,255,0.7); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.03); margin-bottom: 24px; animation: fadeSlideUp 0.6s backwards; }
+    .w-title { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 20px; }
+    .w-link { font-size: 13px; color: #64748b; font-weight: 600; cursor: pointer; transition: color 0.2s; }
+    .w-link:hover { color: #3b82f6; }
+    
+    .w-list { display: flex; flex-direction: column; gap: 16px; }
+    .w-item { display: flex; align-items: center; gap: 14px; transition: transform 0.2s; cursor: pointer; }
+    .w-item:hover { transform: translateX(4px); }
+    .w-avatar { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #e2e8f0; font-weight: 700; font-size: 16px; position:relative; overflow:hidden;}
+    .w-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .w-avatar svg { width: 22px; height: 22px; }
+    .w-info { flex: 1; min-width: 0; }
+    .w-info strong { display: block; font-size: 14px; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .w-info span { font-size: 12px; color: #64748b; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display:block; margin-top:2px; }
+    .w-val { font-size: 13px; font-weight: 600; color: #475569; }
+    
+    .progress-bar { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin: 12px 0; }
+    .progress-fill { height: 100%; background: #3b82f6; border-radius: 4px; width: 45%; }
+    .lim-row { display: flex; justify-content: space-between; font-size: 11px; color: #64748b; font-weight: 600; }
+    .fee-text { font-size: 13px; color: #0f172a; font-weight: 600; margin-top: 24px; }
+    .fee-text span { color: #3b82f6; }
+    
+    .toast-status{ position:fixed; right: 24px; bottom: 24px; padding: 16px 24px; border-radius: 100px; background: #0f172a; color: white; font-weight: 600; box-shadow: 0 20px 40px rgba(0,0,0,0.3); opacity:0; transform: translateY(20px); transition: 0.4s cubic-bezier(0.2,0.8,0.2,1); pointer-events:none; z-index: 1000; }
+    .toast-status.show{ opacity:1; transform: translateY(0); }
+    
+    @media (max-width:1180px){ .t-layout { grid-template-columns: 1fr; } .t-options-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width:860px){
+      .app-shell{ border-radius:0; min-height:100vh;} .sidebar{display:none;} .main{padding: 20px;}
+      .topbar{flex-wrap:wrap;} .search{width: 100%; order:3; margin-top: 16px;} .t-options-grid{ grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
-  <header class="sb-header">
-    <div class="sb-header-top"><div class="sb-header-inner">
-      <a href="index.html" class="sb-logo"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="3"/><circle cx="22" cy="10" r="4" fill="#2563eb"/></svg><span>Сомонибонк</span></a>
-      <nav class="sb-nav-top"><a href="index.html" class="active">Частным лицам</a><a href="business.html">Бизнесу</a><a href="somonibank.html">Сомонибонк</a></nav>
-      <div class="sb-header-actions"><a href="addresses.html" class="sb-location-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Адреса и банкоматы</a><button class="sb-lang-btn">Рус ▾</button></div>
-    </div></div>
-    <div class="sb-header-bottom"><div class="sb-header-inner">
-      <nav class="sb-nav-bottom"><a href="somonibank-app.html">Приложение Somoni</a><a href="cards.html">Карты</a><a href="#">Салом</a><a href="auto.html">Покупка авто</a><a href="#">Somoni Shop</a><a href="transfers.html" class="active">Переводы</a><a href="#">Депозиты</a><a href="#">Авиабилеты</a><a href="#">Ещё ▾</a></nav>
-    </div></div>
-  </header>
-
-  <main class="sb-main">
-    <section class="hero-section">
-      <div class="hero-content">
-        <h1 class="hero-title">Переводы по всему миру</h1>
-        <p class="hero-desc">Отправляйте деньги в 190+ стран мгновенно с минимальной комиссией через приложение Сомонибонк</p>
-        <button class="hero-btn">Начать перевод</button>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">C</div>
+        <div class="brand-title">Сомонибанк</div>
       </div>
-      <div class="hero-visual">
-        <img alt="Международные переводы" src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80" loading="lazy"/>
+      <nav class="side-nav">
+        <a class="nav-link" href="somonibank-app.html"><svg viewBox="0 0 24 24" fill="none"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1v-8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span>Главная</span></a>
+        <a class="nav-link" href="bank.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 10 12 5l9 5M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Банк</span></a>
+        <a class="nav-link" href="payments.html"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/></svg><span>Платежи</span></a>
+        <a class="nav-link active" href="transfers.html"><svg viewBox="0 0 24 24" fill="none"><path d="M5 7h13M14 3l4 4-4 4M19 17H6m5-4-4 4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Переводы</span></a>
+        <a class="nav-link" href="deposits.html"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M4 10h16" stroke="currentColor" stroke-width="2"/></svg><span>Счета</span></a>
+        <a class="nav-link" href="cards.html"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 14h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Карты</span></a>
+        <a class="nav-link" href="somonibank-app.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M6 9h9a3 3 0 0 0 0-6H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Кредиты</span></a>
+        <a class="nav-link" href="deposits.html"><svg viewBox="0 0 24 24" fill="none"><path d="M5 20h14M7 20V7l5-3 5 3v13" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span>Депозиты</span></a>
+        <a class="nav-link" href="somonibank-app.html"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>История</span></a>
+      </nav>
+      <div class="support">
+        <strong>Помощь и поддержка</strong>
+        <span>24/7 • Онлайн чат</span>
       </div>
-    </section>
+    </aside>
 
-    <section class="transfers-grid">
-      <article class="transfer-card">
-        <div class="transfer-card-img"><img alt="Переводы в Европу" src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=600&q=80" loading="lazy"/></div>
-        <div class="transfer-card-body">
-          <span class="transfer-badge">0% комиссия</span>
-          <h3 class="transfer-card-title">Переводы в Европу</h3>
-          <p class="transfer-card-desc">35 стран Европы — переводите на карты и счета без комиссии через SEPA и Swift</p>
-          <button class="transfer-card-btn">Узнать больше →</button>
-        </div>
-      </article>
-      <article class="transfer-card">
-        <div class="transfer-card-img"><img alt="Переводы в Китай" src="https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?auto=format&fit=crop&w=600&q=80" loading="lazy"/></div>
-        <div class="transfer-card-body">
-          <span class="transfer-badge">0% комиссия</span>
-          <h3 class="transfer-card-title">Переводы в Китай</h3>
-          <p class="transfer-card-desc">Alipay и WeChat Pay — отправляйте деньги без комиссии напрямую в приложении</p>
-          <button class="transfer-card-btn">Узнать больше →</button>
-        </div>
-      </article>
-      <article class="transfer-card">
-        <div class="transfer-card-img"><img alt="Переводы в США" src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=600&q=80" loading="lazy"/></div>
-        <div class="transfer-card-body">
-          <h3 class="transfer-card-title">Переводы в США</h3>
-          <p class="transfer-card-desc">ACH и Wire Transfer — быстрые переводы на банковские счета в США</p>
-          <button class="transfer-card-btn">Узнать больше →</button>
-        </div>
-      </article>
-      <article class="transfer-card">
-        <div class="transfer-card-img"><img alt="Переводы по Таджикистану" src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80" loading="lazy"/></div>
-        <div class="transfer-card-body">
-          <h3 class="transfer-card-title">Переводы по стране</h3>
-          <p class="transfer-card-desc">Мгновенные переводы по Таджикистану на карты Visa, Mastercard и национальные банки</p>
-          <button class="transfer-card-btn">Узнать больше →</button>
-        </div>
-      </article>
-    </section>
+    <main class="main">
+      <div class="frame">
+        <header class="topbar">
+          <label class="search">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <input id="searchInput" type="search" placeholder="Поиск...">
+          </label>
+          <div class="top-actions">
+            <button class="icon-btn" type="button" aria-label="Поиск"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+            <button class="icon-btn" type="button" aria-label="Уведомления"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3a5 5 0 0 0-5 5v2l-2 3h14l-2-3V8a5 5 0 0 0-5-5Z" stroke="currentColor" stroke-width="2"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="badge">9</span></button>
+            <div class="profile">
+              <div class="avatar"><span>И</span></div>
+              <strong>Иван Иванов</strong>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </header>
 
-    <section class="info-section">
-      <h2 class="section-title">Международные переводы</h2>
-      <div class="info-grid">
-        <div class="info-card">
-          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
-          <h4>190+ стран</h4>
-          <p>Visa Direct и Mastercard MoneySend — переводы по всему миру</p>
-        </div>
-        <div class="info-card">
-          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-          <h4>Мгновенно</h4>
-          <p>Деньги поступают на счёт получателя в течение нескольких минут</p>
-        </div>
-        <div class="info-card">
-          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <h4>Безопасно</h4>
-          <p>Все переводы защищены и соответствуют международным стандартам</p>
-        </div>
+        <section class="content">
+          <div class="th-header">
+            <div>
+              <h1 class="page-title">Переводы</h1>
+              <p class="subtitle">Переводите деньги быстро и безопасно</p>
+            </div>
+            <button class="limits-btn">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 8h16M4 16h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              Лимиты &nbsp;|&nbsp; Итого &nbsp; <span style="font-weight: 400; opacity: 0.8">50800</span>
+            </button>
+          </div>
+
+          <div class="t-layout">
+            <div class="t-left">
+              <div class="t-options-grid" id="optionsGrid">
+                <!-- Rendered remotely -->
+              </div>
+
+              <h2 class="section-title" id="formTitle">На карту</h2>
+              <form class="t-form card" id="transferForm">
+                <div class="input-group">
+                  <label>Откуда</label>
+                  <div class="val" style="color: #64748b;">Текущий • <span style="color: #0f172a;">5 230 с.</span></div>
+                  <svg class="arrow" viewBox="0 0 24 24" fill="none"><path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </div>
+                <div class="input-group">
+                  <label>Номер карты</label>
+                  <input type="text" value="1234 *** *** 2324">
+                </div>
+                <div class="input-group">
+                  <label>Имя получателя</label>
+                  <input type="text" value="Иван Иванов">
+                </div>
+                <div class="input-group" style="margin-top: 16px;">
+                  <input type="text" placeholder="Комментарий (необязательно)">
+                </div>
+
+                <div class="summary-box">
+                  <div class="summary-row"><span>Сумма:</span> <span>500 с.</span></div>
+                  <div class="summary-row"><span>Комиссия:</span> <span>5 с.</span></div>
+                  <div class="summary-row total"><span>Итого:</span> <span>505 с.</span></div>
+                </div>
+
+                <button type="submit" class="btn-primary">Перевести 505 с.</button>
+              </form>
+            </div>
+
+            <div class="t-right">
+              <div class="widget" style="animation-delay: 0.1s;">
+                <div class="w-title">Избранные получатели <span class="w-link">Смотреть все ></span></div>
+                <div class="w-list">
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #3b82f6; color: white;">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div class="w-info"><strong>Мама</strong><span>Бахромова</span></div>
+                    <div class="w-val">******* 1468</div>
+                  </div>
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #10b981;">
+                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div class="w-info"><strong>Брат</strong><span>Едгоров</span></div>
+                    <div class="w-val">******* 0321</div>
+                  </div>
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #ef4444;">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                    </div>
+                    <div class="w-info"><strong>Рабочая карта</strong><span>ЗАО МДО</span></div>
+                    <div class="w-val">**** 4587</div>
+                  </div>
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #14b8a6;">
+                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:white;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                    </div>
+                    <div class="w-info"><strong>Мама</strong><span>По номеру телефона</span></div>
+                    <div class="w-val">** 2095</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="widget" style="animation-delay: 0.2s;">
+                <div class="w-title">Последние переводы</div>
+                <div class="w-list">
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #fcd34d; color: #78350f;">М</div>
+                    <div class="w-info"><strong>Мария П.</strong><span>На карту **** 4213</span></div>
+                  </div>
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #6ee7b7; color: #064e3b;">А</div>
+                    <div class="w-info"><strong>Артём</strong><span>Перевод 500 USD</span></div>
+                  </div>
+                  <div class="w-item">
+                    <div class="w-avatar" style="background: #7dd3fc; color: #0c4a6e;">М</div>
+                    <div class="w-info"><strong>Мама</strong><span>По номеру 300 с.</span></div>
+                  </div>
+                </div>
+                <div style="text-align: right; margin-top: 16px;"><span class="w-link">История все ></span></div>
+              </div>
+
+              <div class="widget" style="margin-bottom: 0; animation-delay: 0.3s;">
+                <div class="w-title" style="margin-bottom: 12px;">Лимиты и комиссия</div>
+                <div class="w-info"><strong>Ваши лимиты</strong> <span style="float:right; color:#0f172a; font-size:13px; font-weight:700; margin-top: -18px;">47 230 с.</span></div>
+                <div class="progress-bar"><div class="progress-fill"></div></div>
+                <div class="lim-row"><span>Последний ... 78 560 с.</span><span>98 990 с.</span></div>
+                
+                <div class="fee-text">Комиссия <br><span>1%</span> <span style="color: #64748b; font-weight:500;">— на карту других банков</span></div>
+                <div style="text-align: right; margin-top: 16px;"><button style="background:#f1f5f9; color:#334155; border:none; padding:8px 18px; border-radius:12px; font-weight:600; cursor:pointer;">История ></button></div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
+    </main>
+  </div>
 
-    <section class="info-section">
-      <h2 class="section-title">Western Union и Ватан</h2>
-      <div class="info-grid">
-        <div class="info-card">
-          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-          <h4>Western Union</h4>
-          <p>Из любой точки мира — деньги на счёту мгновенно</p>
-        </div>
-        <div class="info-card">
-          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
-          <h4>Ватан</h4>
-          <p>Быстрая отправка денег по стране без открытия счёта</p>
-        </div>
-        <div class="info-card">
-          <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-          <h4>SWIFT</h4>
-          <p>Международные переводы в любой уголок мира</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="sb-footer">
-    <div class="sb-footer-inner">
-      <div class="sb-footer-grid">
-        <div class="sb-footer-col">
-          <div class="sb-footer-logo"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="#fbbf24" stroke-width="2" fill="none"/><path d="M16 6L24 10V22L16 26L8 22V10L16 6Z" fill="#fbbf24"/></svg><span>Сомонибонк</span></div>
-          <p class="sb-footer-address">ул. Рудаки, 48<br>Душанбе, Таджикистан</p>
-          <a href="addresses.html" class="sb-footer-link">Филиалы и точки обслуживания</a>
-        </div>
-        <div class="sb-footer-col">
-          <div class="sb-contact-item"><div class="sb-contact-number">900</div><div class="sb-contact-label">Для звонков с мобильных в Таджикистане</div></div>
-          <div class="sb-contact-item"><div class="sb-contact-number">+992 44 600 1111</div><div class="sb-contact-label">Для звонков из любой точки мира</div></div>
-          <div class="sb-contact-item"><div class="sb-contact-email">support@somoni.tj</div><div class="sb-contact-label">Для онлайн-обращений</div></div>
-        </div>
-        <div class="sb-footer-col">
-          <div class="sb-footer-section"><h4>Приложения</h4><div class="sb-app-buttons"><a href="#" class="sb-app-btn">Google Play</a><a href="#" class="sb-app-btn">App Store</a></div></div>
-          <div class="sb-footer-section"><h4>Социальные сети</h4><div class="sb-social-grid"><a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.04C20.54,3.74 21.21,4.22 20.94,5.32L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.66,16.27L10.65,18.23C10.43,18.45 10.25,18.65 9.78,18.65Z"/></svg></a><a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12,2C6.48,2 2,6.48 2,12C2,16.84 5.44,20.87 10,21.8V15H8V12H10V9.5C10,7.57 11.57,6 13.5,6H16V9H14C13.45,9 13,9.45 13,10V12H16L15.5,15H13V21.8C18.56,20.87 22,16.84 22,12C22,6.48 17.52,2 12,2Z"/></svg></a><a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg></a><a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/></svg></a></div></div>
-        </div>
-      </div>
-      <div class="sb-footer-bottom"><div class="sb-footer-links"><a href="somonibank.html">О нас</a><a href="addresses.html">Адреса</a><a href="documents.html">Документы и тарифы</a><a href="#">Вакансии</a><a href="contact.html">Связь с нами</a></div></div>
-      <div class="sb-footer-copyright"><p>© 2024 ПАО Сомонибонк</p><p>Лицензия НБТ №0000114 от 3 января 2020 года</p><p>ПАО Сомонибонк является участником Фонда страхования вкладов</p></div>
-    </div>
-  </footer>
+  <div class="toast-status" id="toastStatus"></div>
+  <script type="module" src="scripts/transfers-page.js"></script>
 </body>
 </html>

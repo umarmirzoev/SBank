@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Банковские карты — Сомонибонк</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--primary:#2563eb;--primary-dark:#1d4ed8;--secondary:#10b981;--text:#1e293b;--text-muted:#64748b;--bg:#f1f5f9;--card-bg:#ffffff;--border:#e2e8f0;--shadow:0 4px 6px -1px rgba(0,0,0,.1);--shadow-lg:0 20px 25px -5px rgba(0,0,0,.1)}
+    body{font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    @keyframes holoSheen{0%{left:-100%}100%{left:200%}}
+    @keyframes cardFloat{0%,100%{transform:translateY(0) rotateX(0) rotateY(0)}50%{transform:translateY(-6px) rotateX(2deg) rotateY(-2deg)}}
+    @keyframes pulseGlow{0%,100%{box-shadow:0 0 20px rgba(37,99,235,.2)}50%{box-shadow:0 0 40px rgba(37,99,235,.4)}}
+
+    /* Header */
+    .sb-header{background:#fff;position:sticky;top:0;z-index:100}
+    .sb-header-top{border-bottom:1px solid var(--border);padding:12px 48px}
+    .sb-header-bottom{border-bottom:1px solid var(--border);padding:0 48px}
+    .sb-header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+    .sb-logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;color:var(--text);text-decoration:none}
+    .sb-nav-top{display:flex;gap:40px}
+    .sb-nav-top a{color:#4b5563;text-decoration:none;font-weight:500;font-size:15px;padding:8px 0;position:relative;transition:color .2s ease}
+    .sb-nav-top a.active{color:var(--text)}
+    .sb-nav-top a.active::after{content:'';position:absolute;bottom:-12px;left:0;right:0;height:3px;background:var(--secondary);border-radius:2px}
+    .sb-nav-bottom{display:flex;gap:32px;padding:12px 0}
+    .sb-nav-bottom a{color:#4b5563;text-decoration:none;font-weight:500;font-size:14px;transition:color .2s ease}
+    .sb-nav-bottom a.active{color:var(--text);font-weight:600}
+    .sb-header-actions{display:flex;align-items:center;gap:24px}
+    .sb-location-link{display:flex;align-items:center;gap:8px;color:#4b5563;text-decoration:none;font-size:14px}
+    .sb-lang-btn{background:transparent;border:none;font-size:14px;color:#4b5563;cursor:pointer}
+
+    /* Main */
+    .sb-main{max-width:1200px;margin:0 auto;padding:40px 24px}
+
+    /* Hero */
+    .hero-section{background:linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%);border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;margin-bottom:48px;animation:fadeInUp .8s ease;min-height:400px}
+    .hero-content{padding:60px 48px;display:flex;flex-direction:column;justify-content:center}
+    .hero-title{font-size:42px;font-weight:700;line-height:1.2;margin-bottom:20px;color:var(--text)}
+    .hero-desc{font-size:16px;color:var(--text-muted);margin-bottom:32px;max-width:400px}
+    .hero-btn{display:inline-flex;align-items:center;gap:8px;padding:16px 32px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s ease;box-shadow:0 10px 20px rgba(37,99,235,.3);width:fit-content}
+    .hero-btn:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(37,99,235,.4)}
+    .hero-visual{position:relative;display:flex;align-items:center;justify-content:center;padding:40px;overflow:hidden}
+    .hero-visual img{width:100%;height:100%;object-fit:cover;border-radius:20px;box-shadow:0 18px 40px rgba(0,0,0,.12)}
+
+    /* Section Title */
+    .section-title{font-size:32px;font-weight:700;margin-bottom:40px;text-align:center;font-family:Georgia,serif;color:#1e3a5f}
+
+    /* ===== BANK CARD CSS ART ===== */
+    .bank-card{width:320px;height:200px;border-radius:16px;position:relative;overflow:hidden;cursor:pointer;transition:all .4s ease;flex-shrink:0}
+    .bank-card:hover{transform:translateY(-8px) scale(1.03);box-shadow:0 24px 48px rgba(0,0,0,.25)}
+    .bank-card::after{content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.15) 45%,rgba(255,255,255,.25) 50%,rgba(255,255,255,.15) 55%,transparent 60%);z-index:10;pointer-events:none;animation:holoSheen 4s ease-in-out infinite}
+
+    .card-chip{width:42px;height:32px;border-radius:6px;position:absolute;top:50px;left:28px;background:linear-gradient(135deg,#f0d078 0%,#c9a227 30%,#f0d078 50%,#c9a227 70%,#f0d078 100%);box-shadow:0 2px 6px rgba(0,0,0,.2)}
+    .card-chip::before{content:'';position:absolute;top:50%;left:4px;right:4px;height:1px;background:rgba(0,0,0,.15)}
+    .card-chip::after{content:'';position:absolute;left:50%;top:4px;bottom:4px;width:1px;background:rgba(0,0,0,.15)}
+
+    .card-chip-lines{position:absolute;top:6px;left:6px;right:6px;bottom:6px;border:1px solid rgba(0,0,0,.12);border-radius:3px}
+
+    .contactless{position:absolute;top:54px;left:82px;display:flex;gap:3px;align-items:center}
+    .contactless span{display:block;width:4px;height:4px;border:1.5px solid currentColor;border-radius:50%;opacity:.7}
+    .contactless span:nth-child(2){width:7px;height:7px;margin-left:-2px}
+    .contactless span:nth-child(3){width:10px;height:10px;margin-left:-3px}
+
+    .card-logo{position:absolute;top:20px;left:28px;font-size:18px;font-weight:700;letter-spacing:1px;opacity:.95}
+    .card-logo-sub{font-size:9px;font-weight:500;letter-spacing:2px;opacity:.7;display:block;margin-top:2px}
+
+    .card-number{position:absolute;top:100px;left:28px;font-size:15px;letter-spacing:3px;font-weight:500;font-family:'Courier New',monospace;opacity:.9}
+    .card-holder-label,.card-expiry-label{font-size:8px;text-transform:uppercase;letter-spacing:1.5px;opacity:.6;margin-bottom:2px}
+    .card-holder{position:absolute;bottom:28px;left:28px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;opacity:.9}
+    .card-expiry{position:absolute;bottom:28px;right:100px;font-size:11px;letter-spacing:1px;font-weight:500;opacity:.9}
+
+    .card-brand{position:absolute;bottom:20px;right:24px;display:flex;align-items:center;gap:4px}
+    .card-brand-text{font-size:14px;font-weight:700;font-style:italic;letter-spacing:.5px}
+
+    /* Visa Gold */
+    .card-visa-gold{background:linear-gradient(135deg,#f6e4a0 0%,#d4a823 40%,#c9951a 60%,#e8c84a 100%);color:#3d2e05}
+    .card-visa-gold .card-brand-text{color:#1a1f71;font-size:18px}
+    .card-visa-gold .contactless{color:#3d2e05}
+
+    /* Mastercard Platinum */
+    .card-mc-platinum{background:linear-gradient(135deg,#1a237e 0%,#0d47a1 40%,#1565c0 70%,#1e88e5 100%);color:#fff}
+    .card-mc-platinum .card-brand-text{color:#fff}
+    .card-mc-platinum .contactless{color:#fff}
+    .mc-circles{position:absolute;bottom:18px;right:24px;display:flex;align-items:center}
+    .mc-circle{width:28px;height:28px;border-radius:50%;position:absolute}
+    .mc-circle-red{background:rgba(234,56,76,.85);left:0;z-index:1}
+    .mc-circle-orange{background:rgba(255,159,67,.85);left:16px;z-index:2}
+
+    /* Visa Platinum */
+    .card-visa-platinum{background:linear-gradient(135deg,#e8eaf6 0%,#c5cae9 25%,#9fa8da 50%,#c5cae9 75%,#e8eaf6 100%);color:#1a237e;animation:cardFloat 6s ease-in-out infinite}
+    .card-visa-platinum::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 30%,rgba(255,255,255,.4) 50%,transparent 70%);z-index:5;pointer-events:none}
+    .card-visa-platinum .card-brand-text{color:#1a237e;font-size:18px}
+    .card-visa-platinum .contactless{color:#1a237e}
+
+    /* Somoni Infinite */
+    .card-infinite{background:linear-gradient(135deg,#0f0f0f 0%,#1a1a2e 40%,#16213e 70%,#0f3460 100%);color:#fff}
+    .card-infinite::before{content:'';position:absolute;top:-50%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,rgba(0,210,255,.2),transparent 70%);border-radius:50%;z-index:1;pointer-events:none}
+    .card-infinite .card-brand-text{color:#00d4ff;font-size:16px;font-style:normal;font-weight:800;letter-spacing:3px}
+    .card-infinite .contactless{color:#00d4ff}
+    .card-infinite .card-number{color:rgba(255,255,255,.7);font-size:14px}
+    .infinite-line{position:absolute;bottom:60px;left:28px;right:28px;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.3),transparent)}
+
+    /* Business */
+    .card-business{background:radial-gradient(ellipse at 30% 50%,#1e3a5f 0%,#0f2744 50%,#0a1628 100%);color:#fff}
+    .card-business::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 20px,rgba(212,175,55,.04) 20px,rgba(212,175,55,.04) 21px),repeating-linear-gradient(-45deg,transparent,transparent 20px,rgba(212,175,55,.04) 20px,rgba(212,175,55,.04) 21px);z-index:1;pointer-events:none}
+    .card-business .card-brand-text{color:#d4af37;font-size:15px;font-weight:800}
+    .card-business .contactless{color:#d4af37}
+    .business-diamond{position:absolute;top:18px;right:24px;width:32px;height:32px;border:1.5px solid rgba(212,175,55,.5);transform:rotate(45deg);z-index:2}
+    .business-diamond::before{content:'';position:absolute;inset:6px;border:1px solid rgba(212,175,55,.3)}
+
+    /* Milli */
+    .card-milli{background:linear-gradient(135deg,#f5f5f5 0%,#e0e0e0 40%,#eeeeee 70%,#f5f5f5 100%);color:#333}
+    .card-milli::before{content:'';position:absolute;top:50%;left:50%;width:140px;height:140px;transform:translate(-50%,-50%);border:2px solid rgba(198,163,80,.15);border-radius:50%;z-index:1;pointer-events:none}
+    .card-milli::after{content:'';position:absolute;top:50%;left:50%;width:100px;height:100px;transform:translate(-50%,-50%);border:1px solid rgba(198,163,80,.1);border-radius:50%;z-index:1;pointer-events:none;animation:none}
+    .card-milli .card-brand-text{color:#8b6914;font-size:16px;font-weight:800}
+    .card-milli .contactless{color:#666}
+    .milli-pattern{position:absolute;inset:0;background:radial-gradient(circle at 80% 80%,rgba(198,163,80,.08),transparent 50%),radial-gradient(circle at 20% 20%,rgba(198,163,80,.06),transparent 40%);z-index:0;pointer-events:none}
+
+    /* Card Showcase Grid */
+    .cards-showcase{margin-bottom:64px}
+    .cards-showcase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;justify-items:center}
+    .card-wrapper{display:flex;flex-direction:column;align-items:center;gap:20px;animation:fadeInUp .6s ease backwards}
+    .card-wrapper:nth-child(1){animation-delay:.1s}
+    .card-wrapper:nth-child(2){animation-delay:.2s}
+    .card-wrapper:nth-child(3){animation-delay:.3s}
+    .card-wrapper-info{background:var(--card-bg);border-radius:16px;padding:20px;width:100%;max-width:320px;box-shadow:var(--shadow);border:1px solid var(--border);text-align:center;transition:all .3s ease}
+    .card-wrapper:hover .card-wrapper-info{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+    .card-wrapper-info h3{font-size:18px;font-weight:700;margin-bottom:6px}
+    .card-wrapper-info p{font-size:13px;color:var(--text-muted);line-height:1.5;margin-bottom:14px}
+    .card-wrapper-features{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:16px}
+    .card-wrapper-feature{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text-muted)}
+    .card-wrapper-feature svg{width:14px;height:14px;color:var(--secondary)}
+    .card-wrapper-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .3s ease;box-shadow:0 4px 12px rgba(37,99,235,.25)}
+    .card-wrapper-btn:hover{transform:translateY(-2px);box-shadow:0 8px 16px rgba(37,99,235,.35)}
+
+    /* Premium Section */
+    .premium-section{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);border-radius:24px;padding:60px 48px;margin-bottom:64px;position:relative;overflow:hidden}
+    .premium-section::before{content:'';position:absolute;top:-50%;right:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(37,99,235,.15),transparent 70%);border-radius:50%}
+    .premium-title{font-size:32px;font-weight:700;margin-bottom:16px;color:#fff;position:relative;z-index:1}
+    .premium-subtitle{color:#94a3b8;font-size:16px;margin-bottom:40px;position:relative;z-index:1}
+    .premium-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;justify-items:center;position:relative;z-index:1}
+    .premium-card-wrapper{display:flex;flex-direction:column;align-items:center;gap:16px;animation:fadeInUp .6s ease backwards}
+    .premium-card-wrapper:nth-child(1){animation-delay:.1s}
+    .premium-card-wrapper:nth-child(2){animation-delay:.2s}
+    .premium-card-wrapper:nth-child(3){animation-delay:.3s}
+    .premium-card-info{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:20px;text-align:center;backdrop-filter:blur(10px);width:100%;max-width:320px;transition:all .3s ease}
+    .premium-card-wrapper:hover .premium-card-info{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);transform:translateY(-4px)}
+    .premium-card-info h3{font-size:16px;font-weight:700;margin-bottom:6px;color:#fff}
+    .premium-card-info p{font-size:13px;color:#94a3b8;line-height:1.5}
+
+    /* Benefits */
+    .benefits-section{margin-bottom:64px}
+    .benefits-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+    .benefit-item{background:var(--card-bg);border-radius:20px;padding:32px 24px;text-align:center;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .3s ease;animation:fadeInUp .6s ease backwards}
+    .benefit-item:nth-child(1){animation-delay:.1s}
+    .benefit-item:nth-child(2){animation-delay:.2s}
+    .benefit-item:nth-child(3){animation-delay:.3s}
+    .benefit-item:nth-child(4){animation-delay:.4s}
+    .benefit-item:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+    .benefit-icon{width:64px;height:64px;margin:0 auto 20px;border-radius:16px;background:linear-gradient(135deg,#dbeafe 0%,#bfdbfe 100%);display:flex;align-items:center;justify-content:center}
+    .benefit-icon svg{width:28px;height:28px;color:var(--primary)}
+    .benefit-item h4{font-size:16px;font-weight:600;margin-bottom:8px}
+    .benefit-item p{font-size:13px;color:var(--text-muted);line-height:1.5}
+
+    /* FAQ */
+    .faq-section{margin-bottom:64px}
+    .faq-list{max-width:800px;margin:0 auto}
+    .faq-item{border-bottom:1px solid var(--border)}
+    .faq-question{width:100%;padding:24px 0;display:flex;justify-content:space-between;align-items:center;background:none;border:none;font-size:16px;font-weight:500;cursor:pointer;text-align:left;color:var(--text);transition:color .2s ease}
+    .faq-question:hover{color:var(--primary)}
+    .faq-icon{width:24px;height:24px;color:#06b6d4;transition:transform .3s ease}
+    .faq-item.active .faq-icon{transform:rotate(45deg)}
+    .faq-answer{max-height:0;overflow:hidden;transition:max-height .3s ease}
+    .faq-item.active .faq-answer{max-height:200px}
+    .faq-answer p{padding-bottom:24px;color:var(--text-muted);font-size:14px;line-height:1.6}
+
+    /* Footer */
+    .sb-footer{background:#0f172a;color:#e2e8f0;padding:60px 48px 30px}
+    .sb-footer-inner{max-width:1200px;margin:0 auto}
+    .sb-footer-grid{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:60px;margin-bottom:50px}
+    .sb-footer-logo{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:700;margin-bottom:20px}
+    .sb-footer-address{color:#94a3b8;font-size:14px;line-height:1.6;margin-bottom:16px}
+    .sb-footer-link{color:#60a5fa;text-decoration:none;font-size:14px}
+    .sb-contact-item{margin-bottom:24px}
+    .sb-contact-number{font-size:24px;font-weight:600;color:#fbbf24;margin-bottom:4px}
+    .sb-contact-email{font-size:18px;font-weight:500;color:#e2e8f0}
+    .sb-contact-label{color:#94a3b8;font-size:13px;line-height:1.5}
+    .sb-footer-section h4{font-size:16px;font-weight:600;margin-bottom:16px}
+    .sb-app-buttons{display:flex;gap:12px;margin-bottom:30px}
+    .sb-app-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#1e293b;border:1px solid #334155;border-radius:8px;color:#e2e8f0;text-decoration:none;font-size:13px;transition:all .2s ease}
+    .sb-app-btn:hover{background:#334155}
+    .sb-social-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .sb-social-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#1e293b;border-radius:50%;color:#94a3b8;transition:all .2s ease}
+    .sb-social-icon:hover{background:#334155;color:#e2e8f0}
+    .sb-footer-bottom{border-top:1px solid #1e293b;padding:24px 0;margin-bottom:24px}
+    .sb-footer-links{display:flex;gap:32px}
+    .sb-footer-links a{color:#94a3b8;text-decoration:none;font-size:14px;transition:color .2s ease}
+    .sb-footer-links a:hover{color:#e2e8f0}
+    .sb-footer-copyright{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid #1e293b;color:#64748b;font-size:12px}
+
+    /* Responsive */
+    @media(max-width:1024px){
+      .hero-section{grid-template-columns:1fr}
+      .cards-showcase-grid,.benefits-grid{grid-template-columns:repeat(2,1fr)}
+      .premium-cards-grid{grid-template-columns:repeat(2,1fr)}
+      .sb-footer-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:768px){
+      .sb-header-top,.sb-header-bottom{padding:12px 20px}
+      .sb-nav-top,.sb-nav-bottom{display:none}
+      .hero-title{font-size:32px}
+      .hero-section{grid-template-columns:1fr}
+      .hero-visual{order:-1}
+      .cards-showcase-grid,.benefits-grid,.premium-cards-grid,.sb-footer-grid{grid-template-columns:1fr}
+      .sb-main{padding:20px 16px}
+      .premium-section{padding:40px 24px}
+      .bank-card{width:280px;height:175px}
+      .card-chip{width:36px;height:28px;top:44px;left:22px}
+      .card-number{top:88px;left:22px;font-size:13px}
+      .card-holder{bottom:22px;left:22px;font-size:10px}
+      .card-expiry{bottom:22px;right:80px;font-size:10px}
+      .contactless{top:48px;left:70px}
+      .card-logo{font-size:15px}
+    }
+  </style>
+</head>
+<body>
+  <header class="sb-header">
+    <div class="sb-header-top">
+      <div class="sb-header-inner">
+        <a href="index.html" class="sb-logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="3"/><circle cx="22" cy="10" r="4" fill="#2563eb"/></svg>
+          <span>Сомонибонк</span>
+        </a>
+        <nav class="sb-nav-top">
+          <a href="index.html" class="active">Частным лицам</a>
+          <a href="business.html">Бизнесу</a>
+          <a href="somonibank.html">Сомонибонк</a>
+        </nav>
+        <div class="sb-header-actions">
+          <a href="addresses.html" class="sb-location-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Адреса и банкоматы
+          </a>
+          <button class="sb-lang-btn">Рус ▾</button>
+        </div>
+      </div>
+    </div>
+    <div class="sb-header-bottom">
+      <div class="sb-header-inner">
+        <nav class="sb-nav-bottom">
+          <a href="somonibank-app.html">Приложение Somoni</a>
+          <a href="cards.html" class="active">Карты</a>
+          <a href="#">Салом</a>
+          <a href="auto.html">Покупка авто</a>
+          <a href="#">Somoni Shop</a>
+          <a href="transfers.html">Переводы</a>
+          <a href="#">Депозиты</a>
+          <a href="#">Авиабилеты</a>
+          <a href="#">Ещё ▾</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="sb-main">
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">Карты для каждой цели</h1>
+        <p class="hero-desc">Visa, Mastercard и национальные карты — выберите идеальную карту для покупок, путешествий и бизнеса</p>
+        <button class="hero-btn">Выбрать карту</button>
+      </div>
+      <div class="hero-visual">
+        <img alt="Банковские карты" src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80" loading="lazy" referrerpolicy="no-referrer"/>
+      </div>
+    </section>
+
+    <!-- Standard Cards -->
+    <section class="cards-showcase">
+      <h2 class="section-title">Популярные карты</h2>
+      <div class="cards-showcase-grid">
+
+        <!-- Visa Gold -->
+        <div class="card-wrapper">
+          <div class="bank-card card-visa-gold">
+            <div class="card-logo">СОМОНИБОНК<span class="card-logo-sub">SOMONIBANK</span></div>
+            <div class="card-chip"><div class="card-chip-lines"></div></div>
+            <div class="contactless"><span></span><span></span><span></span></div>
+            <div class="card-number">•••• &nbsp; •••• &nbsp; •••• &nbsp; 4521</div>
+            <div class="card-holder">
+              <div class="card-holder-label">Держатель карты</div>
+              CARDHOLDER NAME
+            </div>
+            <div class="card-expiry">
+              <div class="card-expiry-label">До</div>
+              09/28
+            </div>
+            <div class="card-brand">
+              <span class="card-brand-text" style="color:#1a1f71;font-style:italic;font-size:20px;font-weight:900">VISA</span>
+            </div>
+          </div>
+          <div class="card-wrapper-info">
+            <h3>Visa Gold</h3>
+            <p>Премиальная карта с расширенными привилегиями, страхованием в путешествиях и кэшбэком</p>
+            <div class="card-wrapper-features">
+              <span class="card-wrapper-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Мультивалютный счёт</span>
+              <span class="card-wrapper-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Страховка</span>
+            </div>
+            <button class="card-wrapper-btn">Получить карту</button>
+          </div>
+        </div>
+
+        <!-- Mastercard Platinum -->
+        <div class="card-wrapper">
+          <div class="bank-card card-mc-platinum">
+            <div class="card-logo">СОМОНИБОНК<span class="card-logo-sub">SOMONIBANK</span></div>
+            <div class="card-chip"><div class="card-chip-lines"></div></div>
+            <div class="contactless"><span></span><span></span><span></span></div>
+            <div class="card-number">•••• &nbsp; •••• &nbsp; •••• &nbsp; 8832</div>
+            <div class="card-holder">
+              <div class="card-holder-label">Держатель карты</div>
+              CARDHOLDER NAME
+            </div>
+            <div class="card-expiry">
+              <div class="card-expiry-label">До</div>
+              06/29
+            </div>
+            <div class="mc-circles">
+              <div class="mc-circle mc-circle-red"></div>
+              <div class="mc-circle mc-circle-orange"></div>
+            </div>
+          </div>
+          <div class="card-wrapper-info">
+            <h3>Mastercard Platinum</h3>
+            <p>Эксклюзивные привилегии, доступ к VIP-залам аэропортов и персональный консьерж-сервис</p>
+            <div class="card-wrapper-features">
+              <span class="card-wrapper-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Консьерж-сервис</span>
+              <span class="card-wrapper-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Lounge Key</span>
+            </div>
+            <button class="card-wrapper-btn">Получить карту</button>
+          </div>
+        </div>
+
+        <!-- Карта Милли -->
+        <div class="card-wrapper">
+          <div class="bank-card card-milli">
+            <div class="milli-pattern"></div>
+            <div class="card-logo" style="color:#555">СОМОНИБОНК<span class="card-logo-sub" style="color:#888">SOMONIBANK</span></div>
+            <div class="card-chip" style="background:linear-gradient(135deg,#e0d5b8 0%,#c6a350 30%,#e0d5b8 50%,#c6a350 70%,#e0d5b8 100%)"><div class="card-chip-lines"></div></div>
+            <div class="contactless"><span></span><span></span><span></span></div>
+            <div class="card-number" style="color:#444">•••• &nbsp; •••• &nbsp; •••• &nbsp; 2109</div>
+            <div class="card-holder" style="color:#555">
+              <div class="card-holder-label">Держатель карты</div>
+              CARDHOLDER NAME
+            </div>
+            <div class="card-expiry" style="color:#555">
+              <div class="card-expiry-label">До</div>
+              12/27
+            </div>
+            <div class="card-brand">
+              <span class="card-brand-text">МИЛЛИ</span>
+            </div>
+          </div>
+          <div class="card-wrapper-info">
+            <h3>Карта «Милли»</h3>
+            <p>Национальная карта для повседневных покупок с бесплатным обслуживанием и скидками</p>
+            <div class="card-wrapper-features">
+              <span class="card-wrapper-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Бесплатно</span>
+              <span class="card-wrapper-feature"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Кэшбэк</span>
+            </div>
+            <button class="card-wrapper-btn">Получить карту</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Premium Section -->
+    <section class="premium-section">
+      <h2 class="premium-title">Премиальные карты</h2>
+      <p class="premium-subtitle">Для тех, кто ценит безупречный сервис и эксклюзивные возможности</p>
+      <div class="premium-cards-grid">
+
+        <!-- Visa Platinum -->
+        <div class="premium-card-wrapper">
+          <div class="bank-card card-visa-platinum">
+            <div class="card-logo">СОМОНИБОНК<span class="card-logo-sub">SOMONIBANK</span></div>
+            <div class="card-chip"><div class="card-chip-lines"></div></div>
+            <div class="contactless"><span></span><span></span><span></span></div>
+            <div class="card-number">•••• &nbsp; •••• &nbsp; •••• &nbsp; 7703</div>
+            <div class="card-holder">
+              <div class="card-holder-label">Держатель карты</div>
+              CARDHOLDER NAME
+            </div>
+            <div class="card-expiry">
+              <div class="card-expiry-label">До</div>
+              03/29
+            </div>
+            <div class="card-brand">
+              <span class="card-brand-text" style="color:#1a237e;font-style:italic;font-size:20px;font-weight:900">VISA</span>
+            </div>
+          </div>
+          <div class="premium-card-info">
+            <h3>Visa Platinum</h3>
+            <p>Хромированная карта с расширенным лимитом, страхованием и доступом к премиальным сервисам</p>
+          </div>
+        </div>
+
+        <!-- Сомонибонк Infinite -->
+        <div class="premium-card-wrapper">
+          <div class="bank-card card-infinite">
+            <div class="infinite-line"></div>
+            <div class="card-logo">СОМОНИБОНК<span class="card-logo-sub">SOMONIBANK</span></div>
+            <div class="card-chip"><div class="card-chip-lines"></div></div>
+            <div class="contactless"><span></span><span></span><span></span></div>
+            <div class="card-number">•••• &nbsp; •••• &nbsp; •••• &nbsp; 0001</div>
+            <div class="card-holder">
+              <div class="card-holder-label">Держатель карты</div>
+              CARDHOLDER NAME
+            </div>
+            <div class="card-expiry">
+              <div class="card-expiry-label">До</div>
+              01/30
+            </div>
+            <div class="card-brand">
+              <span class="card-brand-text">INFINITE</span>
+            </div>
+          </div>
+          <div class="premium-card-info">
+            <h3>Сомонибонк Infinite</h3>
+            <p>Высший уровень: безлимитный доступ в VIP-залы, персональный менеджер и премиальная страховка</p>
+          </div>
+        </div>
+
+        <!-- Сомонибонк Business -->
+        <div class="premium-card-wrapper">
+          <div class="bank-card card-business">
+            <div class="business-diamond"></div>
+            <div class="card-logo" style="color:#d4af37">СОМОНИБОНК<span class="card-logo-sub" style="color:rgba(212,175,55,.6)">BUSINESS</span></div>
+            <div class="card-chip"><div class="card-chip-lines"></div></div>
+            <div class="contactless"><span></span><span></span><span></span></div>
+            <div class="card-number" style="color:rgba(255,255,255,.7)">•••• &nbsp; •••• &nbsp; •••• &nbsp; 5500</div>
+            <div class="card-holder" style="color:rgba(255,255,255,.8)">
+              <div class="card-holder-label" style="color:rgba(212,175,55,.5)">Держатель карты</div>
+              BUSINESS NAME
+            </div>
+            <div class="card-expiry" style="color:rgba(255,255,255,.8)">
+              <div class="card-expiry-label" style="color:rgba(212,175,55,.5)">До</div>
+              08/28
+            </div>
+            <div class="card-brand">
+              <span class="card-brand-text">BUSINESS</span>
+            </div>
+          </div>
+          <div class="premium-card-info">
+            <h3>Сомонибонк Business</h3>
+            <p>Мультивалютные счета, корпоративные лимиты и аналитика расходов для вашего бизнеса</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Benefits -->
+    <section class="benefits-section">
+      <h2 class="section-title">Преимущества карт Сомонибонк</h2>
+      <div class="benefits-grid">
+        <div class="benefit-item">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <h4>Бесплатное обслуживание</h4>
+          <p>Откройте карту без платы за обслуживание первый год</p>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <h4>Мультивалютность</h4>
+          <p>Сомони, доллары и евро на одной карте одновременно</p>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <h4>Работает в 190+ странах</h4>
+          <p>Используйте карту для покупок и снятия наличных по всему миру</p>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h4>Безопасность</h4>
+          <p>3D Secure, мгновенные уведомления и блокировка в один клик</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+      <h2 class="section-title">Часто задаваемые вопросы</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Как заказать карту Сомонибонк?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-answer"><p>Оформить заявку можно онлайн через приложение Сомонибонк или в ближайшем отделении банка.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Какой срок действия у карт?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-answer"><p>Срок действия зависит от типа карты — обычно 3–5 лет. Условия указаны в описании каждой карты.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Можно ли использовать карту за рубежом?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-answer"><p>Да, международные карты Visa и Mastercard принимаются в 190+ странах мира для оплаты и снятия наличных.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Как установить или изменить PIN-код?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-answer"><p>PIN-код можно установить или изменить через мобильное приложение Сомонибонк или в любом отделении.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            <span>Как иностранцу получить карту?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+          <div class="faq-answer"><p>Для иностранных граждан перечень документов зависит от типа карты. Подробности в отделении банка.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="sb-footer">
+    <div class="sb-footer-inner">
+      <div class="sb-footer-grid">
+        <div class="sb-footer-col">
+          <div class="sb-footer-logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="#fbbf24" stroke-width="2" fill="none"/><path d="M16 6L24 10V22L16 26L8 22V10L16 6Z" fill="#fbbf24"/></svg>
+            <span>Сомонибонк</span>
+          </div>
+          <p class="sb-footer-address">ул. Рудаки, 48<br>Душанбе, Таджикистан</p>
+          <a href="addresses.html" class="sb-footer-link">Филиалы и точки обслуживания</a>
+        </div>
+        <div class="sb-footer-col">
+          <div class="sb-contact-item"><div class="sb-contact-number">900</div><div class="sb-contact-label">Для звонков с мобильных в Таджикистане</div></div>
+          <div class="sb-contact-item"><div class="sb-contact-number">+992 44 600 1111</div><div class="sb-contact-label">Для звонков из любой точки мира</div></div>
+          <div class="sb-contact-item"><div class="sb-contact-email">support@somoni.tj</div><div class="sb-contact-label">Для онлайн-обращений</div></div>
+        </div>
+        <div class="sb-footer-col">
+          <div class="sb-footer-section">
+            <h4>Приложения</h4>
+            <div class="sb-app-buttons">
+              <a href="#" class="sb-app-btn">Google Play</a>
+              <a href="#" class="sb-app-btn">App Store</a>
+            </div>
+          </div>
+          <div class="sb-footer-section">
+            <h4>Социальные сети</h4>
+            <div class="sb-social-grid">
+              <a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.04C20.54,3.74 21.21,4.22 20.94,5.32L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.66,16.27L10.65,18.23C10.43,18.45 10.25,18.65 9.78,18.65Z"/></svg></a>
+              <a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12,2C6.48,2 2,6.48 2,12C2,16.84 5.44,20.87 10,21.8V15H8V12H10V9.5C10,7.57 11.57,6 13.5,6H16V9H14C13.45,9 13,9.45 13,10V12H16L15.5,15H13V21.8C18.56,20.87 22,16.84 22,12C22,6.48 17.52,2 12,2Z"/></svg></a>
+              <a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg></a>
+              <a href="#" class="sb-social-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/></svg></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sb-footer-bottom">
+        <div class="sb-footer-links">
+          <a href="somonibank.html">О нас</a>
+          <a href="addresses.html">Адреса</a>
+          <a href="documents.html">Документы и тарифы</a>
+          <a href="#">Вакансии</a>
+          <a href="contact.html">Связь с нами</a>
+        </div>
+      </div>
+      <div class="sb-footer-copyright">
+        <p>© 2024 ПАО Сомонибонк</p>
+        <p>Лицензия НБТ №0000114 от 3 января 2020 года</p>
+        <p>ПАО Сомонибонк является участником Фонда страхования вкладов</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => btn.parentElement.classList.toggle('active'));
+    });
+  </script>
+</body>
+</html>

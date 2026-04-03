@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200">
+  <defs>
+    <linearGradient id="transBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#4c1d95"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="200" fill="url(#transBg)"/>
+  <circle cx="80" cy="100" r="40" fill="rgba(255,255,255,0.15)"/>
+  <circle cx="320" cy="100" r="40" fill="rgba(255,255,255,0.15)"/>
+  <path d="M110 100 L290 100" stroke="rgba(255,255,255,0.5)" stroke-width="3" stroke-dasharray="10,5"/>
+  <polygon points="280,90 310,100 280,110" fill="rgba(255,255,255,0.5)"/>
+  <text x="80" y="105" font-family="Arial" font-size="30" fill="#fff" text-anchor="middle">🇹🇯</text>
+  <text x="320" y="105" font-family="Arial" font-size="30" fill="#fff" text-anchor="middle">🌍</text>
+  <text x="200" y="160" font-family="Arial" font-size="14" fill="rgba(255,255,255,0.8)" text-anchor="middle">Мгновенные переводы</text>
+  <circle cx="200" cy="50" r="20" fill="rgba(255,255,255,0.08)"/>
+</svg>

@@ -11,7 +11,7 @@ const status = document.getElementById("loginStatus");
 const registerLink = document.getElementById("registerLink");
 const forgotLink = document.getElementById("forgotLink");
 const params = new URLSearchParams(window.location.search);
-const redirectTarget = params.get("redirect") || "somonibank-app.html";
+const redirectTarget = params.get("redirect") || "bank.html";
 const isLocalDevHost = ["localhost", "127.0.0.1"].includes(window.location.hostname);
 
 function loadSavedCredentials() {

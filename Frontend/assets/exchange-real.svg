@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200">
+  <defs>
+    <linearGradient id="exchBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#dc2626"/>
+      <stop offset="100%" style="stop-color:#991b1b"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="200" fill="url(#exchBg)"/>
+  <circle cx="200" cy="100" r="60" fill="rgba(255,255,255,0.1)"/>
+  <text x="150" y="110" font-family="Arial" font-size="40" fill="#fff" font-weight="bold">$</text>
+  <text x="250" y="110" font-family="Arial" font-size="40" fill="#fff" font-weight="bold">€</text>
+  <path d="M185 85 L215 85 L200 65 Z" fill="rgba(255,255,255,0.7)"/>
+  <path d="M185 115 L215 115 L200 135 Z" fill="rgba(255,255,255,0.7)"/>
+  <text x="200" y="170" font-family="Arial" font-size="12" fill="rgba(255,255,255,0.8)" text-anchor="middle">Обмен по выгодному курсу</text>
+  <circle cx="350" cy="40" r="30" fill="rgba(255,255,255,0.05)"/>
+</svg>

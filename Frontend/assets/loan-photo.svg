@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200">
+  <defs>
+    <linearGradient id="loanBg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#065f46"/>
+      <stop offset="100%" style="stop-color:#022c22"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="200" fill="url(#loanBg1)"/>
+  <rect x="40" y="25" width="320" height="150" rx="10" fill="rgba(255,255,255,0.08)"/>
+  <rect x="60" y="50" width="180" height="80" rx="8" fill="rgba(52,211,153,0.15)"/>
+  <text x="150" y="95" font-family="Arial" font-size="36" fill="#34d399" text-anchor="middle" font-weight="bold">500 000</text>
+  <text x="150" y="115" font-family="Arial" font-size="12" fill="#34d399" text-anchor="middle">Сомони</text>
+  <circle cx="310" cy="90" r="35" fill="rgba(52,211,153,0.2)"/>
+  <text x="310" y="97" font-family="Arial" font-size="40" fill="#34d399">💰</text>
+  <rect x="60" y="145" width="280" height="25" rx="5" fill="rgba(52,211,153,0.2)"/>
+  <text x="200" y="162" font-family="Arial" font-size="11" fill="#6ee7b7" text-anchor="middle">Ставка от 12% годовых | Одобрение за 15 минут</text>
+  <text x="30" y="185" font-family="Arial" font-size="9" fill="rgba(255,255,255,0.5)">СОМОНИБАНК</text>
+</svg>

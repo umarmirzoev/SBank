@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Новости — Сомонибонк</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--primary:#2563eb;--primary-dark:#1d4ed8;--secondary:#10b981;--text:#1e293b;--text-muted:#64748b;--bg:#f1f5f9;--card-bg:#fff;--border:#e2e8f0;--shadow:0 4px 6px -1px rgba(0,0,0,.1);--shadow-lg:0 20px 25px -5px rgba(0,0,0,.1)}
+    body{font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+
+    /* Header */
+    .sb-header{background:#fff;position:sticky;top:0;z-index:100}
+    .sb-header-top{border-bottom:1px solid var(--border);padding:12px 48px}
+    .sb-header-bottom{border-bottom:1px solid var(--border);padding:0 48px}
+    .sb-header-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+    .sb-logo{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;color:var(--text);text-decoration:none}
+    .sb-nav-top{display:flex;gap:40px}
+    .sb-nav-top a{color:#4b5563;text-decoration:none;font-weight:500;font-size:15px;padding:8px 0;position:relative;transition:color .2s ease}
+    .sb-nav-top a.active{color:var(--text)}
+    .sb-nav-top a.active::after{content:'';position:absolute;bottom:-12px;left:0;right:0;height:3px;background:var(--secondary);border-radius:2px}
+    .sb-nav-bottom{display:flex;gap:32px;padding:12px 0}
+    .sb-nav-bottom a{color:#4b5563;text-decoration:none;font-weight:500;font-size:14px;transition:color .2s ease}
+    .sb-nav-bottom a.active{color:var(--text);font-weight:600}
+    .sb-nav-bottom a.active::after{content:'';position:absolute;bottom:-14px;left:0;right:0;height:3px;background:var(--secondary);border-radius:2px}
+    .sb-header-actions{display:flex;align-items:center;gap:24px}
+    .sb-location-link{display:flex;align-items:center;gap:8px;color:#4b5563;text-decoration:none;font-size:14px}
+    .sb-lang-btn{background:transparent;border:none;font-size:14px;color:#4b5563;cursor:pointer}
+
+    /* Main */
+    .sb-main{max-width:1200px;margin:0 auto;padding:40px 24px}
+
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Hero */
+    .hero-section{border-radius:24px;overflow:hidden;position:relative;margin-bottom:48px;animation:fadeInUp .8s ease;height:320px}
+    .hero-bg{width:100%;height:100%;background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 40%,#2563eb 100%);position:relative}
+    .hero-bg::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.2),transparent 70%);top:-80px;right:-60px}
+    .hero-bg::after{content:'';position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.3),transparent 70%);bottom:-60px;left:100px}
+    .hero-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:48px;z-index:1}
+    .hero-title{font-size:42px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:20px}
+
+    /* Filter tabs */
+    .filter-tabs{display:flex;gap:12px}
+    .tab-btn{padding:10px 24px;border-radius:12px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;font-size:15px;font-weight:600;cursor:pointer;backdrop-filter:blur(6px);transition:all .3s ease}
+    .tab-btn:hover,.tab-btn.active{background:#fff;color:var(--text);border-color:transparent;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+
+    /* Year filters */
+    .year-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px}
+    .year-btn{min-width:52px;padding:8px 18px;border-radius:999px;border:1px solid var(--border);background:var(--card-bg);color:var(--text-muted);font-size:13px;font-weight:700;cursor:pointer;transition:all .25s ease}
+    .year-btn.active{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);border-color:transparent;color:#fff;box-shadow:0 8px 20px rgba(37,99,235,.3)}
+    .year-btn:hover:not(.active){background:#dbeafe;color:var(--primary)}
+
+    /* News grid */
+    .news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    .news-card{background:var(--card-bg);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--border);transition:all .3s ease;animation:fadeInUp .6s ease backwards;cursor:pointer}
+    .news-card:nth-child(1){animation-delay:.1s}
+    .news-card:nth-child(2){animation-delay:.2s}
+    .news-card:nth-child(3){animation-delay:.3s}
+    .news-card:nth-child(4){animation-delay:.4s}
+    .news-card:nth-child(5){animation-delay:.5s}
+    .news-card:nth-child(6){animation-delay:.6s}
+    .news-card:hover{transform:translateY(-8px);box-shadow:var(--shadow-lg)}
+    .news-card-img{width:100%;height:200px;display:block;object-fit:cover}
+    .news-card-body{padding:24px}
+    .news-card-date{font-size:13px;color:var(--text-muted);margin-bottom:8px;font-weight:500}
+    .news-card-title{font-size:18px;font-weight:700;margin-bottom:10px;line-height:1.4;color:var(--text)}
+    .news-card-desc{font-size:14px;color:var(--text-muted);line-height:1.6}
+
+    /* Footer */
+    .sb-footer{background:#0f172a;color:#e2e8f0;padding:60px 48px 30px}
+    .sb-footer-inner{max-width:1200px;margin:0 auto}
+    .sb-footer-grid{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:60px;margin-bottom:50px}
+    .sb-footer-logo{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:700;margin-bottom:20px}
+    .sb-footer-address{color:#94a3b8;font-size:14px;line-height:1.6;margin-bottom:16px}
+    .sb-footer-link{color:#60a5fa;text-decoration:none;font-size:14px}
+    .sb-contact-item{margin-bottom:24px}
+    .sb-contact-number{font-size:24px;font-weight:600;color:#fbbf24;margin-bottom:4px}
+    .sb-contact-email{font-size:18px;font-weight:500;color:#e2e8f0}
+    .sb-contact-label{color:#94a3b8;font-size:13px;line-height:1.5}
+    .sb-footer-section h4{font-size:16px;font-weight:600;margin-bottom:16px}
+    .sb-app-buttons{display:flex;gap:12px;margin-bottom:30px}
+    .sb-app-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#1e293b;border:1px solid #334155;border-radius:8px;color:#e2e8f0;text-decoration:none;font-size:13px;transition:all .2s ease}
+    .sb-app-btn:hover{background:#334155}
+    .sb-social-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .sb-social-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#1e293b;border-radius:50%;color:#94a3b8;transition:all .2s ease}
+    .sb-social-icon:hover{background:#334155;color:#e2e8f0}
+    .sb-footer-bottom{border-top:1px solid #1e293b;padding:24px 0;margin-bottom:24px}
+    .sb-footer-links{display:flex;gap:32px}
+    .sb-footer-links a{color:#94a3b8;text-decoration:none;font-size:14px;transition:color .2s ease}
+    .sb-footer-links a:hover{color:#e2e8f0}
+    .sb-footer-copyright{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid #1e293b;color:#64748b;font-size:12px}
+
+    /* Responsive */
+    @media(max-width:1024px){
+      .news-grid{grid-template-columns:repeat(2,1fr)}
+      .sb-footer-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:768px){
+      .sb-header-top,.sb-header-bottom{padding:12px 20px}
+      .sb-nav-top,.sb-nav-bottom{display:none}
+      .hero-title{font-size:28px}
+      .hero-overlay{padding:28px}
+      .hero-img{height:240px}
+      .news-grid{grid-template-columns:1fr}
+      .sb-main{padding:20px 16px}
+      .sb-footer{padding:40px 20px 24px}
+      .sb-footer-grid{grid-template-columns:1fr}
+      .sb-footer-copyright{flex-direction:column;gap:8px;text-align:center}
+      .sb-footer-links{flex-wrap:wrap;gap:16px}
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="sb-header">
+    <div class="sb-header-top">
+      <div class="sb-header-inner">
+        <a href="index.html" class="sb-logo">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="#2563eb" stroke-width="3"/>
+            <circle cx="22" cy="10" r="4" fill="#2563eb"/>
+          </svg>
+          <span>Сомонибонк</span>
+        </a>
+        <nav class="sb-nav-top">
+          <a href="index.html">Частным лицам</a>
+          <a href="business.html">Бизнесу</a>
+          <a href="somonibank.html" class="active">Сомонибонк</a>
+        </nav>
+        <div class="sb-header-actions">
+          <a href="addresses.html" class="sb-location-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            Адреса и банкоматы
+          </a>
+          <button class="sb-lang-btn">Рус ▾</button>
+        </div>
+      </div>
+    </div>
+    <div class="sb-header-bottom">
+      <div class="sb-header-inner">
+        <nav class="sb-nav-bottom">
+          <a href="somonibank.html">О нас</a>
+          <a href="news.html" class="active">Новости</a>
+          <a href="addresses.html">Адреса</a>
+          <a href="documents.html">Документы</a>
+          <a href="delivery.html">Доставка</a>
+          <a href="contact.html">Связь с нами</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="sb-main">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-bg"></div>
+      <div class="hero-overlay">
+        <h1 class="hero-title">Все новости</h1>
+        <div class="filter-tabs">
+          <button class="tab-btn active" type="button" data-tab="important">Важно</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Year Filters -->
+    <div class="year-row">
+      <button class="year-btn active" type="button" data-year="2026">2026</button>
+      <button class="year-btn" type="button" data-year="2025">2025</button>
+      <button class="year-btn" type="button" data-year="2024">2024</button>
+      <button class="year-btn" type="button" data-year="2023">2023</button>
+    </div>
+
+    <!-- News Grid -->
+    <div class="news-grid" id="newsGrid">
+      <article class="news-card" data-year="2026">
+        <div class="news-card-img" style="background:linear-gradient(135deg,#0f172a,#1e3a5f);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+          <svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="200" fill="url(#g1)"/>
+            <circle cx="320" cy="50" r="80" fill="rgba(37,99,235,0.15)"/>
+            <circle cx="80" cy="160" r="60" fill="rgba(16,185,129,0.1)"/>
+            <rect x="120" y="50" width="160" height="100" rx="12" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+            <circle cx="200" cy="85" r="28" stroke="#60a5fa" stroke-width="3" fill="none"/>
+            <line x1="200" y1="85" x2="200" y2="67" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="200" y1="85" x2="215" y2="85" stroke="#93c5fd" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="200" cy="85" r="3" fill="#60a5fa"/>
+            <text x="200" y="130" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="11" font-family="Segoe UI,sans-serif">ГРАФИК РАБОТЫ</text>
+            <defs><linearGradient id="g1" x1="0" y1="0" x2="400" y2="200"><stop stop-color="#0f172a"/><stop offset="1" stop-color="#1e3a5f"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="news-card-body">
+          <p class="news-card-date">19 марта 2026</p>
+          <h3 class="news-card-title">Рабочие часы с 21 по 25 марта</h3>
+          <p class="news-card-desc">Уважаемые клиенты, информируем вас об изменённом графике работы отделений банка в праздничные дни.</p>
+        </div>
+      </article>
+
+      <article class="news-card" data-year="2026">
+        <div class="news-card-img" style="background:linear-gradient(135deg,#064e3b,#059669);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+          <svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="200" fill="url(#g2)"/>
+            <circle cx="340" cy="40" r="70" fill="rgba(16,185,129,0.12)"/>
+            <circle cx="60" cy="170" r="50" fill="rgba(52,211,153,0.08)"/>
+            <path d="M200 40L260 65V115C260 145 230 168 200 175C170 168 140 145 140 115V65L200 40Z" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+            <path d="M180 110L192 122L220 94" stroke="#6ee7b7" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="200" y="190" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="10" font-family="Segoe UI,sans-serif">ЗАЩИТА ПРАВ</text>
+            <defs><linearGradient id="g2" x1="0" y1="0" x2="400" y2="200"><stop stop-color="#064e3b"/><stop offset="1" stop-color="#059669"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="news-card-body">
+          <p class="news-card-date">11 марта 2026</p>
+          <h3 class="news-card-title">День защиты прав потребителей</h3>
+          <p class="news-card-desc">Сомонибонк напоминает о ваших правах как потребителя финансовых услуг и предлагает бесплатные консультации.</p>
+        </div>
+      </article>
+
+      <article class="news-card" data-year="2026">
+        <div class="news-card-img" style="background:linear-gradient(135deg,#78350f,#d97706);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+          <svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="200" fill="url(#g3)"/>
+            <circle cx="60" cy="40" r="60" fill="rgba(251,191,36,0.1)"/>
+            <circle cx="350" cy="170" r="50" fill="rgba(251,191,36,0.08)"/>
+            <rect x="110" y="55" width="180" height="110" rx="12" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+            <rect x="110" y="80" width="180" height="22" fill="rgba(255,255,255,0.08)"/>
+            <rect x="125" y="115" width="60" height="10" rx="3" fill="rgba(255,255,255,0.15)"/>
+            <circle cx="260" cy="125" r="12" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+            <circle cx="275" cy="125" r="12" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <text x="200" y="50" text-anchor="middle" fill="#fcd34d" font-size="22" font-weight="bold" font-family="Segoe UI,sans-serif">10%</text>
+            <text x="200" y="190" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="10" font-family="Segoe UI,sans-serif">КЭШБЭК MASTERCARD</text>
+            <defs><linearGradient id="g3" x1="0" y1="0" x2="400" y2="200"><stop stop-color="#78350f"/><stop offset="1" stop-color="#d97706"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="news-card-body">
+          <p class="news-card-date">18 февраля 2026</p>
+          <h3 class="news-card-title">Кэшбэк 10% с Mastercard</h3>
+          <p class="news-card-desc">Получайте кэшбэк 10% при оплате картой Mastercard от Сомонибонк в торговых точках по всему Таджикистану.</p>
+        </div>
+      </article>
+
+      <article class="news-card" data-year="2025">
+        <div class="news-card-img" style="background:linear-gradient(135deg,#1e1b4b,#4338ca);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+          <svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="200" fill="url(#g4)"/>
+            <circle cx="330" cy="50" r="70" fill="rgba(99,102,241,0.12)"/>
+            <rect x="155" y="30" width="90" height="140" rx="14" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+            <rect x="165" y="50" width="70" height="95" rx="4" fill="rgba(255,255,255,0.06)"/>
+            <circle cx="200" cy="158" r="6" fill="rgba(255,255,255,0.15)"/>
+            <path d="M185 95L195 105L215 85" stroke="#a5b4fc" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="180" y="115" width="40" height="5" rx="2" fill="rgba(255,255,255,0.12)"/>
+            <text x="200" y="192" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="10" font-family="Segoe UI,sans-serif">МОБИЛЬНЫЙ СЕРВИС</text>
+            <defs><linearGradient id="g4" x1="0" y1="0" x2="400" y2="200"><stop stop-color="#1e1b4b"/><stop offset="1" stop-color="#4338ca"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="news-card-body">
+          <p class="news-card-date">22 ноября 2025</p>
+          <h3 class="news-card-title">Запуск обновлённого мобильного сервиса</h3>
+          <p class="news-card-desc">Обновлённый мобильный сервис с удобным интерфейсом и новыми функциями для управления финансами.</p>
+        </div>
+      </article>
+
+      <article class="news-card" data-year="2025">
+        <div class="news-card-img" style="background:linear-gradient(135deg,#1e3a5f,#2563eb);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+          <svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="200" fill="url(#g5)"/>
+            <circle cx="70" cy="45" r="55" fill="rgba(37,99,235,0.12)"/>
+            <rect x="100" y="60" width="200" height="80" rx="10" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+            <rect x="100" y="80" width="200" height="16" fill="rgba(255,255,255,0.06)"/>
+            <rect x="115" y="108" width="50" height="8" rx="2" fill="rgba(255,255,255,0.15)"/>
+            <circle cx="270" cy="115" r="10" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+            <circle cx="285" cy="115" r="10" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <text x="200" y="185" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="10" font-family="Segoe UI,sans-serif">ДЕБЕТОВЫЕ КАРТЫ</text>
+            <defs><linearGradient id="g5" x1="0" y1="0" x2="400" y2="200"><stop stop-color="#1e3a5f"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="news-card-body">
+          <p class="news-card-date">14 сентября 2025</p>
+          <h3 class="news-card-title">Новые условия по дебетовым картам</h3>
+          <p class="news-card-desc">Обновлённые тарифы и привилегии для держателей дебетовых карт Сомонибонк.</p>
+        </div>
+      </article>
+
+      <article class="news-card" data-year="2025">
+        <div class="news-card-img" style="background:linear-gradient(135deg,#0f172a,#334155);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+          <svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="200" fill="url(#g6)"/>
+            <circle cx="100" cy="100" r="35" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+            <rect x="88" y="88" width="24" height="30" rx="3" fill="rgba(255,255,255,0.1)"/>
+            <rect x="92" y="80" width="16" height="8" rx="2" fill="rgba(255,255,255,0.12)"/>
+            <circle cx="200" cy="100" r="35" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+            <rect x="188" y="88" width="24" height="30" rx="3" fill="rgba(255,255,255,0.1)"/>
+            <rect x="192" y="80" width="16" height="8" rx="2" fill="rgba(255,255,255,0.12)"/>
+            <circle cx="300" cy="100" r="35" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+            <rect x="288" y="88" width="24" height="30" rx="3" fill="rgba(255,255,255,0.1)"/>
+            <rect x="292" y="80" width="16" height="8" rx="2" fill="rgba(255,255,255,0.12)"/>
+            <text x="200" y="170" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="10" font-family="Segoe UI,sans-serif">СЕТЬ БАНКОМАТОВ</text>
+            <defs><linearGradient id="g6" x1="0" y1="0" x2="400" y2="200"><stop stop-color="#0f172a"/><stop offset="1" stop-color="#334155"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="news-card-body">
+          <p class="news-card-date">03 июля 2025</p>
+          <h3 class="news-card-title">Расширение сети банкоматов</h3>
+          <p class="news-card-desc">Новые банкоматы установлены в 15 населённых пунктах Таджикистана для вашего удобства.</p>
+        </div>
+      </article>
+
+      <article class="news-card" data-year="2024">
+        <div class="news-card-img" style="background:linear-gradient(135deg,#312e81,#6366f1);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+          <svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="200" fill="url(#g7)"/>
+            <circle cx="330" cy="45" r="65" fill="rgba(99,102,241,0.12)"/>
+            <rect x="120" y="55" width="70" height="90" rx="8" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" transform="rotate(-8 155 100)"/>
+            <rect x="165" y="55" width="70" height="90" rx="8" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+            <rect x="210" y="55" width="70" height="90" rx="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" transform="rotate(8 245 100)"/>
+            <rect x="175" y="75" width="50" height="8" rx="2" fill="rgba(255,255,255,0.2)"/>
+            <rect x="175" y="90" width="30" height="5" rx="2" fill="rgba(255,255,255,0.12)"/>
+            <text x="200" y="185" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="10" font-family="Segoe UI,sans-serif">ЛИНЕЙКА КАРТ</text>
+            <defs><linearGradient id="g7" x1="0" y1="0" x2="400" y2="200"><stop stop-color="#312e81"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="news-card-body">
+          <p class="news-card-date">18 октября 2024</p>
+          <h3 class="news-card-title">Новая линейка карт для клиентов банка</h3>
+          <p class="news-card-desc">Презентация новой линейки платёжных карт с расширенными возможностями и бонусной программой.</p>
+        </div>
+      </article>
+
+      <article class="news-card" data-year="2024">
+        <div class="news-card-img" style="background:linear-gradient(135deg,#164e63,#0891b2);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+          <svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="200" fill="url(#g8)"/>
+            <circle cx="60" cy="160" r="50" fill="rgba(8,145,178,0.1)"/>
+            <path d="M120 130L180 70L240 100L300 50" stroke="#67e8f9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="120" cy="130" r="5" fill="#67e8f9"/>
+            <circle cx="180" cy="70" r="5" fill="#67e8f9"/>
+            <circle cx="240" cy="100" r="5" fill="#67e8f9"/>
+            <circle cx="300" cy="50" r="5" fill="#67e8f9"/>
+            <path d="M300 50L310 42L318 52" stroke="#67e8f9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="200" y="175" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="10" font-family="Segoe UI,sans-serif">ТАРИФЫ НА ПЕРЕВОДЫ</text>
+            <defs><linearGradient id="g8" x1="0" y1="0" x2="400" y2="200"><stop stop-color="#164e63"/><stop offset="1" stop-color="#0891b2"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="news-card-body">
+          <p class="news-card-date">27 июня 2024</p>
+          <h3 class="news-card-title">Обновление тарифов на переводы</h3>
+          <p class="news-card-desc">Снижены комиссии на внутренние и международные переводы для частных лиц и бизнеса.</p>
+        </div>
+      </article>
+
+      <article class="news-card" data-year="2024">
+        <div class="news-card-img" style="background:linear-gradient(135deg,#134e4a,#14b8a6);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+          <svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="200" fill="url(#g9)"/>
+            <circle cx="340" cy="50" r="60" fill="rgba(20,184,166,0.1)"/>
+            <circle cx="200" cy="90" r="40" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+            <path d="M185 90L195 100L215 80" stroke="#5eead4" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M160 60L170 50M240 60L230 50M160 120L170 130M240 120L230 130" stroke="rgba(255,255,255,0.15)" stroke-width="2" stroke-linecap="round"/>
+            <text x="200" y="170" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="10" font-family="Segoe UI,sans-serif">БЫСТРЫЕ ПЛАТЕЖИ</text>
+            <defs><linearGradient id="g9" x1="0" y1="0" x2="400" y2="200"><stop stop-color="#134e4a"/><stop offset="1" stop-color="#14b8a6"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="news-card-body">
+          <p class="news-card-date">12 февраля 2024</p>
+          <h3 class="news-card-title">Сервис быстрых платежей получил обновление</h3>
+          <p class="news-card-desc">Мгновенные переводы теперь доступны 24/7 без ограничений по сумме.</p>
+        </div>
+      </article>
+
+      <article class="news-card" data-year="2023">
+        <div class="news-card-img" style="background:linear-gradient(135deg,#292524,#78716c);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+          <svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="200" fill="url(#g10)"/>
+            <circle cx="60" cy="40" r="50" fill="rgba(120,113,108,0.1)"/>
+            <rect x="130" y="70" width="140" height="90" rx="6" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+            <path d="M120 70L200 40L280 70" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+            <rect x="175" y="100" width="30" height="60" rx="3" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <rect x="215" y="110" width="20" height="20" rx="2" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+            <circle cx="200" cy="55" r="4" fill="rgba(255,255,255,0.2)"/>
+            <text x="200" y="185" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="10" font-family="Segoe UI,sans-serif">НОВЫЙ ОФИС</text>
+            <defs><linearGradient id="g10" x1="0" y1="0" x2="400" y2="200"><stop stop-color="#292524"/><stop offset="1" stop-color="#78716c"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="news-card-body">
+          <p class="news-card-date">16 ноября 2023</p>
+          <h3 class="news-card-title">Сомонибонк открыл новый офис обслуживания</h3>
+          <p class="news-card-desc">Открыто новое отделение в центре Душанбе с современным дизайном и расширенным спектром услуг.</p>
+        </div>
+      </article>
+
+      <article class="news-card" data-year="2023">
+        <div class="news-card-img" style="background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden">
+          <svg width="400" height="200" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="200" fill="url(#g11)"/>
+            <circle cx="340" cy="160" r="60" fill="rgba(37,99,235,0.08)"/>
+            <rect x="130" y="40" width="140" height="100" rx="8" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+            <rect x="140" y="50" width="120" height="70" rx="3" fill="rgba(255,255,255,0.04)"/>
+            <rect x="150" y="60" width="60" height="5" rx="2" fill="rgba(255,255,255,0.12)"/>
+            <rect x="150" y="72" width="80" height="5" rx="2" fill="rgba(255,255,255,0.08)"/>
+            <rect x="150" y="84" width="45" height="5" rx="2" fill="rgba(255,255,255,0.08)"/>
+            <rect x="150" y="96" width="70" height="5" rx="2" fill="rgba(255,255,255,0.06)"/>
+            <circle cx="200" cy="148" r="5" fill="rgba(255,255,255,0.12)"/>
+            <text x="200" y="185" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="10" font-family="Segoe UI,sans-serif">ИНТЕРНЕТ-БАНКИНГ</text>
+            <defs><linearGradient id="g11" x1="0" y1="0" x2="400" y2="200"><stop stop-color="#1a1a2e"/><stop offset="1" stop-color="#16213e"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div class="news-card-body">
+          <p class="news-card-date">07 августа 2023</p>
+          <h3 class="news-card-title">Обновлены правила интернет-банкинга</h3>
+          <p class="news-card-desc">Новые правила безопасности и улучшенный интерфейс системы интернет-банкинга.</p>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="sb-footer">
+    <div class="sb-footer-inner">
+      <div class="sb-footer-grid">
+        <div class="sb-footer-col">
+          <div class="sb-footer-logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M16 2L28 8V24L16 30L4 24V8L16 2Z" stroke="#fbbf24" stroke-width="2" fill="none"/>
+              <path d="M16 6L24 10V22L16 26L8 22V10L16 6Z" fill="#fbbf24"/>
+            </svg>
+            <span>Сомонибонк</span>
+          </div>
+          <p class="sb-footer-address">
+            ул. Рудаки, 48<br>
+            Душанбе, Таджикистан
+          </p>
+          <a href="addresses.html" class="sb-footer-link">Филиалы и точки обслуживания</a>
+        </div>
+
+        <div class="sb-footer-col">
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">900</div>
+            <div class="sb-contact-label">Для звонков с мобильных<br>в Таджикистане</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">+992 44 600 1111</div>
+            <div class="sb-contact-label">Для звонков из любой<br>точки мира</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-number">+992 44 600 1520</div>
+            <div class="sb-contact-label">Телефон доверия<br>Наблюдательный Совет<br>Безопасность и Compliance<br>Жалобы и обращения</div>
+          </div>
+          <div class="sb-contact-item">
+            <div class="sb-contact-email">support@somoni.tj</div>
+            <div class="sb-contact-label">Для онлайн-обращений</div>
+          </div>
+        </div>
+
+        <div class="sb-footer-col">
+          <div class="sb-footer-section">
+            <h4>Приложения</h4>
+            <div class="sb-app-buttons">
+              <a href="#" class="sb-app-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                </svg>
+                Google Play
+              </a>
+              <a href="#" class="sb-app-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,22C7.79,22.05 6.8,20.68 5.96,19.47C4.25,17 2.94,12.45 4.7,9.39C5.57,7.87 7.13,6.91 8.82,6.88C10.1,6.86 11.32,7.75 12.11,7.75C12.89,7.75 14.37,6.68 15.92,6.84C16.57,6.87 18.39,7.1 19.56,8.82C19.47,8.88 17.39,10.1 17.41,12.63C17.44,15.65 20.06,16.66 20.09,16.67C20.06,16.74 19.67,18.11 18.71,19.5M13,3.5C13.73,2.67 14.94,2.04 15.94,2C16.07,3.17 15.6,4.35 14.9,5.19C14.21,6.04 13.07,6.7 11.95,6.61C11.8,5.37 12.36,4.26 13,3.5Z"/>
+                </svg>
+                App Store
+              </a>
+            </div>
+          </div>
+          <div class="sb-footer-section">
+            <h4>Социальные сети</h4>
+            <div class="sb-social-grid">
+              <a href="#" class="sb-social-icon" aria-label="Telegram">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.04C20.54,3.74 21.21,4.22 20.94,5.32L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.66,16.27L10.65,18.23C10.43,18.45 10.25,18.65 9.78,18.65Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M12,2C6.48,2 2,6.48 2,12C2,16.84 5.44,20.87 10,21.8V15H8V12H10V9.5C10,7.57 11.57,6 13.5,6H16V9H14C13.45,9 13,9.45 13,10V12H16L15.5,15H13V21.8C18.56,20.87 22,16.84 22,12C22,6.48 17.52,2 12,2Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon" aria-label="YouTube">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M10,15L15.19,12L10,9V15M21.56,7.17C21.69,7.64 21.78,8.27 21.84,9.07C21.91,9.87 21.94,10.56 21.94,11.16L22,12C22,14.19 21.84,15.8 21.56,16.83C21.31,17.73 20.73,18.31 19.83,18.56C19.36,18.69 18.5,18.78 17.18,18.84C15.88,18.91 14.69,18.94 13.59,18.94L12,19C7.81,19 5.2,18.84 4.17,18.56C3.27,18.31 2.69,17.73 2.44,16.83C2.31,16.36 2.22,15.73 2.16,14.93C2.09,14.13 2.06,13.44 2.06,12.84L2,12C2,9.81 2.16,8.2 2.44,7.17C2.69,6.27 3.27,5.69 4.17,5.44C4.64,5.31 5.5,5.22 6.82,5.16C8.12,5.09 9.31,5.06 10.41,5.06L12,5C16.19,5 18.8,5.16 19.83,5.44C20.73,5.69 21.31,6.27 21.56,7.17Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M18.5,18.5V13.2A3.26,3.26 0 0,0 15.24,9.94C14.39,9.94 13.4,10.46 12.92,11.24V10.13H10.13V18.5H12.92V13.57C12.92,12.8 13.54,12.17 14.31,12.17A1.4,1.4 0 0,1 15.71,13.57V18.5H18.5M6.88,8.56A1.68,1.68 0 0,0 8.56,6.88C8.56,5.95 7.81,5.19 6.88,5.19A1.69,1.69 0 0,0 5.19,6.88C5.19,7.81 5.95,8.56 6.88,8.56M8.27,18.5V10.13H5.5V18.5H8.27Z"/>
+                </svg>
+              </a>
+              <a href="#" class="sb-social-icon" aria-label="TikTok">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                  <path d="M19.59,6.69A4.83,4.83 0 0,1 21.5,9.5C21.5,11.99 19.49,14 17,14V11A2,2 0 0,0 15,9H14V16.5A3.5,3.5 0 0,1 10.5,20A3.5,3.5 0 0,1 7,16.5A3.5,3.5 0 0,1 10.5,13C10.8,13 11.09,13.04 11.37,13.11V10.35C11.05,10.27 10.71,10.23 10.36,10.23A6.36,6.36 0 0,0 4,16.59A6.36,6.36 0 0,0 10.36,22.95C14.31,22.95 17.5,19.76 17.5,15.81V9.5H19.59Z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sb-footer-bottom">
+        <div class="sb-footer-links">
+          <a href="somonibank.html">О нас</a>
+          <a href="addresses.html">Адреса</a>
+          <a href="documents.html">Документы и тарифы</a>
+          <a href="#">Вакансии</a>
+          <a href="contact.html">Связь с нами</a>
+        </div>
+      </div>
+
+      <div class="sb-footer-copyright">
+        <p>&copy; 2024 ПАО Сомонибонк</p>
+        <p>Лицензия НБТ №0000114 от 3 января 2020 года</p>
+        <p>ПАО Сомонибонк является участником Фонда страхования вкладов и Объединения Таджикистана</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function filterNews() {
+      const activeYear = document.querySelector('.year-btn.active')?.dataset.year;
+      document.querySelectorAll('.news-card').forEach(card => {
+        if (!activeYear || card.dataset.year === activeYear) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Year filter logic
+    document.querySelectorAll('.year-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        filterNews();
+      });
+    });
+
+    // Tab filter logic
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Show 2026 by default
+    filterNews();
+  </script>
+</body>
+</html>

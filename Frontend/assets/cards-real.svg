@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f5d76e"/>
+      <stop offset="50%" style="stop-color:#d4af37"/>
+      <stop offset="100%" style="stop-color:#aa8c2c"/>
+    </linearGradient>
+    <linearGradient id="chip" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f0d078"/>
+      <stop offset="50%" style="stop-color:#c9a227"/>
+      <stop offset="100%" style="stop-color:#f0d078"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="200" fill="url(#goldGrad)"/>
+  <rect x="20" y="50" width="50" height="38" rx="4" fill="url(#chip)" stroke="#997a1f" stroke-width="1"/>
+  <path d="M30 50 L30 88 M45 50 L45 88 M20 60 L70 60 M20 75 L70 75" stroke="#997a1f" stroke-width="0.5" fill="none" opacity="0.5"/>
+  <g fill="none" stroke="#997a1f" stroke-width="2">
+    <circle cx="340" cy="70" r="18"/>
+    <circle cx="370" cy="70" r="18"/>
+  </g>
+  <text x="30" y="115" font-family="Arial" font-size="14" fill="#5c4a1f" font-weight="bold">SOMONIBANK</text>
+  <text x="30" y="140" font-family="monospace" font-size="16" fill="#5c4a1f" letter-spacing="3">**** **** **** 4587</text>
+  <text x="30" y="170" font-family="Arial" font-size="9" fill="#5c4a1f" opacity="0.8">IVAN IVANOV</text>
+  <text x="320" y="170" font-family="Arial" font-size="9" fill="#5c4a1f" opacity="0.8">12/28</text>
+  <text x="350" y="105" font-family="Arial" font-size="20" fill="#1a1f71" font-style="italic" font-weight="bold">VISA</text>
+  <circle cx="100" cy="160" r="15" fill="#f5d76e" stroke="#d4af37" stroke-width="2"/>
+  <circle cx="130" cy="170" r="12" fill="#f5d76e" stroke="#d4af37" stroke-width="2"/>
+  <circle cx="155" cy="175" r="10" fill="#f5d76e" stroke="#d4af37" stroke-width="2"/>
+</svg>

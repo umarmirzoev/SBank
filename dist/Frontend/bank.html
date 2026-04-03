@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Банк — Сомонибанк</title>
+  <style>
+    :root{
+      --bg:#eaf1fb;
+      --shell:#f5f8fe;
+      --panel:#ffffff;
+      --panel-soft:rgba(255,255,255,.84);
+      --line:#e6edf8;
+      --line-strong:#dbe6f6;
+      --text:#1f3150;
+      --muted:#8c9ab0;
+      --brand:#2f79ff;
+      --brand-deep:#2566e8;
+      --shadow:0 22px 54px rgba(109,130,171,.14);
+      --shadow-soft:0 14px 32px rgba(139,157,191,.14);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%}
+    body{
+      font-family:"Segoe UI",Arial,sans-serif;
+      background:
+        radial-gradient(circle at 15% 0%,rgba(255,255,255,.95),rgba(255,255,255,0) 28%),
+        radial-gradient(circle at 85% 12%,rgba(220,232,255,.75),rgba(220,232,255,0) 26%),
+        linear-gradient(180deg,#eef3fb 0%,#e8eef8 100%);
+      color:var(--text);
+      padding:4px;
+    }
+    button,input{font:inherit}
+    a{text-decoration:none;color:inherit}
+    .app-shell{
+      display:grid;
+      grid-template-columns:150px minmax(0,1fr);
+      min-height:calc(100vh - 8px);
+      border-radius:30px;
+      overflow:hidden;
+      background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(245,248,253,.92));
+      box-shadow:0 30px 70px rgba(97,117,153,.18);
+      backdrop-filter:blur(20px);
+    }
+    .sidebar{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      padding:14px 8px 14px 6px;
+      background:linear-gradient(180deg,rgba(250,252,255,.92),rgba(241,246,255,.98));
+      border-right:1px solid rgba(223,232,246,.95);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:0 8px;
+      min-height:42px;
+    }
+    .brand-logo{
+      width:32px;
+      height:32px;
+      border-radius:10px;
+      background:linear-gradient(180deg,#2b7bff,#2464eb);
+      color:#fff;
+      display:grid;
+      place-items:center;
+      font-weight:800;
+      font-size:20px;
+      box-shadow:0 12px 24px rgba(47,121,255,.28);
+    }
+    .brand-title{
+      font-size:12px;
+      font-weight:800;
+      color:#1a5fd8;
+      letter-spacing:.01em;
+    }
+    .side-nav{
+      display:grid;
+      gap:6px;
+      padding-right:4px;
+    }
+    .nav-link{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-height:40px;
+      padding:0 14px;
+      border:none;
+      border-radius:12px;
+      background:transparent;
+      color:#40526f;
+      font-size:12px;
+      font-weight:500;
+      cursor:pointer;
+      text-align:left;
+      transition:background .18s ease,color .18s ease,transform .18s ease;
+    }
+    .nav-link svg{width:18px;height:18px;flex:0 0 18px}
+    .nav-link:hover{background:#f1f6ff;color:var(--brand);transform:translateX(1px)}
+    .nav-link.active{
+      background:linear-gradient(180deg,#dceaff,#edf5ff);
+      color:var(--brand);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 10px 24px rgba(138,170,221,.16);
+    }
+    .support{
+      margin-top:auto;
+      display:grid;
+      gap:3px;
+      padding:12px 10px;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:linear-gradient(180deg,#ffffff,#f7faff);
+      box-shadow:var(--shadow-soft);
+    }
+    .support strong{font-size:10px}
+    .support span{font-size:10px;color:var(--muted)}
+    .main{
+      padding:10px 12px 10px 0;
+      min-width:0;
+    }
+    .frame{
+      min-height:100%;
+      border-radius:24px;
+      border:1px solid rgba(228,236,248,.95);
+      background:
+        radial-gradient(circle at 20% 0%,rgba(255,255,255,.95),rgba(255,255,255,0) 25%),
+        linear-gradient(180deg,rgba(255,255,255,.92),rgba(246,249,255,.97));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+    .frame::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 72% 18%,rgba(219,233,255,.65),rgba(219,233,255,0) 24%),
+        radial-gradient(circle at 38% 42%,rgba(255,255,255,.82),rgba(255,255,255,0) 32%);
+      pointer-events:none;
+      z-index:-1;
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      padding:14px 18px 10px;
+    }
+    .search{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex:1;
+      max-width:640px;
+      min-height:44px;
+      padding:0 16px;
+      border:1px solid transparent;
+      border-radius:14px;
+      background:linear-gradient(180deg,#f8fbff,#eef4ff);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 8px 20px rgba(143,164,198,.08);
+    }
+    .search svg,.icon-btn svg{width:18px;height:18px;color:#7f8fa8}
+    .search input{
+      width:100%;
+      border:none;
+      outline:none;
+      background:transparent;
+      color:#4d5e78;
+      font-size:14px;
+    }
+    .top-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-left:auto;
+    }
+    .icon-btn{
+      position:relative;
+      display:grid;
+      place-items:center;
+      width:34px;
+      height:34px;
+      border:none;
+      border-radius:50%;
+      background:transparent;
+      cursor:pointer;
+      transition:background .18s ease,transform .18s ease;
+    }
+    .icon-btn:hover{background:#edf4ff;transform:translateY(-1px)}
+    .badge{
+      position:absolute;
+      right:4px;
+      top:3px;
+      min-width:14px;
+      height:14px;
+      padding:0 4px;
+      display:grid;
+      place-items:center;
+      border-radius:999px;
+      background:#ff7f7f;
+      color:#fff;
+      font-size:9px;
+      font-weight:700;
+    }
+    .profile{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding-left:4px;
+    }
+    .avatar{
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      background:linear-gradient(180deg,#e7d2bf,#b98958);
+      box-shadow:0 10px 22px rgba(140,105,70,.18);
+      position:relative;
+      overflow:hidden;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:700;
+    }
+    .avatar::before{
+      content:"";
+      position:absolute;
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      background:#6b4b2d;
+      top:3px;
+      left:8px;
+    }
+    .avatar::after{
+      content:"";
+      position:absolute;
+      width:26px;
+      height:16px;
+      border-radius:16px 16px 10px 10px;
+      background:#243650;
+      bottom:-2px;
+      left:5px;
+    }
+    .avatar span{
+      position:relative;
+      z-index:1;
+      font-size:12px;
+      opacity:0;
+    }
+    .profile strong{font-size:14px;font-weight:700;color:#283853}
+    .chevron{width:14px;height:14px;color:#7787a0}
+    .content{
+      padding:4px 18px 22px;
+    }
+    .page-title{
+      margin:0 0 12px;
+      font-size:22px;
+      line-height:1.1;
+      font-weight:800;
+      color:#1d2f4d;
+    }
+    .top-grid{
+      display:grid;
+      grid-template-columns:340px minmax(0,1fr);
+      gap:12px;
+      align-items:start;
+    }
+    .card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:linear-gradient(180deg,#ffffff,var(--panel-soft));
+      box-shadow:var(--shadow-soft);
+    }
+    .rates-card{
+      padding:16px 16px 14px;
+      min-height:168px;
+    }
+    .rates-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:14px;
+    }
+    .rates-title{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .rates-head h2{
+      margin:0;
+      font-size:14px;
+      font-weight:800;
+      color:#324666;
+    }
+    .rates-arrow{
+      width:10px;
+      height:10px;
+      color:#9bacbf;
+    }
+    .rates-head button{
+      width:30px;
+      height:30px;
+      border:none;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(180deg,#effcf6,#e0f7ec);
+      color:#1db37c;
+      cursor:pointer;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.85);
+    }
+    .rates-labels,.rate-row{
+      display:grid;
+      grid-template-columns:1.3fr .8fr .8fr;
+      align-items:center;
+    }
+    .rates-labels{
+      margin-bottom:10px;
+      color:#97a5ba;
+      font-size:11px;
+    }
+    .rates-rows{display:grid;gap:14px}
+    .currency{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:13px;
+      font-weight:700;
+      color:#263854;
+    }
+    .flag{
+      display:grid;
+      place-items:center;
+      width:24px;
+      height:18px;
+      border-radius:6px;
+      background:#f7fbff;
+      box-shadow:inset 0 0 0 1px rgba(219,229,242,.9);
+      font-size:14px;
+    }
+    .rate-row strong{font-size:13px;font-weight:700;color:#223552}
+    .tiles-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+    }
+    .feature-tile{
+      min-height:108px;
+      padding:12px;
+      border:1px solid rgba(231,238,248,.95);
+      border-radius:16px;
+      background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(243,247,255,.95));
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      align-items:flex-start;
+      text-align:left;
+      cursor:pointer;
+      box-shadow:0 12px 28px rgba(145,162,190,.10);
+      transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+    }
+    .feature-tile:hover,.service-card:hover,.bottom-banner:hover{
+      transform:translateY(-2px);
+      box-shadow:0 18px 40px rgba(120,141,177,.16);
+      border-color:var(--line-strong);
+    }
+    .feature-icon{
+      width:46px;
+      height:46px;
+      border-radius:15px;
+      background:linear-gradient(180deg,#eef4ff,#dfeafb);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 12px 24px rgba(156,176,210,.16);
+      position:relative;
+      overflow:hidden;
+      flex:0 0 46px;
+    }
+    .feature-icon::before,.feature-icon::after{
+      content:"";
+      position:absolute;
+      inset:auto;
+    }
+    .feature-icon.deposit::before{width:22px;height:22px;border-radius:50%;border:2px solid #2f79ff;left:12px;top:11px}
+    .feature-icon.deposit::after{width:12px;height:2px;background:#2f79ff;left:17px;top:21px;box-shadow:0 -5px 0 #2f79ff,0 5px 0 #2f79ff}
+    .feature-icon.exchange::before{width:28px;height:28px;border-radius:50%;background:linear-gradient(180deg,#56d8ff,#31a8e8);left:9px;top:9px}
+    .feature-icon.exchange::after{width:20px;height:20px;border-radius:50%;border:3px solid rgba(255,255,255,.7);left:13px;top:13px;box-shadow:10px 2px 0 -7px #ffffff}
+    .feature-icon.loan::before{width:28px;height:28px;border-radius:50%;background:linear-gradient(180deg,#7fb8ff,#3f8dff);left:9px;top:9px}
+    .feature-icon.loan::after{width:14px;height:14px;border-radius:4px;transform:rotate(45deg);background:#ffffff;left:16px;top:16px}
+    .feature-icon.cards::before{width:30px;height:20px;border-radius:6px;background:linear-gradient(180deg,#32b2ff,#2b7fff);left:8px;top:13px;box-shadow:8px 6px 0 rgba(20,92,212,.18)}
+    .feature-icon.cards::after{width:10px;height:4px;border-radius:3px;background:rgba(255,255,255,.9);left:24px;top:20px}
+    .feature-icon.cards-secondary::before{width:26px;height:16px;border-radius:6px;background:linear-gradient(180deg,#61b8ff,#2d8cff);left:9px;top:15px;box-shadow:0 -8px 0 rgba(255,255,255,.45)}
+    .feature-icon.cards-secondary::after{width:28px;height:3px;border-radius:3px;background:rgba(255,255,255,.75);left:9px;top:21px}
+    .feature-icon.globe::before{width:30px;height:30px;border-radius:50%;background:linear-gradient(180deg,#74d1ff,#408eff);left:8px;top:8px}
+    .feature-icon.globe::after{width:30px;height:30px;border-radius:50%;left:8px;top:8px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.8)}
+    .feature-icon.cash::before{width:26px;height:26px;border-radius:8px;background:linear-gradient(180deg,#b9f4ff,#6edaff);left:10px;top:10px}
+    .feature-icon.cash::after{width:12px;height:12px;border-radius:50%;border:2px solid #2a86ea;left:17px;top:17px}
+    .feature-icon.auto::before{width:30px;height:30px;border-radius:50%;border:4px solid #2c7cff;left:8px;top:8px}
+    .feature-icon.auto::after{width:14px;height:14px;border-radius:50%;background:#ffffff;left:16px;top:16px;box-shadow:0 0 0 3px #6e9fff inset}
+    .feature-tile strong{
+      font-size:12px;
+      line-height:1.15;
+      font-weight:700;
+      color:#293a55;
+    }
+    .section-title{
+      margin:18px 0 12px;
+      font-size:16px;
+      font-weight:800;
+      color:#203352;
+    }
+    .services-grid{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:10px;
+    }
+    .service-card{
+      min-height:58px;
+      padding:10px 12px;
+      border:1px solid rgba(231,238,248,.95);
+      border-radius:16px;
+      background:linear-gradient(180deg,#ffffff,#f7faff);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      text-align:left;
+      cursor:pointer;
+      box-shadow:0 10px 24px rgba(145,162,190,.08);
+      transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+    }
+    .service-icon{
+      width:34px;
+      height:34px;
+      border-radius:11px;
+      flex:0 0 34px;
+      position:relative;
+      background:linear-gradient(180deg,#eef4ff,#dce8ff);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.95);
+    }
+    .service-icon::before,.service-icon::after{content:"";position:absolute}
+    .service-icon.account::before{inset:8px;border-radius:8px;border:2px solid #2d7bff}
+    .service-icon.account::after{width:10px;height:4px;border-radius:2px;background:#2d7bff;left:12px;top:9px}
+    .service-icon.credit{background:linear-gradient(180deg,#e8fbf5,#d6f4ea)}
+    .service-icon.credit::before{width:18px;height:12px;border-radius:3px;background:#1aa77a;left:8px;top:11px}
+    .service-icon.credit::after{width:8px;height:2px;background:#ffffff;left:13px;top:16px}
+    .service-icon.card::before{width:20px;height:14px;border-radius:4px;background:#2f7cff;left:7px;top:10px}
+    .service-icon.card::after{width:12px;height:2px;background:#ffffff;left:11px;top:15px}
+    .service-icon.transfer{background:linear-gradient(180deg,#fff6e9,#ffebce)}
+    .service-icon.transfer::before{width:16px;height:2px;background:#f2aa36;left:9px;top:12px;box-shadow:0 8px 0 #f2aa36}
+    .service-icon.transfer::after{width:6px;height:6px;border-top:2px solid #f2aa36;border-right:2px solid #f2aa36;transform:rotate(45deg);left:19px;top:9px;box-shadow:-10px 8px 0 -2px transparent}
+    .service-icon.payment::before{inset:7px;border-radius:7px;border:2px solid #2d7bff}
+    .service-icon.payment::after{width:10px;height:2px;background:#2d7bff;left:12px;top:11px;box-shadow:0 6px 0 #2d7bff}
+    .service-icon.help::before{width:18px;height:14px;border-radius:7px 7px 7px 2px;background:#2d7bff;left:8px;top:9px}
+    .service-icon.help::after{width:6px;height:2px;background:#ffffff;left:14px;top:15px}
+    .service-icon.order::before{width:20px;height:16px;border-radius:4px;border:2px solid #2d7bff;left:7px;top:9px}
+    .service-icon.order::after{width:12px;height:2px;background:#2d7bff;left:11px;top:15px}
+    .service-icon.calc::before{inset:8px;border-radius:6px;border:2px solid #2d7bff}
+    .service-icon.calc::after{width:12px;height:10px;left:11px;top:13px;background:linear-gradient(90deg,#2d7bff 0 2px,transparent 2px 5px,#2d7bff 5px 7px,transparent 7px 10px,#2d7bff 10px 12px),linear-gradient(#2d7bff 0 2px,transparent 2px 5px,#2d7bff 5px 7px,transparent 7px 10px)}
+    .service-icon.branch::before{width:18px;height:18px;border-radius:50% 50% 50% 0;background:#35a4ff;transform:rotate(-45deg);left:8px;top:7px}
+    .service-icon.branch::after{width:8px;height:8px;border-radius:50%;background:#ffffff;left:13px;top:12px}
+    .service-icon.security{background:linear-gradient(180deg,#e8fbf4,#d8f3e6)}
+    .service-icon.security::before{width:18px;height:20px;left:8px;top:7px;background:#1ba77c;clip-path:polygon(50% 0,100% 18%,100% 58%,50% 100%,0 58%,0 18%)}
+    .service-icon.security::after{width:8px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg);left:13px;top:16px}
+    .service-copy strong{
+      display:block;
+      font-size:11px;
+      line-height:1.1;
+      font-weight:700;
+      color:#213451;
+    }
+    .service-copy small{
+      display:block;
+      margin-top:3px;
+      font-size:9px;
+      line-height:1.15;
+      color:#93a0b5;
+    }
+    .bottom-banner{
+      margin-top:14px;
+      padding:18px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:linear-gradient(180deg,#ffffff,#f7faff);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      box-shadow:var(--shadow-soft);
+      transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+    }
+    .banner-side{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .banner-icon{
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      background:linear-gradient(180deg,#ebf5ff,#d9e8ff);
+      position:relative;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.95);
+    }
+    .banner-icon::before{
+      content:"";
+      position:absolute;
+      width:22px;
+      height:24px;
+      left:11px;
+      top:9px;
+      background:#4f9dff;
+      clip-path:polygon(50% 0,100% 18%,100% 58%,50% 100%,0 58%,0 18%);
+    }
+    .banner-icon::after{
+      content:"";
+      position:absolute;
+      width:9px;
+      height:5px;
+      left:17px;
+      top:19px;
+      border-left:2px solid #fff;
+      border-bottom:2px solid #fff;
+      transform:rotate(-45deg);
+    }
+    .banner-copy strong{
+      display:block;
+      font-size:17px;
+      font-weight:800;
+      color:#1f3250;
+    }
+    .banner-copy span{
+      display:block;
+      margin-top:4px;
+      font-size:12px;
+      color:#8695aa;
+    }
+    .bottom-banner button{
+      min-width:132px;
+      height:40px;
+      padding:0 22px;
+      border:none;
+      border-radius:12px;
+      background:linear-gradient(180deg,#3f8cff,#2f73ff);
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:0 14px 28px rgba(63,140,255,.24);
+    }
+    .toast-status{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      max-width:320px;
+      padding:12px 14px;
+      border-radius:16px;
+      background:#1d2c44;
+      color:#fff;
+      font-size:13px;
+      box-shadow:0 20px 34px rgba(15,28,52,.28);
+      opacity:0;
+      transform:translateY(10px);
+      transition:.2s ease;
+      pointer-events:none;
+    }
+    .toast-status.show{opacity:1;transform:translateY(0)}
+    @media (max-width:1180px){
+      .top-grid{grid-template-columns:1fr}
+      .tiles-grid,.services-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media (max-width:860px){
+      body{padding:0}
+      .app-shell{grid-template-columns:1fr;border-radius:0;min-height:100vh}
+      .sidebar{display:none}
+      .main{padding:0}
+      .frame{border:none;border-radius:0}
+      .topbar{flex-wrap:wrap}
+      .search{max-width:none}
+      .profile strong{display:none}
+      .bottom-banner{flex-direction:column;align-items:flex-start}
+    }
+    @media (max-width:560px){
+      .content{padding:4px 12px 18px}
+      .tiles-grid,.services-grid{grid-template-columns:1fr}
+      .topbar{padding:12px}
+      .feature-tile{min-height:96px}
+    }
+  </style>
+  <script type="module" crossorigin src="/assets/bank-CTelutf_.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/common-B9vdsGd4.js">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">C</div>
+        <div class="brand-title">Сомонибанк</div>
+      </div>
+      <nav class="side-nav">
+        <a class="nav-link active" href="somonibank-app.html"><svg viewBox="0 0 24 24" fill="none"><path d="M4 11 12 4l8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1v-8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span>Главная</span></a>
+        <a class="nav-link" href="bank.html"><svg viewBox="0 0 24 24" fill="none"><path d="M3 10 12 5l9 5M5 10v8M10 10v8M14 10v8M19 10v8M3 20h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Банк</span></a>
+        <a class="nav-link" href="payments.html"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/></svg><span>Платежи</span></a>
+        <a class="nav-link" href="transfers.html"><svg viewBox="0 0 24 24" fill="none"><path d="M5 7h13M14 3l4 4-4 4M19 17H6m5-4-4 4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Переводы</span></a>
+        <a class="nav-link" href="deposits.html"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M4 10h16" stroke="currentColor" stroke-width="2"/></svg><span>Счета</span></a>
+        <a class="nav-link" href="cards.html"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="12" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 14h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Карты</span></a>
+        <a class="nav-link" href="somonibank-app.html"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M6 9h9a3 3 0 0 0 0-6H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Кредиты</span></a>
+        <a class="nav-link" href="deposits.html"><svg viewBox="0 0 24 24" fill="none"><path d="M5 20h14M7 20V7l5-3 5 3v13" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span>Депозиты</span></a>
+        <a class="nav-link" href="somonibank-app.html"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>История</span></a>
+      </nav>
+      <div class="support">
+        <strong>Помощь и поддержка</strong>
+        <span>24/7 • Онлайн чат</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="frame">
+        <header class="topbar">
+          <label class="search">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <input id="searchInput" type="search" placeholder="Поиск...">
+          </label>
+          <div class="top-actions">
+            <button class="icon-btn" type="button" id="searchButton" aria-label="Поиск"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+            <button class="icon-btn" type="button" aria-label="Уведомления"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3a5 5 0 0 0-5 5v2l-2 3h14l-2-3V8a5 5 0 0 0-5-5Z" stroke="currentColor" stroke-width="2"/><path d="M9.5 18a2.5 2.5 0 0 0 5 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="badge">9</span></button>
+            <div class="profile">
+              <div class="avatar" id="userAvatar"><span>И</span></div>
+              <strong id="userName">Иван Иванов</strong>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </header>
+
+        <section class="content">
+          <h1 class="page-title">Банк</h1>
+
+          <section class="top-grid">
+            <div class="card rates-card">
+              <div class="rates-head">
+                <div class="rates-title">
+                  <h2>Курс валют Сомонибонк</h2>
+                  <svg class="rates-arrow" viewBox="0 0 12 12" fill="none"><path d="m2 4 4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <button type="button" id="refreshRates" aria-label="Обновить курсы">↻</button>
+              </div>
+              <div class="rates-labels">
+                <span>Валюта</span>
+                <span>Покупка</span>
+                <span>Продажа</span>
+              </div>
+              <div class="rates-rows" id="ratesRows"></div>
+            </div>
+
+            <div class="tiles-grid" id="promoGrid"></div>
+          </section>
+
+          <h2 class="section-title">Все услуги</h2>
+          <div class="services-grid" id="servicesGrid"></div>
+
+          <section class="bottom-banner">
+            <div class="banner-side">
+              <div class="banner-icon"></div>
+              <div class="banner-copy">
+                <strong>Ваш банк. Ваши правила.</strong>
+                <span>Надёжные финансовые решения для жизни и бизнеса.</span>
+              </div>
+            </div>
+            <button type="button" id="detailsButton">Подробнее</button>
+          </section>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast-status" id="toastStatus"></div>
+</body>
+</html>
