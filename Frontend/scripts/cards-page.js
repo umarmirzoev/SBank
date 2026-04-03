@@ -4,14 +4,86 @@ import {
   formatMoney,
   getSession,
   isAuthenticated,
-  showToast
+  showToast,
+  unwrapResponse
 } from "./common.js";
+
+const CARD_PRODUCT_STORAGE_KEY = "sbank-card-products";
+const ISSUE_CARD_QUERY_KEY = "issueCard";
+const STARTING_BALANCE = 1000;
+
+const CARD_PRODUCT_CATALOG = {
+  "visa-gold": {
+    key: "visa-gold",
+    title: "Visa Gold",
+    brand: "VISA",
+    recommendation: "Подходит для ежедневных оплат, переводов и хранения основного баланса.",
+    theme: {
+      className: "yellow",
+      gradient: "linear-gradient(135deg, #f6d365 0%, #d4a017 55%, #b7791f 100%)",
+      icon: "💳",
+      accent: "#b7791f"
+    }
+  },
+  "mastercard-platinum": {
+    key: "mastercard-platinum",
+    title: "Mastercard Platinum",
+    brand: "MASTERCARD",
+    recommendation: "Удобна как отдельная карта для крупных оплат, поездок и онлайн-покупок.",
+    theme: {
+      className: "blue",
+      gradient: "linear-gradient(135deg, #1d4ed8 0%, #2563eb 55%, #38bdf8 100%)",
+      icon: "🏦",
+      accent: "#1d4ed8"
+    }
+  },
+  milli: {
+    key: "milli",
+    title: "Карта «Милли»",
+    brand: "МИЛЛИ",
+    recommendation: "Хороший вариант для местных оплат и как отдельная карта для повседневных расходов.",
+    theme: {
+      className: "green",
+      gradient: "linear-gradient(135deg, #f8fafc 0%, #e7e5e4 45%, #d6d3d1 100%)",
+      icon: "🪙",
+      accent: "#8b6914"
+    }
+  }
+};
+
+const DEFAULT_THEMES = [
+  {
+    className: "blue",
+    gradient: "linear-gradient(135deg, #60a5fa 0%, #2563eb 100%)",
+    icon: "💳",
+    accent: "#2563eb"
+  },
+  {
+    className: "green",
+    gradient: "linear-gradient(135deg, #34d399 0%, #059669 100%)",
+    icon: "💠",
+    accent: "#059669"
+  },
+  {
+    className: "yellow",
+    gradient: "linear-gradient(135deg, #fbbf24 0%, #d97706 100%)",
+    icon: "✨",
+    accent: "#d97706"
+  },
+  {
+    className: "purple",
+    gradient: "linear-gradient(135deg, #818cf8 0%, #4f46e5 100%)",
+    icon: "🛡️",
+    accent: "#4f46e5"
+  }
+];
 
 const state = {
   accounts: [],
   cards: [],
   transactions: [],
-  selectedCardId: null
+  selectedCardId: null,
+  lastIssuedCardId: null
 };
 
 const elements = {
@@ -45,48 +117,193 @@ function formatCardNumber(value) {
     .trim();
 }
 
-function getCardBrand(cardNumber) {
-  return String(cardNumber || "").startsWith("4") ? "VISA" : "CARD";
+function parseStoredProducts() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(CARD_PRODUCT_STORAGE_KEY) || "{}");
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
 }
 
-function getCardTheme(index) {
-  const themes = [
-    {
-      className: "blue",
-      gradient: "linear-gradient(135deg, #60a5fa 0%, #2563eb 100%)",
-      icon: "💳",
-      accent: "#2563eb"
-    },
-    {
-      className: "green",
-      gradient: "linear-gradient(135deg, #34d399 0%, #059669 100%)",
-      icon: "💠",
-      accent: "#059669"
-    },
-    {
-      className: "yellow",
-      gradient: "linear-gradient(135deg, #fbbf24 0%, #d97706 100%)",
-      icon: "✨",
-      accent: "#d97706"
-    },
-    {
-      className: "purple",
-      gradient: "linear-gradient(135deg, #818cf8 0%, #4f46e5 100%)",
-      icon: "🛡️",
-      accent: "#4f46e5"
-    }
-  ];
-
-  return themes[index % themes.length];
+function saveStoredProducts(products) {
+  localStorage.setItem(CARD_PRODUCT_STORAGE_KEY, JSON.stringify(products));
 }
 
-function getCardLabel(card, index) {
+function removeCardProduct(cardId) {
+  if (!cardId) {
+    return;
+  }
+
+  const products = parseStoredProducts();
+  delete products[String(cardId)];
+  saveStoredProducts(products);
+}
+
+function saveCardProduct(cardId, productKey) {
+  if (!cardId || !productKey || !CARD_PRODUCT_CATALOG[productKey]) {
+    return;
+  }
+
+  const products = parseStoredProducts();
+  products[String(cardId)] = productKey;
+  saveStoredProducts(products);
+}
+
+function getCardProduct(cardId) {
+  const key = parseStoredProducts()[String(cardId)];
+  return CARD_PRODUCT_CATALOG[key] || null;
+}
+
+function getFallbackTheme(index) {
+  return DEFAULT_THEMES[index % DEFAULT_THEMES.length];
+}
+
+function getCardTheme(index, product) {
+  return product?.theme || getFallbackTheme(index);
+}
+
+function getCardBrand(cardNumber, product) {
+  if (product?.brand) {
+    return product.brand;
+  }
+
+  const digits = String(cardNumber || "");
+  if (digits.startsWith("4")) {
+    return "VISA";
+  }
+
+  if (/^5[1-5]/.test(digits) || /^2(2[2-9]|[3-6]\d|7[01])/.test(digits)) {
+    return "MASTERCARD";
+  }
+
+  return "CARD";
+}
+
+function getCardLabel(card, index, product) {
+  if (product?.title) {
+    return product.title;
+  }
+
   const type = String(card.type || card.Type || "").toLowerCase();
   if (type === "virtual") {
     return `Виртуальная карта ${index + 1}`;
   }
 
   return state.cards.length === 1 ? "Основная карта" : `Карта ${index + 1}`;
+}
+
+function getIssueCardProduct() {
+  const params = new URLSearchParams(window.location.search);
+  const key = params.get(ISSUE_CARD_QUERY_KEY);
+  return key && CARD_PRODUCT_CATALOG[key] ? CARD_PRODUCT_CATALOG[key] : null;
+}
+
+function clearIssueCardQuery() {
+  const url = new URL(window.location.href);
+  url.searchParams.delete(ISSUE_CARD_QUERY_KEY);
+  window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+}
+
+function toCardHolderName(fullName) {
+  const value = String(fullName || "SomoniBank Client")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toUpperCase();
+
+  return value.slice(0, 100) || "SOMONIBANK CLIENT";
+}
+
+async function removeExistingCards() {
+  const cardsPayload = await apiRequest("/api/cards/my?page=1&pageSize=50", { auth: true });
+  const cards = cardsPayload.items || cardsPayload.Items || [];
+
+  for (const card of cards) {
+    const cardId = card.id || card.Id;
+    if (!cardId) {
+      continue;
+    }
+
+    await apiRequest(`/api/cards/${cardId}`, {
+      method: "DELETE",
+      auth: true
+    });
+    removeCardProduct(cardId);
+  }
+}
+
+async function issueSelectedCard() {
+  const product = getIssueCardProduct();
+  if (!product) {
+    return;
+  }
+
+  let createdCardId = null;
+
+  try {
+    showToast(`Оформляем ${product.title}...`);
+    await removeExistingCards();
+
+    const session = getSession();
+    const holderName = toCardHolderName(session?.fullName);
+
+    const accountResponse = unwrapResponse(await apiRequest("/api/accounts/open", {
+      method: "POST",
+      auth: true,
+      body: {
+        type: "Current",
+        currency: "TJS"
+      }
+    }));
+
+    const account = accountResponse.data;
+    const accountId = account?.id || account?.Id;
+    if (!accountId) {
+      throw new Error("Не удалось открыть счет для новой карты.");
+    }
+
+    const cardResponse = unwrapResponse(await apiRequest("/api/cards/create", {
+      method: "POST",
+      auth: true,
+      body: {
+        accountId,
+        cardHolderName: holderName,
+        type: "Physical"
+      }
+    }));
+
+    const createdCard = cardResponse.data;
+    createdCardId = createdCard?.id || createdCard?.Id || null;
+
+    await apiRequest("/api/transactions/deposit", {
+      method: "POST",
+      auth: true,
+      body: {
+        accountId,
+        amount: STARTING_BALANCE,
+        description: `Стартовый баланс для карты ${product.title}`
+      }
+    });
+
+    if (createdCardId) {
+      saveCardProduct(createdCardId, product.key);
+      state.lastIssuedCardId = String(createdCardId);
+      state.selectedCardId = String(createdCardId);
+    }
+
+    showToast(`${product.title} оформлена. На счет зачислено ${STARTING_BALANCE} TJS.`);
+  } catch (error) {
+    if (createdCardId) {
+      saveCardProduct(createdCardId, product.key);
+      state.lastIssuedCardId = String(createdCardId);
+      state.selectedCardId = String(createdCardId);
+      showToast(`${product.title} создана, но пополнение счета не завершилось.`);
+    } else {
+      showToast(error?.message || "Не удалось оформить выбранную карту.");
+    }
+  } finally {
+    clearIssueCardQuery();
+  }
 }
 
 function hydrateProfile() {
@@ -124,6 +341,7 @@ async function init() {
 
   hydrateProfile();
   setupEvents();
+  await issueSelectedCard();
   await loadCardsPage();
 }
 
@@ -145,16 +363,19 @@ async function loadCardsPage() {
 
     state.accounts = accountsPayload.items || accountsPayload.Items || [];
     state.cards = (cardsPayload.items || cardsPayload.Items || []).map((card, index) => {
-      const theme = getCardTheme(index);
-      const account = state.accounts.find((item) => (item.id || item.Id) === (card.accountId || card.AccountId));
+      const cardId = card.id || card.Id;
+      const product = getCardProduct(cardId);
+      const theme = getCardTheme(index, product);
+      const account = state.accounts.find((item) => String(item.id || item.Id) === String(card.accountId || card.AccountId));
       const fullNumber = card.fullCardNumber || card.FullCardNumber || card.cardNumber || card.CardNumber || "";
 
       return {
         ...card,
         uiIndex: index,
         theme,
-        label: getCardLabel(card, index),
-        brand: getCardBrand(fullNumber),
+        product,
+        label: getCardLabel(card, index, product),
+        brand: getCardBrand(fullNumber, product),
         fullNumber,
         formattedNumber: formatCardNumber(fullNumber),
         maskedNumber: card.maskedNumber || card.MaskedNumber || "",
@@ -170,7 +391,7 @@ async function loadCardsPage() {
     });
 
     state.transactions = transfersPayload.items || transfersPayload.Items || [];
-    state.selectedCardId = state.cards[0]?.id || state.cards[0]?.Id || null;
+    state.selectedCardId = state.lastIssuedCardId || state.cards[0]?.id || state.cards[0]?.Id || null;
 
     renderPage();
   } catch (error) {
@@ -186,7 +407,7 @@ function renderPage() {
   }
 
   if (elements.pageSubtitle) {
-    elements.pageSubtitle.textContent = "Здесь показываются только ваши реальные карты без мок-данных.";
+    elements.pageSubtitle.textContent = "Здесь показываются только ваши реальные карты, включая карты, оформленные с главной страницы.";
   }
 
   renderRecommendationBar();
@@ -203,11 +424,13 @@ function renderRecommendationBar() {
     return;
   }
 
+  const selectedCard = getSelectedCard();
   const physicalCount = state.cards.filter((card) => String(card.type || card.Type || "").toLowerCase() === "physical").length;
   const virtualCount = state.cards.length - physicalCount;
-  const recommendation = state.cards.length
-    ? `Рекомендуем держать основную карту для переводов и отдельную карту для онлайн-оплат.`
-    : "После выпуска карты здесь появятся рекомендации по её использованию.";
+  const recommendation = selectedCard?.product?.recommendation
+    || (state.cards.length
+      ? "Рекомендуем держать отдельную карту для повседневных расходов и отдельную для переводов."
+      : "После выпуска карты здесь появятся рекомендации по ее использованию.");
 
   elements.recommendationBar.innerHTML = `
     <button class="date-btn active" type="button">Всего карт: ${state.cards.length}</button>
@@ -230,7 +453,7 @@ function renderCardsList() {
         </div>
         <div>
           <div class="manage-card-label">У вас пока нет карт</div>
-          <div class="manage-card-bal">Когда карта появится на главной странице, она появится и здесь.</div>
+          <div class="manage-card-bal">Когда карта появится на главной странице, она автоматически будет показана и здесь.</div>
         </div>
       </div>
     `;
@@ -238,8 +461,8 @@ function renderCardsList() {
   }
 
   elements.cardsList.innerHTML = state.cards.map((card) => {
-    const id = card.id || card.Id;
-    const isSelected = id === state.selectedCardId;
+    const id = String(card.id || card.Id);
+    const isSelected = id === String(state.selectedCardId);
     return `
       <div class="manage-card ${card.theme.className}" data-card-id="${id}">
         <div class="manage-card-top">
@@ -285,10 +508,10 @@ function renderSelectedCard() {
 
   const relatedTransactions = getCardTransactions(selectedCard);
   const totalOutgoing = relatedTransactions
-    .filter((item) => String(item.direction) === "out")
+    .filter((item) => item.direction === "out")
     .reduce((sum, item) => sum + item.amount, 0);
   const totalIncoming = relatedTransactions
-    .filter((item) => String(item.direction) === "in")
+    .filter((item) => item.direction === "in")
     .reduce((sum, item) => sum + item.amount, 0);
 
   elements.primaryBox.innerHTML = `
@@ -296,7 +519,7 @@ function renderSelectedCard() {
       <span class="box-title">${escapeHtml(selectedCard.label)}</span>
       <span style="font-size:12px;font-weight:800;color:${selectedCard.theme.accent};">${escapeHtml(selectedCard.brand)}</span>
     </div>
-    <div class="visual-card" style="background:${selectedCard.theme.gradient};">
+    <div class="visual-card" style="background:${selectedCard.theme.gradient}; color:${selectedCard.product?.key === "milli" ? "#1f2937" : "#fff"};">
       <div class="v-card-top">
         <div>
           <div class="v-card-chip"></div>
@@ -314,7 +537,7 @@ function renderSelectedCard() {
       </div>
     </div>
     <div class="iban-display">
-      <span>${escapeHtml(selectedCard.accountNumber || "Счёт не найден")}</span>
+      <span>${escapeHtml(selectedCard.accountNumber || "Счет не найден")}</span>
       <span>${escapeHtml(selectedCard.iban || "IBAN недоступен")}</span>
     </div>
     <div class="limits-section">
@@ -334,6 +557,10 @@ function renderSelectedCard() {
         <span>Статус</span>
         <span class="limit-val">${escapeHtml(selectedCard.status || selectedCard.Status || "Active")}</span>
       </div>
+      <div class="limit-row">
+        <span>Баланс счета</span>
+        <span class="limit-val">${escapeHtml(formatMoney(selectedCard.balance, selectedCard.currency))}</span>
+      </div>
     </div>
     <button class="btn-transfer" id="btnGoToTransfer">
       Перевести
@@ -347,7 +574,7 @@ function renderSelectedCard() {
         <span style="font-size:16px; font-weight:800; color:#1e293b;">- ${escapeHtml(formatMoney(totalOutgoing, selectedCard.currency))}</span>
       </div>
       <div style="margin-top:14px;color:#64748b;font-size:13px;line-height:1.6;">
-        Карта привязана к счёту ${escapeHtml(selectedCard.accountNumber || "без счёта")} и показывает реальные данные без демо-вставок.
+        Карта привязана к счету ${escapeHtml(selectedCard.accountNumber || "без счета")} и показывает только реальные данные.
       </div>
     </div>
   `;
@@ -456,7 +683,7 @@ function renderFunctions() {
     </div>
     <div class="func-row">
       <div class="func-icon">🏦</div>
-      <div class="func-text">Привязанный счёт</div>
+      <div class="func-text">Привязанный счет</div>
       <div class="func-val" style="color:#1e293b;">${escapeHtml(selectedCard.accountNumber || "Нет данных")}</div>
     </div>
   `;
@@ -471,15 +698,17 @@ function renderRightColumn() {
   const activeCards = state.cards.filter((card) => String(card.status || card.Status).toLowerCase() === "active").length;
   const totalBalance = state.cards.reduce((sum, card) => sum + Number(card.balance || 0), 0);
   const topCards = state.cards.slice(0, 4);
+  const recommendationTitle = selectedCard?.product?.title || "Основная карта";
+  const recommendationText = selectedCard?.product?.recommendation || "Используйте эту карту для быстрых переводов и контроля баланса.";
 
   elements.rightCol.innerHTML = `
     <div class="insight-box">
       <div class="box-title" style="font-size:14px; margin-bottom:16px;">Рекомендуем для этой карты</div>
       <div class="insight-card">
-        <div class="insight-icon">🛡️</div>
+        <div class="insight-icon">${selectedCard?.theme?.icon || "💳"}</div>
         <div class="insight-text">
-          <div class="insight-name">Основная карта для переводов</div>
-          <div class="insight-desc">Используйте ${escapeHtml(selectedCard?.label || "эту карту")} для быстрых переводов и контроля баланса.</div>
+          <div class="insight-name">${escapeHtml(recommendationTitle)}</div>
+          <div class="insight-desc">${escapeHtml(recommendationText)}</div>
         </div>
       </div>
       <div class="insight-card">
@@ -514,7 +743,7 @@ function renderRightColumn() {
           <div style="font-size:18px;">💳</div>
           <div style="flex:1">
             <div style="font-size:12px; font-weight:800;">Активные карты</div>
-            <div style="font-size:10px; color:#94a3b8;">Без мок-данных</div>
+            <div style="font-size:10px; color:#94a3b8;">Только реальные данные</div>
           </div>
           <div style="font-size:12px; font-weight:800;">${activeCards}</div>
         </div>
@@ -552,7 +781,7 @@ function renderSummaryFooter() {
     <div class="footer-progress-track">
       <div class="footer-progress-fill" style="width:${progress}%;"></div>
     </div>
-    <div class="footer-stat" style="text-align: right;">
+    <div class="footer-stat" style="text-align:right;">
       <span class="footer-label">Списания</span>
       <span class="footer-val">- ${escapeHtml(formatMoney(outgoingTotal, selectedCard?.currency || "TJS"))}</span>
     </div>
