@@ -1,4 +1,4 @@
-import { apiRequest, clearSession, formatMoney, getSession, showToast } from "./common.js";
+﻿import { clearSession, formatMoney, getSession, showToast } from "./common.js";
 
 const userName = document.getElementById("userName");
 const userAvatar = document.getElementById("userAvatar");
@@ -16,8 +16,8 @@ if (!session?.token) {
   window.location.href = "login.html";
 }
 
-userName.textContent = session?.fullName || "Клиент";
-userAvatar.textContent = (session?.fullName || "К").trim().charAt(0).toUpperCase();
+userName.textContent = session?.fullName || session?.FullName || "Клиент";
+userAvatar.textContent = (session?.fullName || session?.FullName || "К").trim().charAt(0).toUpperCase();
 
 logoutButton?.addEventListener("click", () => {
   clearSession();
@@ -31,10 +31,6 @@ addCardButton?.addEventListener("click", () => {
 verifyButton?.addEventListener("click", () => {
   showToast("Верификация уже отправлена после регистрации.");
 });
-
-function getItems(payload) {
-  return payload?.items || payload?.Items || [];
-}
 
 function renderAccount(accounts, cards) {
   const account = accounts[0];
@@ -54,7 +50,7 @@ function renderAccount(accounts, cards) {
           <div class="holder">КАРТА ЕЩЁ НЕ ВЫПУЩЕНА</div>
         </div>
         <div class="account-main">
-          <strong>${account.type} счёт • ${account.accountNumber.slice(-4)}</strong>
+          <strong>${account.type} счёт • ${String(account.accountNumber || "").slice(-4)}</strong>
           <div class="account-sub">Основной счёт</div>
           <div class="account-balance">${formatMoney(account.balance, account.currency)}</div>
           <div class="account-delta">+0.00 c. • Сегодня</div>
@@ -102,9 +98,9 @@ function renderOperations(transactions) {
   }
 
   operationsList.innerHTML = transactions.slice(0, 5).map((transaction, index) => {
-    const amount = Number(transaction.amount || transaction.Amount || 0);
-    const title = transaction.description || transaction.Description || transaction.type || transaction.Type || "Операция";
-    const createdAt = transaction.createdAt || transaction.CreatedAt;
+    const amount = Number(transaction.amount || 0);
+    const title = transaction.description || transaction.type || "Операция";
+    const createdAt = transaction.createdAt;
     const amountClass = amount >= 0 ? "income" : "";
     const iconClass = index % 3 === 0 ? "blue" : index % 3 === 1 ? "green" : "cyan";
 
@@ -115,42 +111,19 @@ function renderOperations(transactions) {
           <div class="op-title">${title}</div>
           <div class="op-sub">${createdAt ? new Date(createdAt).toLocaleString("ru-RU", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }) : "Без даты"}</div>
         </div>
-        <div class="op-amount ${amountClass}">${amount >= 0 ? "+" : ""}${formatMoney(amount, transaction.currency || transaction.Currency || "TJS")}</div>
+        <div class="op-amount ${amountClass}">${amount >= 0 ? "+" : ""}${formatMoney(amount, transaction.currency || "TJS")}</div>
       </div>
     `;
   }).join("");
 }
 
-async function loadDashboard() {
-  // Загрузка в режиме «точь-в-точь макет»
-  totalBalance.textContent = "0.05 c.";
-  bonusLabel.textContent = "1.44 бонусов";
+function loadDashboard() {
+  totalBalance.textContent = "0.00 c.";
+  bonusLabel.textContent = "0.00 бонусов";
 
-  const accountData = [{
-    accountNumber: "1234 5678 9876 3450",
-    type: "Visa Classic",
-    currency: "TJS",
-    balance: 1240.50
-  }];
+  renderAccount([], []);
 
-  const cardData = [{
-    cardNumber: "4567 8901 2345 6789",
-    cardHolderName: "ABDULLAH I",
-    type: "Visa Classic",
-    delta: "+24.50 c. • Сегодня"
-  }];
-
-  renderAccount(accountData, cardData);
-
-  const operations = [
-    { amount: -200, description: "Перевод на карту **** 4587", createdAt: "2025-10-30T14:32:00", currency: "TJS" },
-    { amount: -20, description: "Оплата Мобильная связь", createdAt: "2025-10-30T12:11:00", currency: "TJS" },
-    { amount: 500, description: "Пополнение с карты **** 1234", createdAt: "2025-10-30T20:45:00", currency: "TJS" },
-    { amount: -50, description: "Оплата Интернет", createdAt: "2025-10-29T18:20:00", currency: "TJS" },
-    { amount: 150, description: "Перевод между счетами", createdAt: "2025-10-15T16:05:00", currency: "TJS" }
-  ];
-
-  renderOperations(operations);
+  renderOperations([]);
 }
 
-void loadDashboard();
+loadDashboard();

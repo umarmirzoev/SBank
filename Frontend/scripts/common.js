@@ -240,7 +240,7 @@ export async function apiRequest(path, options = {}) {
     return `${base}${tail}`;
   };
 
-  const response = await fetch(resolveUrl(path), {
+  const buildFetchOptions = () => ({
     method,
     headers: {
       "Content-Type": "application/json",
@@ -249,6 +249,46 @@ export async function apiRequest(path, options = {}) {
     },
     body: body === undefined ? undefined : JSON.stringify(body)
   });
+
+  const resolveFallbackUrls = (value) => {
+    const primaryUrl = resolveUrl(value);
+    const urls = [primaryUrl];
+
+    try {
+      const currentUrl = new URL(primaryUrl, window.location.origin);
+      const isLocalHost = ["localhost", "127.0.0.1"].includes(currentUrl.hostname);
+
+      if (isLocalHost && currentUrl.port === "5142") {
+        urls.push(`${currentUrl.protocol}//${currentUrl.hostname}:5000${currentUrl.pathname}${currentUrl.search}`);
+      } else if (isLocalHost && currentUrl.port === "5000") {
+        urls.push(`${currentUrl.protocol}//${currentUrl.hostname}:5142${currentUrl.pathname}${currentUrl.search}`);
+      }
+    } catch {
+      return urls;
+    }
+
+    return [...new Set(urls)];
+  };
+
+  let response;
+  let lastError;
+  const candidateUrls = resolveFallbackUrls(path);
+
+  for (const candidateUrl of candidateUrls) {
+    try {
+      response = await fetch(candidateUrl, buildFetchOptions());
+      if (candidateUrl !== candidateUrls[0]) {
+        setApiBaseUrl(new URL(candidateUrl).origin);
+      }
+      break;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (!response) {
+    throw lastError || new Error("Failed to fetch");
+  }
 
   const contentType = response.headers.get("content-type") || "";
   const payload = contentType.includes("application/json")

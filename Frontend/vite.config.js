@@ -35,6 +35,8 @@ export default defineConfig({
         settlementAccount: resolve(__dirname, "settlement-account.html"),
         businessTransfers: resolve(__dirname, "business-transfers.html"),
         app: resolve(__dirname, "somonibank-app.html"),
+        bank: resolve(__dirname, "bank.html"),
+        payments: resolve(__dirname, "payments.html"),
         login: resolve(__dirname, "login.html"),
         registration: resolve(__dirname, "registration.html"),
         cards: resolve(__dirname, "cards.html"),

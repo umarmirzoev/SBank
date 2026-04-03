@@ -84,8 +84,24 @@ public class AuthService : IAuthService
             if (!IsValidLoginRequest(request, out var loginError))
                 return new Response<AuthResponseDto>(HttpStatusCode.BadRequest, loginError);
 
+            var normalizedIdentifier = request.Email.Trim();
             var normalizedEmail = NormalizeEmail(request.Email);
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == normalizedEmail);
+            var normalizedPhone = NormalizePhone(request.Email);
+            var generatedPhoneEmail = BuildLoginEmailFromPhone(normalizedPhone);
+
+            User? user = null;
+
+            if (normalizedIdentifier.Contains('@'))
+            {
+                user = await _db.Users.FirstOrDefaultAsync(u => u.Email == normalizedEmail);
+            }
+            else
+            {
+                user = await _db.Users.FirstOrDefaultAsync(u =>
+                    u.Phone == normalizedPhone
+                    || u.Email == generatedPhoneEmail);
+            }
+
             var isSuccess = user != null && BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
 
             if (user != null)
@@ -103,7 +119,10 @@ public class AuthService : IAuthService
 
             if (!isSuccess)
             {
-                await _fraudDetectionService.ProcessFailedLoginAsync(normalizedEmail, ipAddress, userAgent);
+                await _fraudDetectionService.ProcessFailedLoginAsync(
+                    normalizedIdentifier.Contains('@') ? normalizedEmail : generatedPhoneEmail,
+                    ipAddress,
+                    userAgent);
                 return new Response<AuthResponseDto>(HttpStatusCode.Unauthorized, "Invalid email or password");
             }
 
@@ -539,6 +558,12 @@ public class AuthService : IAuthService
     {
         var digits = new string(phone.Where(char.IsDigit).ToArray());
         return $"phone-{digits}@dev.somonibank.local";
+    }
+
+    private static string BuildLoginEmailFromPhone(string phone)
+    {
+        var digits = new string(phone.Where(char.IsDigit).ToArray());
+        return $"{digits}@sbank.local";
     }
 
     private static string BuildDevelopmentPassport(string phone)
