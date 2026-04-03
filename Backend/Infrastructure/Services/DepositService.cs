@@ -45,8 +45,11 @@ public class DepositService : IDepositService
         var page = pagedQuery.Page <= 0 ? 1 : pagedQuery.Page;
         var pageSize = pagedQuery.PageSize <= 0 ? 10 : pagedQuery.PageSize;
 
-        IQueryable<Deposit> query = _db.Deposits.AsNoTracking();
+        IQueryable<Deposit> query = _db.Deposits.AsNoTracking()
+            .Include(x => x.Account);
 
+        if (filter?.UserId != null)
+            query = query.Where(x => x.Account.UserId == filter.UserId.Value);
         if (filter?.AccountId != null)
             query = query.Where(x => x.AccountId == filter.AccountId);
         if (!string.IsNullOrEmpty(filter?.Status))

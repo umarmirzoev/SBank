@@ -506,6 +506,45 @@ function renderHeaderControls() {
   updateThemeButtons();
 }
 
+function renderSidebarLogout() {
+  const sidebarList = document.querySelector(".sidebar-bottom .nav-list");
+  if (!sidebarList) {
+    return;
+  }
+
+  const existingItem = sidebarList.querySelector("[data-sb-sidebar-logout]");
+  if (!isAuthenticated()) {
+    existingItem?.remove();
+    return;
+  }
+
+  if (existingItem) {
+    return;
+  }
+
+  const item = document.createElement("li");
+  item.className = "nav-item";
+  item.dataset.sbSidebarLogout = "true";
+  item.innerHTML = `
+    <a href="#" style="display:flex; align-items:center; gap:16px; color:inherit; width:100%;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="16 17 21 12 16 7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="21" y1="12" x2="9" y2="12" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Выход</span>
+    </a>
+  `;
+
+  item.querySelector("a")?.addEventListener("click", (event) => {
+    event.preventDefault();
+    clearSession(true);
+    window.location.href = "login.html";
+  });
+
+  sidebarList.appendChild(item);
+}
+
 function applyGlobalLanguage() {
   const ui = currentUiText();
   document.documentElement.lang = getLanguage() === "tj" ? "tg" : getLanguage();
@@ -523,6 +562,7 @@ function applyGlobalLanguage() {
 function initGlobalUi() {
   if (globalUiInitialized) {
     renderHeaderControls();
+    renderSidebarLogout();
     applyGlobalTheme();
     applyGlobalLanguage();
     return;
@@ -532,10 +572,12 @@ function initGlobalUi() {
   ensureGlobalStyles();
   removeHeaderNoise();
   renderHeaderControls();
+  renderSidebarLogout();
   applyGlobalTheme();
   applyGlobalLanguage();
   window.addEventListener("sbank:session-changed", () => {
     renderHeaderControls();
+    renderSidebarLogout();
     applyGlobalLanguage();
   });
 }

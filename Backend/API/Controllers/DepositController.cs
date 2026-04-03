@@ -26,7 +26,7 @@ public class DepositController(IDepositService depositService) : ControllerBase
     public async Task<PagedResult<DepositGetDto>> GetMyDeposits([FromQuery] PagedQuery pagedQuery)
     {
         var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-        var filter = new DepositFilter();
+        var filter = new DepositFilter { UserId = userId };
         return await depositService.GetAllAsync(filter, pagedQuery);
     }
 

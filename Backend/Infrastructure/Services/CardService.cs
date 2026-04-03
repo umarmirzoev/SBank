@@ -220,8 +220,10 @@ public class CardService : ICardService
         Type = card.Type.ToString(),
         CardNumber = MaskCardNumber(card.CardNumber),
         MaskedNumber = MaskCardNumber(card.CardNumber),
+        FullCardNumber = card.CardNumber,
         CardHolderName = card.CardHolderName,
         ExpiryDate = card.ExpiryDate,
+        Cvv = card.Cvv,
         Status = card.Status.ToString(),
         CreatedAt = card.CreatedAt
     };

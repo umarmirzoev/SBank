@@ -208,7 +208,7 @@ static async Task EnsureDevelopmentFixturesAsync(
     {
         new DevelopmentUserProfile(
             Phone: "+992979117007",
-            Password: null,
+            Password: "gumarjon.1711",
             FirstName: "Gumarjon",
             LastName: "Test",
             Address: "Local development profile",
@@ -226,7 +226,7 @@ static async Task EnsureDevelopmentFixturesAsync(
     {
         var user = await EnsureDevelopmentUserProfileAsync(dbContext, profile);
         var account = await EnsureDevelopmentTjsAccountAsync(dbContext, user.Id);
-        EnsureDevelopmentBalance(account, 100m);
+        await EnsureDevelopmentBalanceAsync(dbContext, account, 100m);
 
         if (profile.Phone == "+992979117007")
         {
@@ -329,8 +329,17 @@ static async Task EnsureTransactionLimitAsync(AppDbContext dbContext, Guid accou
     }
 }
 
-static void EnsureDevelopmentBalance(Account account, decimal amount)
-    => account.Balance = amount;
+static async Task EnsureDevelopmentBalanceAsync(AppDbContext dbContext, Account account, decimal amount)
+{
+    var hasTransactions = await dbContext.Transactions.AnyAsync(x =>
+        x.FromAccountId == account.Id ||
+        x.ToAccountId == account.Id);
+
+    if (!hasTransactions && account.Balance != amount)
+    {
+        account.Balance = amount;
+    }
+}
 
 static async Task EnsureDevelopmentCardAsync(AppDbContext dbContext, Account account, string cardHolderName)
 {

@@ -22,8 +22,10 @@ public class CardGetDto
     public string Type { get; set; } = null!;
     public string CardNumber { get; set; } = null!;
     public string MaskedNumber { get; set; } = null!;
+    public string FullCardNumber { get; set; } = null!;
     public string CardHolderName { get; set; } = null!;
     public string ExpiryDate { get; set; } = null!;
+    public string Cvv { get; set; } = null!;
     public string Status { get; set; } = null!;
     public DateTime CreatedAt { get; set; }
 }
