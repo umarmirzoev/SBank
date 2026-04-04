@@ -212,6 +212,9 @@ function filterServices(query) {
 
 function handleAction(action, label) {
   switch (action) {
+    case "mobile":
+      window.location.href = "app-mobile-topup.html";
+      return;
     case "transfers":
       window.location.href = "transfers.html";
       return;

@@ -162,7 +162,7 @@ function bindDashboardActions() {
     bindActionByText(".pop-card", [
         { match: "somoni", action: () => goToTransfer("phone") },
         { match: "на карту", action: () => goToTransfer("card") },
-        { match: "мобильная связь", action: () => { window.location.href = "app-payments.html"; } },
+        { match: "мобильная связь", action: () => { window.location.href = "app-mobile-topup.html"; } },
         { match: "интернет", action: () => { window.location.href = "app-payments.html"; } }
     ]);
 
