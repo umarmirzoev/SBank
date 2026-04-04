@@ -30,6 +30,8 @@ const state = {
   resolvedRecipient: null
 };
 
+const TRANSFER_PRESET_KEY = "sb-transfer-preset";
+
 document.addEventListener("DOMContentLoaded", () => {
   ensureToastHost();
   requireAuth(initTransfersPage);
@@ -55,6 +57,7 @@ async function initTransfersPage(session) {
   };
 
   hydrateProfile(session, elements);
+  applyTransferPreset();
   renderTransferOptions(elements);
   renderRightColumn(elements);
   bindEvents(elements);
@@ -62,6 +65,19 @@ async function initTransfersPage(session) {
   await loadRecentTransfers(elements);
   updateRecipientField(elements);
   updateSummary(elements);
+}
+
+function applyTransferPreset() {
+  const preset = sessionStorage.getItem(TRANSFER_PRESET_KEY);
+  if (!preset) {
+    return;
+  }
+
+  if (transferOptions.some((option) => option.id === preset)) {
+    state.selectedType = preset;
+  }
+
+  sessionStorage.removeItem(TRANSFER_PRESET_KEY);
 }
 
 function hydrateProfile(session, elements) {

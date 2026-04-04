@@ -1,17 +1,20 @@
 ﻿import { apiRequest, getSession, showToast, formatMoney, formatDate, isAuthenticated } from "./common.js";
 
-const userNameEl = document.querySelectorAll(".user-name")[0];
-const userAvatarEl = document.querySelector(".user-avatar");
-const totalBalEl = document.querySelector(".hero-bal");
-const bonusEl = document.querySelector(".hero-bonus span");
-const cardNumberEl = document.querySelector(".v-num");
-const cardHolderEl = document.querySelector(".v-holder");
-const cardExpiryEl = document.querySelector("[data-card-expiry]");
-const cardTitleEl = document.querySelector(".card-type-name");
-const cardBalanceEl = document.querySelector(".card-stats-bal");
-const cardDeltaEl = document.querySelector(".card-stats-delta");
-const operationsListEl = document.querySelector(".op-list");
-const rightSidebarEl = document.querySelector(".right-sidebar");
+let userNameEl;
+let userAvatarEl;
+let totalBalEl;
+let totalBalRowEl;
+let balanceToggleEl;
+let heroPlusEl;
+let bonusEl;
+let cardNumberEl;
+let cardHolderEl;
+let cardExpiryEl;
+let cardTitleEl;
+let cardBalanceEl;
+let cardDeltaEl;
+let operationsListEl;
+let rightSidebarEl;
 
 const session = getSession();
 const dashboardState = {
@@ -24,8 +27,56 @@ const dashboardState = {
     operations: []
 };
 
+const TRANSFER_PRESET_KEY = "sb-transfer-preset";
+let isBalanceHidden = false;
+
+function cacheElements() {
+    userNameEl = document.querySelectorAll(".user-name")[0];
+    userAvatarEl = document.querySelector(".user-avatar");
+    totalBalEl = document.querySelector(".hero-bal");
+    totalBalRowEl = document.querySelector(".hero-bal-row");
+    balanceToggleEl = document.querySelector("[data-balance-toggle]");
+    heroPlusEl = document.querySelector(".hero-plus");
+    bonusEl = document.querySelector(".hero-bonus span");
+    cardNumberEl = document.querySelector(".v-num");
+    cardHolderEl = document.querySelector(".v-holder");
+    cardExpiryEl = document.querySelector("[data-card-expiry]");
+    cardTitleEl = document.querySelector(".card-type-name");
+    cardBalanceEl = document.querySelector(".card-stats-bal");
+    cardDeltaEl = document.querySelector(".card-stats-delta");
+    operationsListEl = document.querySelector(".op-list");
+    rightSidebarEl = document.querySelector(".right-sidebar");
+}
+
 function formatCardNumber(value) {
     return String(value || "").replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+}
+
+function eyeIconMarkup(hidden) {
+    return hidden
+        ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18"/><path d="M10.6 10.6a3 3 0 0 0 4.24 4.24"/><path d="M9.88 5.09A10.94 10.94 0 0 1 12 4c5 0 8.27 3.11 9.5 8-0.42 1.67-1.21 3.09-2.35 4.22"/><path d="M6.61 6.61C4.62 8 3.3 9.83 2.5 12c1.23 4.89 4.5 8 9.5 8 1.73 0 3.3-.37 4.69-1.04"/></svg>`
+        : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.1 12c.5-2 1.3-4 2.8-5.5C6.4 5 8.7 4 11 4s4.6 1 6.1 2.5c1.5 1.5 2.3 3.5 2.8 5.5-.5 2-1.3 4-2.8 5.5C15.6 19 13.3 20 11 20s-4.6-1-6.1-2.5C3.4 16 2.6 14 2.1 12Z"/><circle cx="12" cy="12" r="3"/></svg>`;
+}
+
+function hiddenMoneyMask(value) {
+    const currency = String(value || "").replace(/[\d\s.,]/g, "").trim();
+    return currency ? `***** ${currency}` : "*****";
+}
+
+function updateBalanceToggleUi() {
+    if (!balanceToggleEl) {
+        return;
+    }
+
+    balanceToggleEl.innerHTML = eyeIconMarkup(isBalanceHidden);
+    balanceToggleEl.setAttribute("aria-label", isBalanceHidden ? "Показать баланс" : "Скрыть баланс");
+    balanceToggleEl.title = isBalanceHidden ? "Показать баланс" : "Скрыть баланс";
+
+    if (heroPlusEl) {
+        heroPlusEl.textContent = isBalanceHidden ? "•" : "+";
+        heroPlusEl.setAttribute("aria-label", isBalanceHidden ? "Показать деньги" : "Скрыть деньги");
+        heroPlusEl.title = isBalanceHidden ? "Показать деньги" : "Скрыть деньги";
+    }
 }
 
 function setProfile() {
@@ -58,10 +109,14 @@ function applyStaticCleanup() {
     });
 
     document.querySelectorAll("button, .pop-card, .svc-box").forEach((btn) => {
+        if (btn.dataset.boundAction === "true") {
+            return;
+        }
         btn.addEventListener("click", () => {
             const text = btn.innerText || btn.querySelector(".pop-label")?.innerText || "Действие";
             showToast(`Функция "${text.trim()}" в разработке`);
         });
+        btn.dataset.boundAction = "true";
     });
 
     document.querySelectorAll(".nav-item a").forEach((link) => {
@@ -74,13 +129,87 @@ function applyStaticCleanup() {
     });
 }
 
+function goToTransfer(type) {
+    sessionStorage.setItem(TRANSFER_PRESET_KEY, type);
+    window.location.href = "app-transfers.html";
+}
+
+function bindActionByText(selector, handlers) {
+    document.querySelectorAll(selector).forEach((element) => {
+        const rawText = (element.innerText || element.textContent || "").trim().toLowerCase();
+        const handler = handlers.find((item) => rawText.includes(item.match));
+        if (!handler) {
+            return;
+        }
+
+        const clickable = element.tagName === "BUTTON" ? element : element;
+        clickable.dataset.boundAction = "true";
+        clickable.addEventListener("click", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            handler.action();
+        });
+    });
+}
+
+function bindDashboardActions() {
+    bindActionByText(".hero-actions .hero-btn", [
+        { match: "оплатить", action: () => { window.location.href = "app-payments.html"; } },
+        { match: "перевести", action: () => goToTransfer("card") },
+        { match: "между счетами", action: () => goToTransfer("requisites") }
+    ]);
+
+    bindActionByText(".pop-card", [
+        { match: "somoni", action: () => goToTransfer("phone") },
+        { match: "на карту", action: () => goToTransfer("card") },
+        { match: "мобильная связь", action: () => { window.location.href = "app-payments.html"; } },
+        { match: "интернет", action: () => { window.location.href = "app-payments.html"; } }
+    ]);
+
+    bindActionByText(".card-action-btn", [
+        { match: "перевести", action: () => goToTransfer("card") }
+    ]);
+}
+
+function bindBalanceVisibilityToggle() {
+    const toggleVisibility = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        isBalanceHidden = !isBalanceHidden;
+        renderDashboard();
+    };
+
+    window.toggleDashboardBalance = toggleVisibility;
+
+    if (balanceToggleEl) {
+        balanceToggleEl.dataset.boundAction = "true";
+        balanceToggleEl.addEventListener("click", toggleVisibility);
+    }
+
+    if (heroPlusEl) {
+        heroPlusEl.dataset.boundAction = "true";
+        heroPlusEl.addEventListener("click", toggleVisibility);
+    }
+
+    if (totalBalEl) {
+        totalBalEl.dataset.boundAction = "true";
+        totalBalEl.addEventListener("click", toggleVisibility);
+    }
+
+    if (totalBalRowEl) {
+        totalBalRowEl.dataset.boundAction = "true";
+    }
+
+    updateBalanceToggleUi();
+}
+
 function renderDashboard() {
     const formattedBalance = formatMoney(dashboardState.balance, "TJS");
     const formattedCardBalance = formatMoney(dashboardState.cardBalance, "TJS");
     const formattedCardNumber = formatCardNumber(dashboardState.cardNumber);
 
     if (totalBalEl) {
-        totalBalEl.textContent = formattedBalance;
+        totalBalEl.textContent = isBalanceHidden ? hiddenMoneyMask(formattedBalance) : formattedBalance;
     }
 
     if (bonusEl) {
@@ -104,7 +233,7 @@ function renderDashboard() {
     }
 
     if (cardBalanceEl) {
-        cardBalanceEl.textContent = formattedCardBalance;
+        cardBalanceEl.textContent = isBalanceHidden ? hiddenMoneyMask(formattedCardBalance) : formattedCardBalance;
     }
 
     if (cardDeltaEl) {
@@ -113,6 +242,7 @@ function renderDashboard() {
 
     renderOperations();
     renderSidebarSummary(formattedBalance);
+    updateBalanceToggleUi();
 }
 
 function renderOperations() {
@@ -171,7 +301,7 @@ function renderSidebarSummary(formattedBalance) {
         <div class="empty-state">
             <div><strong>Номер:</strong> ${dashboardState.cardNumber}</div>
             <div style="margin-top:8px;"><strong>Срок:</strong> ${dashboardState.expiryDate}</div>
-            <div style="margin-top:8px;"><strong>Общий баланс:</strong> ${formattedBalance}</div>
+            <div style="margin-top:8px;"><strong>Общий баланс:</strong> ${isBalanceHidden ? hiddenMoneyMask(formattedBalance) : formattedBalance}</div>
         </div>
     `;
     rightSidebarEl.appendChild(summaryCard);
@@ -227,7 +357,10 @@ async function loadDashboardData() {
 }
 
 function initDashboard() {
+    cacheElements();
     setProfile();
+    bindDashboardActions();
+    bindBalanceVisibilityToggle();
     applyStaticCleanup();
     renderDashboard();
     loadDashboardData();

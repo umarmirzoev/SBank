@@ -380,8 +380,111 @@ function ensureGlobalStyles() {
     .sb-logout-btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 14px;border:1px solid var(--border,#dbe2ea);border-radius:12px;background:#fff;color:#0f172a;font-size:14px;font-weight:600;cursor:pointer}
     .sb-theme-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border:1px solid var(--border,#dbe2ea);border-radius:12px;background:#fff;color:#0f172a;cursor:pointer}
     .sb-theme-btn svg{width:18px;height:18px}
+    .header-right .sb-theme-btn,.top-actions .sb-theme-btn,.header-actions .sb-theme-btn{flex:0 0 auto}
     html[data-sb-theme="dark"]{--bg:#020617;--card-bg:#0f172a;--text:#f8fafc;--text-muted:#cbd5e1;--border:#334155;--shadow:0 10px 30px rgba(0,0,0,.35)}
     html[data-sb-theme="dark"] body{background:var(--bg) !important;color:var(--text) !important}
+    html[data-sb-theme="dark"] .app-shell{background:#020617 !important;border-color:#1e293b !important;box-shadow:0 24px 64px rgba(0,0,0,.45) !important}
+    html[data-sb-theme="dark"] .sidebar{background:#0f172a !important;border-color:#1e293b !important}
+    html[data-sb-theme="dark"] .main,
+    html[data-sb-theme="dark"] .content,
+    html[data-sb-theme="dark"] .main-col,
+    html[data-sb-theme="dark"] .right-sidebar,
+    html[data-sb-theme="dark"] .right-col,
+    html[data-sb-theme="dark"] .middle-col,
+    html[data-sb-theme="dark"] .side-col,
+    html[data-sb-theme="dark"] .list-col,
+    html[data-sb-theme="dark"] .analysis-sidebar{background:transparent !important}
+    html[data-sb-theme="dark"] .header,
+    html[data-sb-theme="dark"] .topbar{background:transparent !important}
+    html[data-sb-theme="dark"] .brand-name,
+    html[data-sb-theme="dark"] .section-title,
+    html[data-sb-theme="dark"] .page-title,
+    html[data-sb-theme="dark"] .page-head h1,
+    html[data-sb-theme="dark"] .page-title-row h1,
+    html[data-sb-theme="dark"] .user-name,
+    html[data-sb-theme="dark"] .nav-item,
+    html[data-sb-theme="dark"] .nav-link,
+    html[data-sb-theme="dark"] .w-title,
+    html[data-sb-theme="dark"] .panel-title,
+    html[data-sb-theme="dark"] .card-type-name,
+    html[data-sb-theme="dark"] .ticket-title,
+    html[data-sb-theme="dark"] .op-name,
+    html[data-sb-theme="dark"] .mini-item strong{color:var(--text) !important}
+    html[data-sb-theme="dark"] .page-head p,
+    html[data-sb-theme="dark"] .page-title-row p,
+    html[data-sb-theme="dark"] .ticket-meta,
+    html[data-sb-theme="dark"] .op-memo,
+    html[data-sb-theme="dark"] .pop-sub,
+    html[data-sb-theme="dark"] .user-profile span[style*="color:#94a3b8"],
+    html[data-sb-theme="dark"] .conversation-sub,
+    html[data-sb-theme="dark"] .metric strong{color:var(--text-muted) !important}
+    html[data-sb-theme="dark"] .search-pill,
+    html[data-sb-theme="dark"] .search,
+    html[data-sb-theme="dark"] .user-profile,
+    html[data-sb-theme="dark"] .date-pill,
+    html[data-sb-theme="dark"] .sidebar-box,
+    html[data-sb-theme="dark"] .widget,
+    html[data-sb-theme="dark"] .panel,
+    html[data-sb-theme="dark"] .side-card,
+    html[data-sb-theme="dark"] .info-card,
+    html[data-sb-theme="dark"] .focus-box,
+    html[data-sb-theme="dark"] .quick-tabs,
+    html[data-sb-theme="dark"] .tabs,
+    html[data-sb-theme="dark"] .cards-section-grid,
+    html[data-sb-theme="dark"] .pop-card,
+    html[data-sb-theme="dark"] .service-card,
+    html[data-sb-theme="dark"] .quick-card,
+    html[data-sb-theme="dark"] .feature-tile,
+    html[data-sb-theme="dark"] .t-option,
+    html[data-sb-theme="dark"] .t-form,
+    html[data-sb-theme="dark"] .summary-box,
+    html[data-sb-theme="dark"] .stat-card,
+    html[data-sb-theme="dark"] .ticket-item,
+    html[data-sb-theme="dark"] .faq-item,
+    html[data-sb-theme="dark"] .message,
+    html[data-sb-theme="dark"] .profile-card,
+    html[data-sb-theme="dark"] .alert-item,
+    html[data-sb-theme="dark"] .doc-item,
+    html[data-sb-theme="dark"] .timeline-item,
+    html[data-sb-theme="dark"] .empty-state{background:#0f172a !important;color:var(--text-muted) !important;border-color:#334155 !important}
+    html[data-sb-theme="dark"] .nav-item:hover,
+    html[data-sb-theme="dark"] .nav-link:hover{background:#172554 !important;color:#fff !important}
+    html[data-sb-theme="dark"] .nav-item.active,
+    html[data-sb-theme="dark"] .nav-link.active{background:#2563eb !important;color:#fff !important}
+    html[data-sb-theme="dark"] .search-pill input,
+    html[data-sb-theme="dark"] .search input,
+    html[data-sb-theme="dark"] .message-form textarea,
+    html[data-sb-theme="dark"] .ticket-form input,
+    html[data-sb-theme="dark"] .ticket-form select,
+    html[data-sb-theme="dark"] .ticket-form textarea{background:transparent !important;color:var(--text) !important}
+    html[data-sb-theme="dark"] .hero-banner,
+    html[data-sb-theme="dark"] .banner,
+    html[data-sb-theme="dark"] .promo-banner{box-shadow:0 20px 50px rgba(0,0,0,.35) !important}
+    html[data-sb-theme="dark"] .rates-panel{background:#111827 !important;border-color:#334155 !important;box-shadow:0 20px 50px rgba(0,0,0,.35) !important}
+    html[data-sb-theme="dark"] .rates-wrap,
+    html[data-sb-theme="dark"] .rates-table,
+    html[data-sb-theme="dark"] .rates-footer{background:transparent !important;color:var(--text) !important}
+    html[data-sb-theme="dark"] .rates-table thead th{color:var(--text-muted) !important;border-color:#334155 !important}
+    html[data-sb-theme="dark"] .rates-table tbody td{background:#0b1220 !important;color:var(--text) !important;border-color:#1e293b !important}
+    html[data-sb-theme="dark"] .rates-table tbody tr:hover td{background:#131c31 !important}
+    html[data-sb-theme="dark"] .rate-filter,
+    html[data-sb-theme="dark"] .mini-filter{background:transparent !important;color:var(--text) !important;border-color:#334155 !important}
+    html[data-sb-theme="dark"] .rate-filter:hover,
+    html[data-sb-theme="dark"] .mini-filter:hover{background:#172554 !important;color:#fff !important;border-color:#2563eb !important}
+    html[data-sb-theme="dark"] .rate-filter.active,
+    html[data-sb-theme="dark"] .mini-filter.active{background:#2563eb !important;color:#fff !important;border-color:#2563eb !important}
+    html[data-sb-theme="dark"] .converter{background:linear-gradient(180deg,#f8fafc 0%,#e2e8f0 100%) !important;border:1px solid #cbd5e1 !important;box-shadow:0 20px 50px rgba(0,0,0,.35) !important}
+    html[data-sb-theme="dark"] .converter,
+    html[data-sb-theme="dark"] .converter label{color:#0f172a !important}
+    html[data-sb-theme="dark"] .converter-switch{background:#0f172a !important;border:1px solid #1e293b !important}
+    html[data-sb-theme="dark"] .converter-switch button{background:transparent !important;color:#e2e8f0 !important}
+    html[data-sb-theme="dark"] .converter-switch button.active{background:#2563eb !important;color:#fff !important}
+    html[data-sb-theme="dark"] .converter-row{background:#111827 !important;border-color:#334155 !important}
+    html[data-sb-theme="dark"] .converter-row input{background:transparent !important;color:#fff !important;border:0 !important}
+    html[data-sb-theme="dark"] .currency-select{background:#111827 !important;color:#fff !important;border:0 !important}
+    html[data-sb-theme="dark"] .swap{color:#2563eb !important}
+    html[data-sb-theme="dark"] .history-link{color:#3b82f6 !important}
+    html[data-sb-theme="dark"] .send-button{background:#2563eb !important;color:#fff !important}
     html[data-sb-theme="dark"] .sb-header,html[data-sb-theme="dark"] .sb-header-top,html[data-sb-theme="dark"] .sb-header-bottom{background:#020617 !important;border-color:#334155 !important}
     html[data-sb-theme="dark"] .dashboard-section,html[data-sb-theme="dark"] .tariff-section,html[data-sb-theme="dark"] .docs-section,html[data-sb-theme="dark"] .banner-section,html[data-sb-theme="dark"] .product-card,html[data-sb-theme="dark"] .feature-card,html[data-sb-theme="dark"] .benefit-card,html[data-sb-theme="dark"] .news-card,html[data-sb-theme="dark"] .doc-card,html[data-sb-theme="dark"] .branch-item,html[data-sb-theme="dark"] .dash-box,html[data-sb-theme="dark"] [class*="panel"],html[data-sb-theme="dark"] [class*="card"],html[data-sb-theme="dark"] [class*="box"]{background:var(--card-bg) !important;color:var(--text) !important;border-color:var(--border) !important}
     html[data-sb-theme="dark"] .sb-nav-top a,html[data-sb-theme="dark"] .sb-nav-bottom a,html[data-sb-theme="dark"] .sb-logo,html[data-sb-theme="dark"] h1,html[data-sb-theme="dark"] h2,html[data-sb-theme="dark"] h3,html[data-sb-theme="dark"] h4,html[data-sb-theme="dark"] strong,html[data-sb-theme="dark"] label{color:var(--text) !important}
@@ -471,7 +574,7 @@ function applyAuthModalLanguage() {
 }
 
 function renderHeaderControls() {
-  const host = document.querySelector(".sb-header-actions");
+  const host = document.querySelector(".sb-header-actions, .header-right, .top-actions, .header-actions");
   if (!host) {
     return;
   }
@@ -483,18 +586,26 @@ function renderHeaderControls() {
     host.appendChild(controls);
   }
 
+  const isAppShell = !document.querySelector(".sb-header-actions");
   const ui = currentUiText();
   const session = getSession();
-  controls.innerHTML = `
-    <select class="sb-lang-select" data-sb-lang>
-      <option value="ru">Рус</option>
-      <option value="en">Eng</option>
-      <option value="tj">Тҷ</option>
-    </select>
-    ${session
-      ? `<a class="sb-cabinet-btn" href="somonibank-app.html"><span data-sb-cabinet-label>${ui.cabinet}</span></a><button class="sb-theme-btn" type="button" data-sb-theme-toggle></button><button class="sb-logout-btn" type="button" data-sb-logout><span data-sb-logout-label>${ui.logout}</span></button>`
-      : `<a class="sb-login-btn" href="login.html"><span data-sb-login-label>${ui.login}</span></a><button class="sb-theme-btn" type="button" data-sb-theme-toggle></button>`}
-  `;
+
+  if (isAppShell) {
+    controls.innerHTML = `
+      <button class="sb-theme-btn" type="button" data-sb-theme-toggle></button>
+    `;
+  } else {
+    controls.innerHTML = `
+      <select class="sb-lang-select" data-sb-lang>
+        <option value="ru">Рус</option>
+        <option value="en">Eng</option>
+        <option value="tj">Тҷ</option>
+      </select>
+      ${session
+        ? `<a class="sb-cabinet-btn" href="somonibank-app.html"><span data-sb-cabinet-label>${ui.cabinet}</span></a><button class="sb-theme-btn" type="button" data-sb-theme-toggle></button><button class="sb-logout-btn" type="button" data-sb-logout><span data-sb-logout-label>${ui.logout}</span></button>`
+        : `<a class="sb-login-btn" href="login.html"><span data-sb-login-label>${ui.login}</span></a><button class="sb-theme-btn" type="button" data-sb-theme-toggle></button>`}
+    `;
+  }
 
   const select = controls.querySelector("[data-sb-lang]");
   if (select) {
