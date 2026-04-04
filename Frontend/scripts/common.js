@@ -26,6 +26,7 @@ const PAGE_TITLES = {
     "somonibank-app.html": { ru: "Приложение Somoni — Сомонибанк", en: "Somoni App — Somonibank", tj: "Барномаи Somoni — Сомонибонк" },
     "app-mobile-topup.html": { ru: "Пополнение мобильного — Сомонибанк", en: "Mobile Top Up — Somonibank", tj: "Пуркунии мобилӣ — Сомонибонк" },
     "app-internet-tv.html": { ru: "Интернет и ТВ — Сомонибанк", en: "Internet and TV — Somonibank", tj: "Интернет ва ТВ — Сомонибонк" },
+    "app-utilities.html": { ru: "Коммунальные услуги — Сомонибанк", en: "Utilities — Somonibank", tj: "Хизматрасониҳои коммуналӣ — Сомонибонк" },
     "somonibank.html": { ru: "Сомонибанк", en: "Somonibank", tj: "Сомонибонк" },
   "transfers.html": { ru: "Переводы — Сомонибанк", en: "Transfers — Somonibank", tj: "Интиқолҳо — Сомонибонк" },
   "visa-business.html": { ru: "Visa Business — Сомонибанк", en: "Visa Business — Somonibank", tj: "Visa Business — Сомонибонк" }

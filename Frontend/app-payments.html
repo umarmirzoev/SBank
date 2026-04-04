@@ -312,9 +312,15 @@
       const label = String(s || '').trim()
       const normalized = label.toLowerCase()
       const isInternetOrTv = ['интернет','тв','tv','znet','tajnet','tojnet','babilon-t','cjsc telecom','continent tv','sama tv'].some(x => normalized.includes(x))
+      const isUtilities = ['жкх','коммун','barqi','tojikgas','obi khoja','свет','газ','вода'].some(x => normalized.includes(x))
       if(isInternetOrTv){
         if(label){sessionStorage.setItem('sb-internet-provider-preset', label)}
         window.location.href='app-internet-tv.html'
+        return
+      }
+      if(isUtilities){
+        if(label){sessionStorage.setItem('sb-utilities-provider-preset', label)}
+        window.location.href='app-utilities.html'
         return
       }
       if(label){sessionStorage.setItem('sb-mobile-provider-preset', label)}

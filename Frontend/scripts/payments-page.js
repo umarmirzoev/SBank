@@ -2,6 +2,7 @@
 
 const MOBILE_PROVIDER_PRESET_KEY = "sb-mobile-provider-preset";
 const INTERNET_PROVIDER_PRESET_KEY = "sb-internet-provider-preset";
+const UTILITIES_PROVIDER_PRESET_KEY = "sb-utilities-provider-preset";
 const session = getSession();
 const redirectToLogin = () => {
   const target = encodeURIComponent("payments.html");
@@ -36,12 +37,21 @@ window.payService = (providerName) => {
   const label = String(providerName || "").trim();
   const normalized = label.toLowerCase();
   const isInternetOrTv = ["интернет", "тв", "tv", "znet", "tajnet", "tojnet", "babilon-t", "cjsc telecom", "continent tv", "sama tv"].some((item) => normalized.includes(item));
+  const isUtilities = ["жкх", "коммун", "barqi", "tojikgas", "obi khoja", "свет", "газ", "вода"].some((item) => normalized.includes(item));
 
   if (isInternetOrTv) {
     if (label) {
       sessionStorage.setItem(INTERNET_PROVIDER_PRESET_KEY, label);
     }
     window.location.href = "app-internet-tv.html";
+    return;
+  }
+
+  if (isUtilities) {
+    if (label) {
+      sessionStorage.setItem(UTILITIES_PROVIDER_PRESET_KEY, label);
+    }
+    window.location.href = "app-utilities.html";
     return;
   }
 
@@ -238,6 +248,9 @@ function handleAction(action, label) {
       return;
     case "internet":
       window.location.href = "app-internet-tv.html";
+      return;
+    case "utilities":
+      window.location.href = "app-utilities.html";
       return;
     case "transfers":
       window.location.href = "transfers.html";

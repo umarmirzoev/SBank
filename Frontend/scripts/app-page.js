@@ -164,7 +164,7 @@ function bindDashboardActions() {
         { match: "на карту", action: () => goToTransfer("card") },
         { match: "мобильная связь", action: () => { window.location.href = "app-mobile-topup.html"; } },
         { match: "интернет", action: () => { window.location.href = "app-internet-tv.html"; } },
-        { match: "коммунальные услуги", action: () => { window.location.href = "app-payments.html"; } },
+        { match: "коммунальные услуги", action: () => { window.location.href = "app-utilities.html"; } },
         { match: "госуслуги", action: () => { window.location.href = "app-payments.html"; } },
         { match: "налоги", action: () => { window.location.href = "app-payments.html"; } }
     ]);
