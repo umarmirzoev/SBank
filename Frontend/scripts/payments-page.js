@@ -1,6 +1,7 @@
 ﻿import { apiRequest, clearSession, formatMoney, getSession, showToast, unwrapResponse } from "./common.js";
 
 const MOBILE_PROVIDER_PRESET_KEY = "sb-mobile-provider-preset";
+const INTERNET_PROVIDER_PRESET_KEY = "sb-internet-provider-preset";
 const session = getSession();
 const redirectToLogin = () => {
   const target = encodeURIComponent("payments.html");
@@ -32,8 +33,20 @@ userName.textContent = fallbackUserName;
 userAvatar.textContent = fallbackUserName.trim().charAt(0).toUpperCase();
 
 window.payService = (providerName) => {
-  if (providerName) {
-    sessionStorage.setItem(MOBILE_PROVIDER_PRESET_KEY, String(providerName));
+  const label = String(providerName || "").trim();
+  const normalized = label.toLowerCase();
+  const isInternetOrTv = ["интернет", "тв", "tv", "znet", "tajnet", "tojnet", "babilon-t", "cjsc telecom", "continent tv", "sama tv"].some((item) => normalized.includes(item));
+
+  if (isInternetOrTv) {
+    if (label) {
+      sessionStorage.setItem(INTERNET_PROVIDER_PRESET_KEY, label);
+    }
+    window.location.href = "app-internet-tv.html";
+    return;
+  }
+
+  if (label) {
+    sessionStorage.setItem(MOBILE_PROVIDER_PRESET_KEY, label);
   }
   window.location.href = "app-mobile-topup.html";
 };
@@ -222,6 +235,9 @@ function handleAction(action, label) {
   switch (action) {
     case "mobile":
       window.location.href = "app-mobile-topup.html";
+      return;
+    case "internet":
+      window.location.href = "app-internet-tv.html";
       return;
     case "transfers":
       window.location.href = "transfers.html";

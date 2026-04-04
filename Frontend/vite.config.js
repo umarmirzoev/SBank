@@ -56,6 +56,7 @@ export default defineConfig({
         appBank: resolve(__dirname, "app-bank.html"),
         appPayments: resolve(__dirname, "app-payments.html"),
         appMobileTopup: resolve(__dirname, "app-mobile-topup.html"),
+        appInternetTv: resolve(__dirname, "app-internet-tv.html"),
         visaBusiness: resolve(__dirname, "visa-business.html")
       }
     }
