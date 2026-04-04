@@ -58,6 +58,8 @@ export default defineConfig({
         appMobileTopup: resolve(__dirname, "app-mobile-topup.html"),
         appInternetTv: resolve(__dirname, "app-internet-tv.html"),
         appUtilities: resolve(__dirname, "app-utilities.html"),
+        appGovServices: resolve(__dirname, "app-gov-services.html"),
+        appTaxes: resolve(__dirname, "app-taxes.html"),
         visaBusiness: resolve(__dirname, "visa-business.html")
       }
     }

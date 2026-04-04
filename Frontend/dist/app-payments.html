@@ -311,22 +311,91 @@
     function payService(s){
       const label = String(s || '').trim()
       const normalized = label.toLowerCase()
-      const isInternetOrTv = ['интернет','тв','tv','znet','tajnet','tojnet','babilon-t','cjsc telecom','continent tv','sama tv'].some(x => normalized.includes(x))
-      const isUtilities = ['жкх','коммун','barqi','tojikgas','obi khoja','свет','газ','вода'].some(x => normalized.includes(x))
-      if(isInternetOrTv){
-        if(label){sessionStorage.setItem('sb-internet-provider-preset', label)}
+      const mobilePresetMap = {
+        'мегафон': 'Megafon TJ',
+        'megafon': 'Megafon TJ',
+        'tcell': 'Tcell',
+        'babilon': 'Babilon Mobile',
+        'babilon mobile': 'Babilon Mobile',
+        'связь': ''
+      }
+      const internetPresetMap = {
+        'tajnet': 'TojNET',
+        'tojnet': 'TojNET',
+        'znet': 'Babilon-T',
+        'интернет': '',
+        'tv': 'Continent TV',
+        'тв': 'Continent TV',
+        'continent tv': 'Continent TV',
+        'sama tv': 'Sama TV',
+        'cjsc telecom': 'CJSC Telecom',
+        'babilon-t': 'Babilon-T'
+      }
+      const utilitiesPresetMap = {
+        'жкх': '',
+        'коммунальные услуги': '',
+        'барки ток': 'Barqi Tojik',
+        'свет': 'Barqi Tojik',
+        'истиклол': 'Obi Khoja',
+        'вода': 'Obi Khoja',
+        'газ': 'Tojikgas'
+      }
+      const govPresetMap = {
+        'госуслуги': '',
+        'штрафы': 'Traffic fines',
+        'гибдд': 'Traffic fines',
+        'госпошлина': 'Traffic fines'
+      }
+      const taxPresetMap = {
+        'налоги': 'Income tax',
+        'income tax': 'Income tax'
+      }
+      const lookupPreset = (map) => {
+        const key = Object.keys(map).find(item => normalized.includes(item))
+        return key ? map[key] : null
+      }
+      const internetPreset = lookupPreset(internetPresetMap)
+      if(internetPreset !== null){
+        if(internetPreset){sessionStorage.setItem('sb-internet-provider-preset', internetPreset)}
         window.location.href='app-internet-tv.html'
         return
       }
-      if(isUtilities){
-        if(label){sessionStorage.setItem('sb-utilities-provider-preset', label)}
+      const utilityPreset = lookupPreset(utilitiesPresetMap)
+      if(utilityPreset !== null){
+        if(utilityPreset){sessionStorage.setItem('sb-utilities-provider-preset', utilityPreset)}
         window.location.href='app-utilities.html'
+        return
+      }
+      const taxPreset = lookupPreset(taxPresetMap)
+      if(taxPreset !== null){
+        sessionStorage.setItem('sb-tax-provider-preset', taxPreset)
+        window.location.href='app-taxes.html'
+        return
+      }
+      const govPreset = lookupPreset(govPresetMap)
+      if(govPreset !== null){
+        if(govPreset){sessionStorage.setItem('sb-gov-provider-preset', govPreset)}
+        window.location.href='app-gov-services.html'
+        return
+      }
+      const mobilePreset = lookupPreset(mobilePresetMap)
+      if(mobilePreset !== null){
+        if(mobilePreset){sessionStorage.setItem('sb-mobile-provider-preset', mobilePreset)}
+        window.location.href='app-mobile-topup.html'
         return
       }
       if(label){sessionStorage.setItem('sb-mobile-provider-preset', label)}
       window.location.href='app-mobile-topup.html'
     }
-    function filterCat(c,e){document.querySelectorAll('.category-chip').forEach(x=>x.classList.remove('active'));e.classList.add('active');showToast('Фильтр: '+c)}
+    function filterCat(c,e){
+      document.querySelectorAll('.category-chip').forEach(x=>x.classList.remove('active'))
+      e.classList.add('active')
+      if(c === 'mobile'){payService('Связь');return}
+      if(c === 'internet'){payService('Интернет');return}
+      if(c === 'utilities'){payService('ЖКХ');return}
+      if(c === 'gov'){payService('Госуслуги');return}
+      showToast('Показаны все платежи')
+    }
   </script>
 </body>
 </html>

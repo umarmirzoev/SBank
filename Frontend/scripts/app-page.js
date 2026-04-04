@@ -165,8 +165,8 @@ function bindDashboardActions() {
         { match: "мобильная связь", action: () => { window.location.href = "app-mobile-topup.html"; } },
         { match: "интернет", action: () => { window.location.href = "app-internet-tv.html"; } },
         { match: "коммунальные услуги", action: () => { window.location.href = "app-utilities.html"; } },
-        { match: "госуслуги", action: () => { window.location.href = "app-payments.html"; } },
-        { match: "налоги", action: () => { window.location.href = "app-payments.html"; } }
+        { match: "госуслуги", action: () => { window.location.href = "app-gov-services.html"; } },
+        { match: "налоги", action: () => { sessionStorage.setItem("sb-tax-provider-preset", "income tax"); window.location.href = "app-taxes.html"; } }
     ]);
 
     bindActionByText(".card-action-btn", [

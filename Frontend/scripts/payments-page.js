@@ -3,6 +3,8 @@
 const MOBILE_PROVIDER_PRESET_KEY = "sb-mobile-provider-preset";
 const INTERNET_PROVIDER_PRESET_KEY = "sb-internet-provider-preset";
 const UTILITIES_PROVIDER_PRESET_KEY = "sb-utilities-provider-preset";
+const GOV_PROVIDER_PRESET_KEY = "sb-gov-provider-preset";
+const TAX_PROVIDER_PRESET_KEY = "sb-tax-provider-preset";
 const session = getSession();
 const redirectToLogin = () => {
   const target = encodeURIComponent("payments.html");
@@ -34,31 +36,7 @@ userName.textContent = fallbackUserName;
 userAvatar.textContent = fallbackUserName.trim().charAt(0).toUpperCase();
 
 window.payService = (providerName) => {
-  const label = String(providerName || "").trim();
-  const normalized = label.toLowerCase();
-  const isInternetOrTv = ["интернет", "тв", "tv", "znet", "tajnet", "tojnet", "babilon-t", "cjsc telecom", "continent tv", "sama tv"].some((item) => normalized.includes(item));
-  const isUtilities = ["жкх", "коммун", "barqi", "tojikgas", "obi khoja", "свет", "газ", "вода"].some((item) => normalized.includes(item));
-
-  if (isInternetOrTv) {
-    if (label) {
-      sessionStorage.setItem(INTERNET_PROVIDER_PRESET_KEY, label);
-    }
-    window.location.href = "app-internet-tv.html";
-    return;
-  }
-
-  if (isUtilities) {
-    if (label) {
-      sessionStorage.setItem(UTILITIES_PROVIDER_PRESET_KEY, label);
-    }
-    window.location.href = "app-utilities.html";
-    return;
-  }
-
-  if (label) {
-    sessionStorage.setItem(MOBILE_PROVIDER_PRESET_KEY, label);
-  }
-  window.location.href = "app-mobile-topup.html";
+  openPaymentsDestination(providerName);
 };
 
 document.getElementById("logoutButton")?.addEventListener("click", () => {
@@ -244,13 +222,19 @@ function filterServices(query) {
 function handleAction(action, label) {
   switch (action) {
     case "mobile":
-      window.location.href = "app-mobile-topup.html";
+      openPaymentsDestination(label || "Связь");
       return;
     case "internet":
-      window.location.href = "app-internet-tv.html";
+      openPaymentsDestination(label || "Интернет");
       return;
     case "utilities":
-      window.location.href = "app-utilities.html";
+      openPaymentsDestination(label || "ЖКХ");
+      return;
+    case "taxes":
+      openPaymentsDestination(label || "Налоги");
+      return;
+    case "state-services":
+      openPaymentsDestination(label || "Госуслуги");
       return;
     case "transfers":
       window.location.href = "transfers.html";
@@ -290,6 +274,109 @@ function handleAction(action, label) {
     default:
       showInlineToast(`${label || "Раздел"} открыт.`);
   }
+}
+
+function openPaymentsDestination(value) {
+  const label = String(value || "").trim();
+  const normalized = label.toLowerCase();
+
+  const mobilePresetMap = {
+    "мегафон": "Megafon TJ",
+    "megafon": "Megafon TJ",
+    "tcell": "Tcell",
+    "babilon mobile": "Babilon Mobile",
+    "babilon": "Babilon Mobile",
+    "связь": ""
+  };
+
+  const internetPresetMap = {
+    "tajnet": "TojNET",
+    "tojnet": "TojNET",
+    "znet": "Babilon-T",
+    "интернет": "",
+    "tv": "Continent TV",
+    "тв": "Continent TV",
+    "continent tv": "Continent TV",
+    "sama tv": "Sama TV",
+    "cjsc telecom": "CJSC Telecom",
+    "babilon-t": "Babilon-T"
+  };
+
+  const utilityPresetMap = {
+    "жкх": "",
+    "коммунальные услуги": "",
+    "барки ток": "Barqi Tojik",
+    "свет": "Barqi Tojik",
+    "истиклол": "Obi Khoja",
+    "вода": "Obi Khoja",
+    "газ": "Tojikgas"
+  };
+
+  const govPresetMap = {
+    "госуслуги": "",
+    "штрафы": "Traffic fines",
+    "гибдд": "Traffic fines",
+    "госпошлина": "Traffic fines"
+  };
+
+  const taxPresetMap = {
+    "налоги": "Income tax",
+    "income tax": "Income tax"
+  };
+
+  const lookupPreset = (map) => {
+    const matchedKey = Object.keys(map).find((key) => normalized.includes(key));
+    if (!matchedKey) return null;
+    return map[matchedKey];
+  };
+
+  const internetPreset = lookupPreset(internetPresetMap);
+  if (internetPreset !== null) {
+    if (internetPreset) {
+      sessionStorage.setItem(INTERNET_PROVIDER_PRESET_KEY, internetPreset);
+    }
+    window.location.href = "app-internet-tv.html";
+    return;
+  }
+
+  const utilitiesPreset = lookupPreset(utilityPresetMap);
+  if (utilitiesPreset !== null) {
+    if (utilitiesPreset) {
+      sessionStorage.setItem(UTILITIES_PROVIDER_PRESET_KEY, utilitiesPreset);
+    }
+    window.location.href = "app-utilities.html";
+    return;
+  }
+
+  const taxesPreset = lookupPreset(taxPresetMap);
+  if (taxesPreset !== null) {
+    sessionStorage.setItem(TAX_PROVIDER_PRESET_KEY, taxesPreset);
+    window.location.href = "app-taxes.html";
+    return;
+  }
+
+  const govPreset = lookupPreset(govPresetMap);
+  if (govPreset !== null) {
+    if (govPreset) {
+      sessionStorage.setItem(GOV_PROVIDER_PRESET_KEY, govPreset);
+    }
+    window.location.href = "app-gov-services.html";
+    return;
+  }
+
+  const mobilePreset = lookupPreset(mobilePresetMap);
+  if (mobilePreset !== null) {
+    if (mobilePreset) {
+      sessionStorage.setItem(MOBILE_PROVIDER_PRESET_KEY, mobilePreset);
+    }
+    window.location.href = "app-mobile-topup.html";
+    return;
+  }
+
+  if (label) {
+    sessionStorage.setItem(MOBILE_PROVIDER_PRESET_KEY, label);
+  }
+  window.location.href = "app-mobile-topup.html";
 }
 
 async function loadRecurringPayments() {
