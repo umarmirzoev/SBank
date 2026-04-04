@@ -304,7 +304,10 @@
   <div class="toast" id="toast"></div>
   <script>
     function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
-    function payService(s){showToast('Открытие: '+s)}
+    function payService(s){
+      if(s){sessionStorage.setItem('sb-mobile-provider-preset', String(s))}
+      window.location.href='app-mobile-topup.html'
+    }
     function filterCat(c,e){document.querySelectorAll('.category-chip').forEach(x=>x.classList.remove('active'));e.classList.add('active');showToast('Фильтр: '+c)}
   </script>
 </body>

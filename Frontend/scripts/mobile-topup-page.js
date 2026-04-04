@@ -1,4 +1,6 @@
-import { apiRequest, clearSession, formatMoney, formatDate, getSession, requireAuth, showToast, unwrapResponse } from "./common.js";
+import { apiRequest, formatMoney, formatDate, getSession, requireAuth, showToast, unwrapResponse } from "./common.js";
+
+const MOBILE_PROVIDER_PRESET_KEY = "sb-mobile-provider-preset";
 
 const state = {
   session: getSession(),
@@ -8,7 +10,8 @@ const state = {
   providers: [],
   selectedProviderId: null,
   payments: [],
-  autopay: false
+  autopay: false,
+  mode: "mobile"
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -19,6 +22,7 @@ function initPage(session) {
   state.session = session;
   const elements = getElements();
   hydrateProfile(elements, session);
+  ensureHistoryPanel(elements);
   bindEvents(elements);
   loadData(elements);
 }
@@ -27,7 +31,8 @@ function getElements() {
   return {
     userName: document.getElementById("userName"),
     userAvatar: document.getElementById("userAvatar"),
-    searchInput: document.getElementById("searchInput"),
+    topupCard: document.querySelector(".topup-card"),
+    toggleRow: document.querySelector(".topup-card .toggle-row"),
     accountSelect: document.getElementById("accountSelect"),
     phoneInput: document.getElementById("phoneInput"),
     amountInput: document.getElementById("amountInput"),
@@ -39,7 +44,9 @@ function getElements() {
     categoryName: document.getElementById("categoryName"),
     payButton: document.getElementById("payButton"),
     autopayToggle: document.getElementById("autopayToggle"),
-    modeToggle: document.getElementById("modeToggle")
+    modeToggle: document.getElementById("modeToggle"),
+    pageTitle: document.querySelector(".page-head h1"),
+    pageSubtitle: document.querySelector(".page-head p")
   };
 }
 
@@ -54,6 +61,20 @@ function hydrateProfile(elements, session) {
     .join("");
 }
 
+function ensureHistoryPanel(elements) {
+  if (!elements.topupCard || document.getElementById("historyPaymentsPanel")) {
+    return;
+  }
+
+  const panel = document.createElement("div");
+  panel.id = "historyPaymentsPanel";
+  panel.style.display = "none";
+  panel.style.flexDirection = "column";
+  panel.style.gap = "12px";
+  panel.style.marginTop = "16px";
+  elements.topupCard.appendChild(panel);
+}
+
 function bindEvents(elements) {
   elements.amountInput.addEventListener("input", () => updateSummary(elements));
   elements.accountSelect.addEventListener("change", () => updateSummary(elements));
@@ -66,15 +87,15 @@ function bindEvents(elements) {
   elements.autopayToggle.addEventListener("click", () => {
     state.autopay = !state.autopay;
     elements.autopayToggle.classList.toggle("active", state.autopay);
-    showToast(state.autopay ? "Автоплатеж включён" : "Автоплатеж выключен");
+    showToast(state.autopay ? "Автоплатеж включен" : "Автоплатеж выключен");
   });
+
   elements.modeToggle.querySelectorAll("[data-mode]").forEach((button) => {
     button.addEventListener("click", () => {
+      state.mode = button.dataset.mode || "mobile";
       elements.modeToggle.querySelectorAll("[data-mode]").forEach((item) => item.classList.remove("active"));
       button.classList.add("active");
-      if (button.dataset.mode === "history") {
-        document.getElementById("recentPayments")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      renderMode(elements);
     });
   });
 }
@@ -84,7 +105,7 @@ async function loadData(elements) {
     const [accountsPayload, categoriesPayload, paymentsPayload] = await Promise.all([
       apiRequest("/api/accounts/my?page=1&pageSize=20", { auth: true }),
       apiRequest("/api/BillPayment/categories", { auth: true }),
-      apiRequest("/api/BillPayment/my?page=1&pageSize=8", { auth: true })
+      apiRequest("/api/BillPayment/my?page=1&pageSize=50", { auth: true })
     ]);
 
     state.accounts = accountsPayload.Items || accountsPayload.items || [];
@@ -104,12 +125,70 @@ async function loadData(elements) {
     }
 
     updateSummary(elements);
+    renderMode(elements);
   } catch (error) {
     console.error(error);
     elements.providersList.innerHTML = `<div class="empty-state">Не удалось загрузить реальные данные для пополнения.</div>`;
     elements.recentPayments.innerHTML = `<div class="empty-state">История платежей недоступна.</div>`;
     showToast("Не удалось загрузить страницу мобильной связи");
   }
+}
+
+function renderMode(elements) {
+  const historyPanel = document.getElementById("historyPaymentsPanel");
+  const contentNodes = Array.from(elements.topupCard.children).filter((node) => node !== elements.toggleRow && node !== historyPanel);
+  const isHistory = state.mode === "history";
+
+  if (elements.pageTitle) {
+    elements.pageTitle.textContent = isHistory ? "Мои пополнения" : "Пополнение мобильного";
+  }
+  if (elements.pageSubtitle) {
+    elements.pageSubtitle.textContent = isHistory
+      ? "Здесь показываются все ваши реальные платежи мобильной связи."
+      : "Оплатите услуги любого мобильного оператора";
+  }
+
+  contentNodes.forEach((node) => {
+    node.style.display = isHistory ? "none" : "";
+  });
+
+  if (historyPanel) {
+    historyPanel.style.display = isHistory ? "flex" : "none";
+    if (isHistory) {
+      renderHistoryPayments(historyPanel);
+    }
+  }
+}
+
+function renderHistoryPayments(container) {
+  if (!state.payments.length) {
+    container.innerHTML = `<div class="empty-state">У вас пока нет реальных пополнений мобильной связи.</div>`;
+    return;
+  }
+
+  container.innerHTML = state.payments.map((payment) => {
+    const phone = payment.AccountNumber || payment.accountNumber || "Неизвестно";
+    const provider = payment.ProviderName || payment.providerName || "Оператор";
+    const createdAt = payment.CreatedAt || payment.createdAt;
+    const amount = Number(payment.Amount ?? payment.amount ?? 0);
+    const currency = payment.Currency || payment.currency || "TJS";
+
+    return `
+      <div style="display:flex;justify-content:space-between;gap:14px;padding:14px 16px;border-radius:18px;background:#f8fbff;border:1px solid #e4edf9;">
+        <div style="min-width:0;flex:1;">
+          <div style="font-size:15px;font-weight:800;color:#0f172a;">${escapeHtml(provider)}</div>
+          <div style="margin-top:4px;font-size:13px;color:#64748b;display:flex;flex-direction:column;gap:4px;">
+            <span>Номер: ${escapeHtml(phone)}</span>
+            <span>Чек: пополнение мобильной связи</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;white-space:nowrap;">
+          <div style="font-size:16px;font-weight:900;color:#0f172a;">${escapeHtml(formatMoney(amount, currency))}</div>
+          <div style="font-size:12px;color:#94a3b8;">${escapeHtml(formatDate(createdAt))}</div>
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
 function extractArray(payload) {
@@ -134,8 +213,80 @@ function findMobileCategory(categories) {
 async function loadProviders(elements, categoryId) {
   const payload = await apiRequest(`/api/BillPayment/categories/${categoryId}/providers`, { auth: true });
   state.providers = extractArray(payload);
-  state.selectedProviderId = state.providers[0]?.Id || state.providers[0]?.id || null;
+  state.selectedProviderId = resolvePresetProviderId(state.providers) || state.providers[0]?.Id || state.providers[0]?.id || null;
   renderProviders(elements);
+}
+
+function resolvePresetProviderId(providers) {
+  const preset = sessionStorage.getItem(MOBILE_PROVIDER_PRESET_KEY);
+  if (!preset) {
+    return null;
+  }
+
+  const normalizedPreset = normalizeProviderName(preset);
+  const matched = providers.find((provider) => {
+    const name = normalizeProviderName(provider.Name || provider.name || "");
+    const code = normalizeProviderName(provider.Code || provider.code || "");
+    return name === normalizedPreset || code === normalizedPreset || name.includes(normalizedPreset) || normalizedPreset.includes(name);
+  });
+
+  sessionStorage.removeItem(MOBILE_PROVIDER_PRESET_KEY);
+  return matched ? (matched.Id || matched.id) : null;
+}
+
+function normalizeProviderName(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/mega\s*fon/g, "megafon")
+    .replace(/мега\s*фон/g, "megafon")
+    .replace(/megafontj/g, "megafon")
+    .replace(/билайн/g, "beeline")
+    .replace(/t\s*cell/g, "tcell")
+    .replace(/тселл/g, "tcell")
+    .replace(/t-?cell/g, "tcell")
+    .replace(/babylon/g, "babilon")
+    .replace(/babi\s*lon/g, "babilon")
+    .replace(/вавилон/g, "babilon")
+    .replace(/babilon-?t/g, "babilon")
+    .replace(/[^a-z0-9а-яё]/g, "");
+}
+
+function getProviderKind(provider) {
+  const normalized = normalizeProviderName(`${provider?.Name || provider?.name || ""} ${provider?.Code || provider?.code || ""}`);
+  if (normalized.includes("megafon")) return "megafon";
+  if (normalized.includes("tcell")) return "tcell";
+  if (normalized.includes("babilon")) return "babilon";
+  if (normalized.includes("beeline")) return "beeline";
+  if (normalized.includes("zagros")) return "zagros";
+  return "other";
+}
+
+function validatePhoneForProvider(phone, provider) {
+  const digits = String(phone || "").replace(/\D/g, "");
+  const localNumber = digits.startsWith("992") ? digits.slice(3) : digits;
+  const prefix = localNumber.slice(0, 2);
+  const providerKind = getProviderKind(provider);
+  const providerPrefixes = {
+    megafon: ["97"],
+    tcell: ["93"],
+    babilon: ["98"],
+    beeline: ["90"],
+    zagros: ["99"]
+  };
+  const allowedPrefixes = providerPrefixes[providerKind];
+
+  if (!allowedPrefixes || !allowedPrefixes.length) {
+    return { ok: true };
+  }
+  if (allowedPrefixes.includes(prefix)) {
+    return { ok: true };
+  }
+
+  return {
+    ok: false,
+    message: "Такой номер не относится к выбранному оператору"
+  };
 }
 
 function renderProviders(elements) {
@@ -153,8 +304,8 @@ function renderProviders(elements) {
       <button class="provider-btn ${String(id) === String(state.selectedProviderId) ? "active" : ""}" type="button" data-provider-id="${id}">
         <span class="provider-logo">${initials}</span>
         <span class="provider-copy">
-          <strong>${name}</strong>
-          <span>${code || "Оператор"}</span>
+          <strong>${escapeHtml(name)}</strong>
+          <span>${escapeHtml(code || "Оператор")}</span>
         </span>
       </button>
     `;
@@ -183,7 +334,7 @@ function renderAccounts(elements) {
     const number = account.AccountNumber || account.accountNumber;
     const balance = account.Balance ?? account.balance ?? 0;
     const currency = account.Currency || account.currency || "TJS";
-    return `<option value="${id}" data-currency="${currency}">Счёт ${number} • ${formatMoney(balance, currency)}</option>`;
+    return `<option value="${id}" data-currency="${currency}">Счет ${escapeHtml(number)} • ${escapeHtml(formatMoney(balance, currency))}</option>`;
   }).join("");
 }
 
@@ -198,35 +349,38 @@ function renderPopularServices(elements) {
     <div class="service-item ${index === 0 ? "active" : ""}">
       <div class="service-icon">${index + 1}</div>
       <div class="service-copy">
-        <strong>${category.Name || category.name}</strong>
-        <span>${category.Code || category.code || "Категория услуг"}</span>
+        <strong>${escapeHtml(category.Name || category.name)}</strong>
+        <span>${escapeHtml(category.Code || category.code || "Категория услуг")}</span>
       </div>
     </div>
   `).join("");
 }
 
 function renderRecentPayments(elements) {
-  const mobilePayments = state.payments.filter((payment) => {
-    const category = String(payment.CategoryName || payment.categoryName || "").toLowerCase();
-    return category.includes("мобиль") || category.includes("связ");
-  });
-
-  if (!mobilePayments.length) {
+  if (!state.payments.length) {
     elements.recentPayments.innerHTML = `<div class="empty-state">У вас пока нет реальных пополнений мобильной связи.</div>`;
     return;
   }
 
-  elements.recentPayments.innerHTML = mobilePayments.slice(0, 4).map((payment) => `
-    <div class="recent-item">
-      <div class="recent-icon">✓</div>
-      <div class="recent-copy">
-        <strong>${payment.AccountNumber || payment.accountNumber}</strong>
-        <span>${payment.ProviderName || payment.providerName}</span>
-        <em>${formatDate(payment.CreatedAt || payment.createdAt)}</em>
+  elements.recentPayments.innerHTML = state.payments.slice(0, 6).map((payment) => {
+    const phone = payment.AccountNumber || payment.accountNumber || "Неизвестно";
+    const provider = payment.ProviderName || payment.providerName || "Оператор";
+    const createdAt = payment.CreatedAt || payment.createdAt;
+    const amount = Number(payment.Amount ?? payment.amount ?? 0);
+    const currency = payment.Currency || payment.currency || "TJS";
+
+    return `
+      <div class="recent-item">
+        <div class="recent-icon">✓</div>
+        <div class="recent-copy">
+          <strong>${escapeHtml(provider)}</strong>
+          <span>Номер: ${escapeHtml(phone)}</span>
+          <em>${escapeHtml(formatDate(createdAt))}</em>
+        </div>
+        <div class="recent-amount">${escapeHtml(formatMoney(amount, currency))}</div>
       </div>
-      <div class="recent-amount">${formatMoney(payment.Amount || payment.amount || 0, payment.Currency || payment.currency || "TJS")}</div>
-    </div>
-  `).join("");
+    `;
+  }).join("");
 }
 
 function updateSummary(elements) {
@@ -255,9 +409,10 @@ async function submitTopup(elements) {
   const phone = elements.phoneInput.value.replace(/\s+/g, "");
   const selectedOption = elements.accountSelect.selectedOptions[0];
   const currency = selectedOption?.dataset.currency || "TJS";
+  const provider = state.providers.find((item) => String(item.Id || item.id) === String(providerId));
 
   if (!accountId) {
-    showToast("Выберите счёт для списания");
+    showToast("Выберите счет для списания");
     return;
   }
   if (!providerId) {
@@ -268,13 +423,19 @@ async function submitTopup(elements) {
     showToast("Введите номер в формате +992 и 9 цифр");
     return;
   }
+
+  const phoneValidation = validatePhoneForProvider(phone, provider);
+  if (!phoneValidation.ok) {
+    showToast(phoneValidation.message);
+    return;
+  }
+
   if (amount <= 0) {
     showToast("Введите сумму пополнения");
     return;
   }
 
   try {
-    const provider = state.providers.find((item) => String(item.Id || item.id) === String(providerId));
     await apiRequest("/api/BillPayment/pay", {
       method: "POST",
       auth: true,
@@ -291,8 +452,22 @@ async function submitTopup(elements) {
     showToast("Пополнение выполнено успешно");
     elements.amountInput.value = "";
     await loadData(elements);
+    state.mode = "history";
+    elements.modeToggle.querySelectorAll("[data-mode]").forEach((item) => {
+      item.classList.toggle("active", item.dataset.mode === "history");
+    });
+    renderMode(elements);
   } catch (error) {
     console.error(error);
     showToast(error.message || "Не удалось выполнить пополнение");
   }
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }

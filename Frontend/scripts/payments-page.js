@@ -1,5 +1,6 @@
 ﻿import { apiRequest, clearSession, formatMoney, getSession, showToast, unwrapResponse } from "./common.js";
 
+const MOBILE_PROVIDER_PRESET_KEY = "sb-mobile-provider-preset";
 const session = getSession();
 const redirectToLogin = () => {
   const target = encodeURIComponent("payments.html");
@@ -29,6 +30,13 @@ const toast = document.getElementById("toastStatus");
 const fallbackUserName = session?.fullName || session?.FullName || "Иван Иванов";
 userName.textContent = fallbackUserName;
 userAvatar.textContent = fallbackUserName.trim().charAt(0).toUpperCase();
+
+window.payService = (providerName) => {
+  if (providerName) {
+    sessionStorage.setItem(MOBILE_PROVIDER_PRESET_KEY, String(providerName));
+  }
+  window.location.href = "app-mobile-topup.html";
+};
 
 document.getElementById("logoutButton")?.addEventListener("click", () => {
   clearSession();

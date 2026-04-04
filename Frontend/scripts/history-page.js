@@ -1,4 +1,4 @@
-﻿import {
+import {
   apiRequest,
   formatDate,
   formatMoney,
@@ -9,7 +9,9 @@
 
 const state = {
   accounts: [],
-  transactions: []
+  transfers: [],
+  billPayments: [],
+  historyItems: []
 };
 
 const elements = {
@@ -65,11 +67,11 @@ function hydrateProfile() {
 
 function simplifyControls() {
   if (elements.title) {
-    elements.title.textContent = "История переводов";
+    elements.title.textContent = "История операций";
   }
 
   if (elements.subtitle) {
-    elements.subtitle.textContent = "Здесь показываются ваши реальные переводы и зачисления без мок-данных.";
+    elements.subtitle.textContent = "Здесь показываются реальные переводы и платежи, включая мобильную связь.";
   }
 
   if (elements.topFilterBar) {
@@ -82,7 +84,7 @@ function simplifyControls() {
 
   if (elements.secondaryFilter) {
     elements.secondaryFilter.innerHTML = `
-      <button class="sec-btn active" type="button">Все переводы</button>
+      <button class="sec-btn active" type="button">Все операции</button>
       <button class="sec-btn" type="button" data-filter="outgoing">Исходящие</button>
       <button class="sec-btn" type="button" data-filter="incoming">Входящие</button>
     `;
@@ -108,13 +110,16 @@ function simplifyControls() {
 
 async function loadHistory() {
   try {
-    const [accountsPayload, transfersPayload] = await Promise.all([
+    const [accountsPayload, transfersPayload, billPaymentsPayload] = await Promise.all([
       apiRequest("/api/accounts/my?page=1&pageSize=20", { auth: true }),
-      apiRequest("/api/transfers/my?page=1&pageSize=50", { auth: true })
+      apiRequest("/api/transfers/my?page=1&pageSize=50", { auth: true }),
+      apiRequest("/api/BillPayment/my?page=1&pageSize=50", { auth: true })
     ]);
 
     state.accounts = accountsPayload.items || accountsPayload.Items || [];
-    state.transactions = transfersPayload.items || transfersPayload.Items || [];
+    state.transfers = transfersPayload.items || transfersPayload.Items || [];
+    state.billPayments = billPaymentsPayload.items || billPaymentsPayload.Items || [];
+    state.historyItems = buildHistoryItems();
 
     renderHistory("all");
     renderSidebar();
@@ -131,8 +136,64 @@ async function loadHistory() {
     if (elements.analysisSidebar) {
       elements.analysisSidebar.innerHTML = "";
     }
-    showToast("История переводов пока недоступна");
+    showToast("История операций пока недоступна");
   }
+}
+
+function buildHistoryItems() {
+  const myAccountIds = new Set(state.accounts.map((account) => String(account.id || account.Id)));
+
+  const transferItems = state.transfers.map((transaction) => {
+    const fromAccountId = String(transaction.fromAccountId || transaction.FromAccountId || "");
+    const isOutgoing = Boolean(fromAccountId && myAccountIds.has(fromAccountId));
+    const toAccountNumber = transaction.toAccountNumber || transaction.ToAccountNumber || "Неизвестно";
+    const fromAccountNumber = transaction.fromAccountNumber || transaction.FromAccountNumber || "Неизвестно";
+    const createdAt = transaction.createdAt || transaction.CreatedAt;
+    const amount = Number(transaction.amount ?? transaction.Amount ?? 0);
+    const currency = transaction.currency || transaction.Currency || "TJS";
+    const counterparty = isOutgoing ? toAccountNumber : fromAccountNumber;
+    const title = isOutgoing ? `Перевод на ${counterparty}` : `Зачисление от ${counterparty}`;
+
+    return {
+      kind: "transfer",
+      direction: isOutgoing ? "outgoing" : "incoming",
+      title,
+      subtitle: transaction.description || transaction.Description || "Перевод",
+      amount,
+      currency,
+      createdAt,
+      status: "успешно",
+      timeLabel: formatDate(createdAt),
+      counterparty,
+      sortableDate: new Date(createdAt || Date.now()).getTime()
+    };
+  });
+
+  const billPaymentItems = state.billPayments.map((payment) => {
+    const createdAt = payment.createdAt || payment.CreatedAt;
+    const amount = Number(payment.amount ?? payment.Amount ?? 0);
+    const currency = payment.currency || payment.Currency || "TJS";
+    const phone = payment.accountNumber || payment.AccountNumber || "Неизвестно";
+    const providerName = payment.providerName || payment.ProviderName || "Оператор";
+
+    return {
+      kind: "bill-payment",
+      direction: "outgoing",
+      title: `${providerName} ${phone}`,
+      subtitle: "Пополнение мобильной связи",
+      amount,
+      currency,
+      createdAt,
+      status: "успешно",
+      timeLabel: formatDate(createdAt),
+      counterparty: phone,
+      providerName,
+      phone,
+      sortableDate: new Date(createdAt || Date.now()).getTime()
+    };
+  });
+
+  return [...transferItems, ...billPaymentItems].sort((left, right) => right.sortableDate - left.sortableDate);
 }
 
 function renderHistory(filter) {
@@ -140,50 +201,42 @@ function renderHistory(filter) {
     return;
   }
 
-  const myAccountIds = new Set(state.accounts.map((account) => account.id || account.Id));
-  const filteredTransactions = state.transactions.filter((transaction) => {
-    const fromAccountId = transaction.fromAccountId || transaction.FromAccountId;
-    const isOutgoing = fromAccountId && myAccountIds.has(fromAccountId);
-
+  const filteredItems = state.historyItems.filter((item) => {
     if (filter === "outgoing") {
-      return Boolean(isOutgoing);
+      return item.direction === "outgoing";
     }
-
     if (filter === "incoming") {
-      return !isOutgoing;
+      return item.direction === "incoming";
     }
-
     return true;
   });
 
-  if (filteredTransactions.length === 0) {
+  if (!filteredItems.length) {
     elements.listCol.innerHTML = `
       <div class="analysis-box">
         <div class="box-title">Операций пока нет</div>
-        <p style="margin-top:12px;color:#64748b;font-size:14px;">После первого перевода история появится здесь автоматически.</p>
+        <p style="margin-top:12px;color:#64748b;font-size:14px;">После первого перевода или платежа история появится здесь автоматически.</p>
       </div>
     `;
     return;
   }
 
   const groups = new Map();
-  filteredTransactions.forEach((transaction) => {
-    const createdAt = new Date(transaction.createdAt || transaction.CreatedAt || Date.now());
+  filteredItems.forEach((item) => {
+    const createdAt = new Date(item.createdAt || Date.now());
     const dateKey = createdAt.toDateString();
-
     if (!groups.has(dateKey)) {
       groups.set(dateKey, []);
     }
-
-    groups.get(dateKey).push(transaction);
+    groups.get(dateKey).push(item);
   });
 
   elements.listCol.innerHTML = Array.from(groups.entries())
-    .map(([dateKey, transactions]) => renderDateGroup(dateKey, transactions, myAccountIds))
+    .map(([dateKey, items]) => renderDateGroup(dateKey, items))
     .join("");
 }
 
-function renderDateGroup(dateKey, transactions, myAccountIds) {
+function renderDateGroup(dateKey, items) {
   const date = new Date(dateKey);
   const heading = date.toLocaleDateString("ru-RU", {
     day: "numeric",
@@ -195,40 +248,35 @@ function renderDateGroup(dateKey, transactions, myAccountIds) {
     <div class="date-group">
       <div class="date-header">
         <div class="date-label">${escapeHtml(capitalize(heading))}</div>
-        <div class="date-subtext">${transactions.length} операций</div>
+        <div class="date-subtext">${items.length} операций</div>
       </div>
-      ${transactions.map((transaction) => renderHistoryItem(transaction, myAccountIds)).join("")}
+      ${items.map((item) => renderHistoryItem(item)).join("")}
     </div>
   `;
 }
 
-function renderHistoryItem(transaction, myAccountIds) {
-  const fromAccountId = transaction.fromAccountId || transaction.FromAccountId;
-  const toAccountNumber = transaction.toAccountNumber || transaction.ToAccountNumber || "Неизвестно";
-  const fromAccountNumber = transaction.fromAccountNumber || transaction.FromAccountNumber || "Неизвестно";
-  const description = transaction.description || transaction.Description || "Перевод";
-  const createdAt = transaction.createdAt || transaction.CreatedAt;
-  const amount = Number(transaction.amount ?? transaction.Amount ?? 0);
-  const currency = transaction.currency || transaction.Currency || "TJS";
-  const isOutgoing = fromAccountId && myAccountIds.has(fromAccountId);
-  const counterparty = isOutgoing ? toAccountNumber : fromAccountNumber;
+function renderHistoryItem(item) {
+  const isOutgoing = item.direction === "outgoing";
   const sign = isOutgoing ? "-" : "+";
   const amountClass = isOutgoing ? "" : "pos";
-  const title = isOutgoing ? `Перевод на ${counterparty}` : `Зачисление от ${counterparty}`;
-  const icon = isOutgoing ? "↗" : "↙";
-  const iconBg = isOutgoing ? "#eff6ff" : "#dcfce7";
-  const iconColor = isOutgoing ? "#2563eb" : "#16a34a";
+  const icon = item.kind === "bill-payment" ? "☎" : (isOutgoing ? "↗" : "↙");
+  const iconBg = item.kind === "bill-payment"
+    ? "#ede9fe"
+    : (isOutgoing ? "#eff6ff" : "#dcfce7");
+  const iconColor = item.kind === "bill-payment"
+    ? "#7c3aed"
+    : (isOutgoing ? "#2563eb" : "#16a34a");
 
   return `
     <div class="history-item">
       <div class="hist-icon" style="background:${iconBg};color:${iconColor};font-weight:900;">${icon}</div>
       <div>
-        <div class="hist-title">${escapeHtml(title)}</div>
-        <div class="hist-desc">${escapeHtml(description)}</div>
+        <div class="hist-title">${escapeHtml(item.title)}</div>
+        <div class="hist-desc">${escapeHtml(item.subtitle)}</div>
       </div>
-      <div class="hist-amt ${amountClass}">${sign} ${escapeHtml(formatMoney(amount, currency))}</div>
-      <div class="hist-status">успешно</div>
-      <div class="hist-time">${escapeHtml(formatDate(createdAt))}</div>
+      <div class="hist-amt ${amountClass}">${sign} ${escapeHtml(formatMoney(item.amount, item.currency))}</div>
+      <div class="hist-status">${escapeHtml(item.status)}</div>
+      <div class="hist-time">${escapeHtml(item.timeLabel)}</div>
     </div>
   `;
 }
@@ -238,12 +286,11 @@ function renderSidebar() {
     return;
   }
 
-  const myAccountIds = new Set(state.accounts.map((account) => account.id || account.Id));
-  const outgoingTransactions = state.transactions.filter((transaction) => myAccountIds.has(transaction.fromAccountId || transaction.FromAccountId));
-  const incomingTransactions = state.transactions.filter((transaction) => !myAccountIds.has(transaction.fromAccountId || transaction.FromAccountId));
-  const outgoingTotal = outgoingTransactions.reduce((sum, transaction) => sum + Number(transaction.amount ?? transaction.Amount ?? 0), 0);
-  const incomingTotal = incomingTransactions.reduce((sum, transaction) => sum + Number(transaction.amount ?? transaction.Amount ?? 0), 0);
-  const latestTransaction = state.transactions[0];
+  const outgoingItems = state.historyItems.filter((item) => item.direction === "outgoing");
+  const incomingItems = state.historyItems.filter((item) => item.direction === "incoming");
+  const outgoingTotal = outgoingItems.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const incomingTotal = incomingItems.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const latestItem = state.historyItems[0];
 
   elements.analysisSidebar.innerHTML = `
     <div class="analysis-box">
@@ -267,34 +314,36 @@ function renderSidebar() {
       <div class="box-header-row">
         <span class="box-title">Последняя операция</span>
       </div>
-      ${latestTransaction ? renderLatestTransaction(latestTransaction, myAccountIds) : '<div style="color:#64748b;font-size:14px;">Операций пока нет.</div>'}
+      ${latestItem ? renderLatestItem(latestItem) : '<div style="color:#64748b;font-size:14px;">Операций пока нет.</div>'}
     </div>
     <div class="analysis-box">
       <div class="box-header-row">
-        <span class="box-title">SMS</span>
+        <span class="box-title">Чек</span>
       </div>
       <div style="color:#64748b;font-size:14px;line-height:1.6;">
-        После успешного перевода отправляется SMS с датой, временем, суммой и получателем.
+        В истории сохраняются номер, сумма, оператор и точное время платежа.
       </div>
     </div>
   `;
 }
 
-function renderLatestTransaction(transaction, myAccountIds) {
-  const fromAccountId = transaction.fromAccountId || transaction.FromAccountId;
-  const isOutgoing = fromAccountId && myAccountIds.has(fromAccountId);
-  const accountNumber = isOutgoing
-    ? (transaction.toAccountNumber || transaction.ToAccountNumber || "Неизвестно")
-    : (transaction.fromAccountNumber || transaction.FromAccountNumber || "Неизвестно");
+function renderLatestItem(item) {
+  const isOutgoing = item.direction === "outgoing";
+  const operationTitle = item.kind === "bill-payment"
+    ? "Платеж мобильной связи"
+    : (isOutgoing ? "Исходящий перевод" : "Входящий перевод");
+  const details = item.kind === "bill-payment"
+    ? `${item.providerName} • ${item.phone}`
+    : item.counterparty;
 
   return `
     <div style="display:flex;flex-direction:column;gap:10px;">
-      <div style="font-size:15px;font-weight:800;color:#0f172a;">${isOutgoing ? "Исходящий перевод" : "Входящий перевод"}</div>
-      <div style="font-size:14px;color:#64748b;">${escapeHtml(accountNumber)}</div>
+      <div style="font-size:15px;font-weight:800;color:#0f172a;">${escapeHtml(operationTitle)}</div>
+      <div style="font-size:14px;color:#64748b;">${escapeHtml(details)}</div>
       <div style="font-size:22px;font-weight:900;color:${isOutgoing ? "#2563eb" : "#16a34a"};">
-        ${isOutgoing ? "-" : "+"} ${escapeHtml(formatMoney(transaction.amount ?? transaction.Amount ?? 0, transaction.currency || transaction.Currency || "TJS"))}
+        ${isOutgoing ? "-" : "+"} ${escapeHtml(formatMoney(item.amount, item.currency))}
       </div>
-      <div style="font-size:12px;color:#94a3b8;">${escapeHtml(formatDate(transaction.createdAt || transaction.CreatedAt))}</div>
+      <div style="font-size:12px;color:#94a3b8;">${escapeHtml(item.timeLabel)}</div>
     </div>
   `;
 }
@@ -312,9 +361,7 @@ function capitalize(value) {
   if (!value) {
     return value;
   }
-
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 document.addEventListener("DOMContentLoaded", init);
-
