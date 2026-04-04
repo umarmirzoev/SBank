@@ -273,15 +273,18 @@
       box-shadow:var(--shadow-soft);
     }
     .rates-card{
-      padding:16px 16px 14px;
+      padding:14px;
       min-height:168px;
+      display:grid;
+      align-content:start;
+      gap:10px;
     }
     .rates-head{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      margin-bottom:14px;
+      margin-bottom:4px;
     }
     .rates-title{
       display:flex;
@@ -311,36 +314,120 @@
       cursor:pointer;
       box-shadow:inset 0 1px 0 rgba(255,255,255,.85);
     }
-    .rates-labels,.rate-row{
+    .mini-exchange{
+      border:1px solid #dbe6f4;
+      border-radius:20px;
+      background:linear-gradient(180deg,#fbfdff,#eef4fb);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.95);
+      padding:14px;
       display:grid;
-      grid-template-columns:1.3fr .8fr .8fr;
-      align-items:center;
+      gap:12px;
     }
-    .rates-labels{
-      margin-bottom:10px;
-      color:#97a5ba;
-      font-size:11px;
-    }
-    .rates-rows{display:grid;gap:14px}
-    .currency{
+    .mini-exchange-head{
       display:flex;
       align-items:center;
-      gap:10px;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .mini-exchange-head strong{
+      color:#233553;
       font-size:13px;
+      font-weight:800;
+    }
+    .exchange-mode{
+      display:inline-flex;
+      gap:4px;
+      padding:4px;
+      border-radius:999px;
+      background:#ffffff;
+      box-shadow:inset 0 0 0 1px rgba(210,223,241,.95);
+    }
+    .exchange-mode button{
+      border:none;
+      background:transparent;
+      color:#6580a7;
+      font-size:12px;
       font-weight:700;
-      color:#263854;
+      padding:8px 14px;
+      border-radius:999px;
+      cursor:pointer;
+      transition:all .18s ease;
     }
-    .flag{
+    .exchange-mode button.active{
+      color:#ffffff;
+      background:linear-gradient(135deg,#3b82f6,#2563eb);
+      box-shadow:0 10px 20px rgba(37,99,235,.24);
+    }
+    .exchange-fields{
       display:grid;
-      place-items:center;
-      width:24px;
-      height:18px;
-      border-radius:6px;
-      background:#f7fbff;
-      box-shadow:inset 0 0 0 1px rgba(219,229,242,.9);
-      font-size:14px;
+      gap:10px;
     }
-    .rate-row strong{font-size:13px;font-weight:700;color:#223552}
+    .exchange-field{
+      padding:12px;
+      border-radius:16px;
+      background:#ffffff;
+      box-shadow:inset 0 0 0 1px rgba(214,225,242,.95);
+      display:grid;
+      gap:6px;
+    }
+    .exchange-field label{
+      font-size:11px;
+      font-weight:700;
+      color:#8a9ab1;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+    .exchange-field-row{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:10px;
+      align-items:center;
+    }
+    .exchange-field input,
+    .exchange-field select{
+      border:none;
+      outline:none;
+      background:transparent;
+      color:#223552;
+      font-weight:800;
+    }
+    .exchange-field input{
+      font-size:24px;
+      min-width:0;
+    }
+    .exchange-field select{
+      font-size:15px;
+      cursor:pointer;
+    }
+    .exchange-swap{
+      width:36px;
+      height:36px;
+      border:none;
+      border-radius:50%;
+      justify-self:center;
+      cursor:pointer;
+      background:linear-gradient(135deg,#eff5ff,#dbeafe);
+      color:#2563eb;
+      font-size:18px;
+      font-weight:900;
+      box-shadow:0 8px 18px rgba(59,130,246,.18);
+    }
+    .exchange-note{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      font-size:11px;
+      font-weight:600;
+      color:#7488a4;
+    }
+    .exchange-result{
+      color:#1f5eff;
+      font-weight:800;
+    }
+    .mini-exchange.compact-top{
+      margin-top:0;
+    }
     .tiles-grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
@@ -474,9 +561,11 @@
       .sidebar{display:none;} .main{padding: 20px;}
       .topbar{flex-wrap:wrap;} .search{width: 100%; order:3; margin-top: 16px;}
       .bottom-banner{flex-direction:column; align-items:flex-start;}
+      .mini-exchange-head{flex-direction:column; align-items:stretch;}
     }
     @media (max-width:560px){
       .tiles-grid, .services-grid{grid-template-columns:1fr;}
+      .exchange-field-row{grid-template-columns:1fr;}
     }
   </style>
 </head>
@@ -531,19 +620,53 @@
 
           <section class="top-grid">
             <div class="card rates-card">
-              <div class="rates-head">
-                <div class="rates-title">
-                  <h2>Курс валют Сомонибонк</h2>
-                  <svg class="rates-arrow" viewBox="0 0 12 12" fill="none"><path d="m2 4 4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div class="mini-exchange compact-top">
+                <div class="mini-exchange-head">
+                  <div class="rates-title">
+                    <h2>Курс валют Сомонибонк</h2>
+                    <svg class="rates-arrow" viewBox="0 0 12 12" fill="none"><path d="m2 4 4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                  <button type="button" id="refreshRates" aria-label="Обновить курсы">↻</button>
                 </div>
-                <button type="button" id="refreshRates" aria-label="Обновить курсы">↻</button>
+                <div class="mini-exchange-head">
+                  <strong>Калькулятор валют</strong>
+                  <div class="exchange-mode" id="exchangeMode">
+                    <button type="button" class="active" data-mode="buy">Купить</button>
+                    <button type="button" data-mode="sell">Продать</button>
+                  </div>
+                </div>
+                <div class="exchange-fields">
+                  <div class="exchange-field">
+                    <label for="exchangeFromAmount">Отдаю</label>
+                    <div class="exchange-field-row">
+                      <input id="exchangeFromAmount" type="number" min="0" step="0.01" value="100" />
+                      <select id="exchangeFromCurrency">
+                        <option value="TJS">TJS</option>
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="RUB">RUB</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button type="button" class="exchange-swap" id="exchangeSwapButton" aria-label="Поменять валюты местами">↕</button>
+                  <div class="exchange-field">
+                    <label for="exchangeToAmount">Получу</label>
+                    <div class="exchange-field-row">
+                      <input id="exchangeToAmount" type="text" value="0.00" readonly />
+                      <select id="exchangeToCurrency">
+                        <option value="USD">USD</option>
+                        <option value="TJS">TJS</option>
+                        <option value="EUR">EUR</option>
+                        <option value="RUB">RUB</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="exchange-note">
+                  <span id="exchangeHint">Расчёт по текущим курсам банка</span>
+                  <span class="exchange-result" id="exchangeResultText">0.00</span>
+                </div>
               </div>
-              <div class="rates-labels">
-                <span>Валюта</span>
-                <span>Покупка</span>
-                <span>Продажа</span>
-              </div>
-              <div class="rates-rows" id="ratesRows"></div>
             </div>
 
             <div class="tiles-grid" id="promoGrid"></div>

@@ -12,11 +12,27 @@ if (!session?.token) {
 
 const userName = document.getElementById("userName");
 const userAvatar = document.getElementById("userAvatar");
-const ratesRows = document.getElementById("ratesRows");
+const exchangeMode = document.getElementById("exchangeMode");
+const exchangeFromAmount = document.getElementById("exchangeFromAmount");
+const exchangeFromCurrency = document.getElementById("exchangeFromCurrency");
+const exchangeToAmount = document.getElementById("exchangeToAmount");
+const exchangeToCurrency = document.getElementById("exchangeToCurrency");
+const exchangeSwapButton = document.getElementById("exchangeSwapButton");
+const exchangeHint = document.getElementById("exchangeHint");
+const exchangeResultText = document.getElementById("exchangeResultText");
 const promoGrid = document.getElementById("promoGrid");
 const servicesGrid = document.getElementById("servicesGrid");
 const searchInput = document.getElementById("searchInput");
 const toast = document.getElementById("toastStatus");
+const exchangeState = {
+  mode: "buy",
+  rates: {
+    TJS: { buy: 1, sell: 1 },
+    USD: { buy: 9.5, sell: 9.6 },
+    EUR: { buy: 10.94, sell: 11.15 },
+    RUB: { buy: 0.1184, sell: 0.1207 }
+  }
+};
 
 const displayName = session?.fullName || session?.FullName || "Иван Иванов";
 userName.textContent = displayName;
@@ -35,6 +51,24 @@ searchInput?.addEventListener("input", () => filterTiles(searchInput.value.trim(
 document.getElementById("refreshRates")?.addEventListener("click", () => void loadRates(true));
 document.getElementById("detailsButton")?.addEventListener("click", () => {
   window.location.href = "somonibank-app.html";
+});
+exchangeMode?.querySelectorAll("[data-mode]")?.forEach((button) => {
+  button.addEventListener("click", () => {
+    exchangeState.mode = button.dataset.mode || "buy";
+    exchangeMode.querySelectorAll("[data-mode]").forEach((node) => {
+      node.classList.toggle("active", node === button);
+    });
+    updateExchangeCalculator();
+  });
+});
+exchangeFromAmount?.addEventListener("input", () => updateExchangeCalculator());
+exchangeFromCurrency?.addEventListener("change", () => syncCurrencies("from"));
+exchangeToCurrency?.addEventListener("change", () => syncCurrencies("to"));
+exchangeSwapButton?.addEventListener("click", () => {
+  const previousFrom = exchangeFromCurrency.value;
+  exchangeFromCurrency.value = exchangeToCurrency.value;
+  exchangeToCurrency.value = previousFrom;
+  syncCurrencies();
 });
 
 function showInlineToast(message) {
@@ -205,33 +239,21 @@ function filterTiles(query) {
 
 function renderRates(rows) {
   if (!rows.length) {
-    ratesRows.innerHTML = `
-      <div class="rate-row">
-        <div class="currency"><span class="flag">🇺🇸</span><strong>USD</strong></div>
-        <strong>9,50</strong>
-        <strong>9,60</strong>
-      </div>
-      <div class="rate-row">
-        <div class="currency"><span class="flag">🇪🇺</span><strong>EUR</strong></div>
-        <strong>10,94</strong>
-        <strong>11,15</strong>
-      </div>
-      <div class="rate-row">
-        <div class="currency"><span class="flag">🇷🇺</span><strong>RUB</strong></div>
-        <strong>0,1184</strong>
-        <strong>0,1207</strong>
-      </div>
-    `;
+    exchangeState.rates = {
+      TJS: { buy: 1, sell: 1 },
+      USD: { buy: 9.5, sell: 9.6 },
+      EUR: { buy: 10.94, sell: 11.15 },
+      RUB: { buy: 0.1184, sell: 0.1207 }
+    };
+    updateExchangeCalculator();
     return;
   }
 
-  ratesRows.innerHTML = rows.map((row) => `
-    <div class="rate-row">
-      <div class="currency"><span class="flag">${row.flag}</span><strong>${row.code}</strong></div>
-      <strong>${row.buy}</strong>
-      <strong>${row.sell}</strong>
-    </div>
-  `).join("");
+  exchangeState.rates = rows.reduce((accumulator, row) => {
+    accumulator[row.code] = { buy: row.buyRaw, sell: row.sellRaw };
+    return accumulator;
+  }, { TJS: { buy: 1, sell: 1 } });
+  updateExchangeCalculator();
 }
 
 async function loadRates(withToast = false) {
@@ -248,6 +270,8 @@ async function loadRates(withToast = false) {
       return {
         code,
         flag: flags[code] || "•",
+        buyRaw: buyRate || (code === "USD" ? 9.5 : code === "EUR" ? 10.94 : 0.1184),
+        sellRaw: sellRate || (code === "USD" ? 9.6 : code === "EUR" ? 11.15 : 0.1207),
         buy: buyRate ? amountText(buyRate) : code === "USD" ? "9,50" : code === "EUR" ? "10,94" : "0,1184",
         sell: sellRate ? amountText(sellRate) : code === "USD" ? "9,60" : code === "EUR" ? "11,15" : "0,1207"
       };
@@ -263,6 +287,75 @@ async function loadRates(withToast = false) {
       showInlineToast("Не удалось загрузить курсы, показаны базовые значения.");
     }
   }
+}
+
+function syncCurrencies(changedSide = "from") {
+  if (!exchangeFromCurrency || !exchangeToCurrency) {
+    return;
+  }
+  if (exchangeFromCurrency.value === exchangeToCurrency.value) {
+    if (changedSide === "from") {
+      exchangeToCurrency.value = previousAvailableCurrency(exchangeFromCurrency.value);
+    } else if (changedSide === "to") {
+      exchangeFromCurrency.value = previousAvailableCurrency(exchangeToCurrency.value);
+    } else {
+      exchangeToCurrency.value = previousAvailableCurrency(exchangeFromCurrency.value);
+    }
+  }
+  updateExchangeCalculator();
+}
+
+function previousAvailableCurrency(current) {
+  const options = ["TJS", "USD", "EUR", "RUB"];
+  return options.find((item) => item !== current) || "TJS";
+}
+
+function formatCompactAmount(value, currency) {
+  return `${Number(value || 0).toLocaleString("ru-RU", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 4
+  })} ${currency}`;
+}
+
+function convertViaBank(amount, fromCurrency, toCurrency, mode) {
+  if (fromCurrency === toCurrency) {
+    return amount;
+  }
+
+  const fromRates = exchangeState.rates[fromCurrency] || { buy: 1, sell: 1 };
+  const toRates = exchangeState.rates[toCurrency] || { buy: 1, sell: 1 };
+
+  let tjsAmount = amount;
+  if (fromCurrency !== "TJS") {
+    const fromRate = mode === "buy" ? fromRates.buy : fromRates.sell;
+    tjsAmount = amount * fromRate;
+  }
+
+  if (toCurrency === "TJS") {
+    return tjsAmount;
+  }
+
+  const toRate = mode === "buy" ? toRates.sell : toRates.buy;
+  return toRate > 0 ? tjsAmount / toRate : 0;
+}
+
+function updateExchangeCalculator() {
+  if (!exchangeFromAmount || !exchangeFromCurrency || !exchangeToCurrency || !exchangeToAmount || !exchangeHint || !exchangeResultText) {
+    return;
+  }
+
+  const amount = Number(exchangeFromAmount.value || 0);
+  const fromCurrency = exchangeFromCurrency.value || "TJS";
+  const toCurrency = exchangeToCurrency.value || "USD";
+  const result = convertViaBank(amount, fromCurrency, toCurrency, exchangeState.mode);
+
+  exchangeToAmount.value = Number.isFinite(result)
+    ? Number(result).toLocaleString("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 4 })
+    : "0.00";
+
+  const verb = exchangeState.mode === "buy" ? "Режим: купить" : "Режим: продать";
+  exchangeHint.textContent = `${verb} • ${fromCurrency} → ${toCurrency}`;
+  exchangeResultText.textContent = formatCompactAmount(result, toCurrency);
 }
 
 bindActions();
