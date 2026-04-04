@@ -142,7 +142,7 @@
     .content { padding: 0 40px 40px; overflow-y: auto; flex: 1; display: grid; grid-template-columns: 1fr 340px; gap: 32px; }
 
     /* Column 1 */
-    .main-col { display: flex; flex-direction: column; gap: 32px; }
+    .main-col { display: flex; flex-direction: column; gap: 32px; min-width: 0; }
 
     /* Blue Banner */
     .hero-banner {
@@ -201,8 +201,23 @@
     .section-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .section-title { font-size: 18px; font-weight: 850; }
     
-    .popular-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
-    .pop-card { background: white; border-radius: 24px; padding: 20px; box-shadow: var(--card-shadow); text-align: center; border: 1.5px solid #f1f5f9; cursor: pointer; transition: 0.3s; }
+    .popular-grid {
+      width: 100%;
+      max-width: 100%;
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 8px;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x proximity;
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 transparent;
+    }
+    .popular-grid::-webkit-scrollbar { height: 8px; }
+    .popular-grid::-webkit-scrollbar-track { background: transparent; }
+    .popular-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+    .pop-card { flex: 0 0 184px; min-width: 184px; min-height: 120px; background: white; border-radius: 24px; padding: 20px; box-shadow: var(--card-shadow); text-align: center; border: 1.5px solid #f1f5f9; cursor: pointer; transition: 0.3s; scroll-snap-align: start; }
     .pop-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(37,99,235,0.06); border-color: #dbeafe; }
     .pop-icon { width: 44px; height: 44px; border-radius: 14px; background: #eff6ff; color: #3b82f6; display: grid; place-items: center; margin: 0 auto 12px; font-size: 20px; }
     .pop-label { font-size: 12px; font-weight: 800; margin-bottom: 4px; }
@@ -279,7 +294,7 @@
       .right-sidebar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     }
   </style>
-  <script type="module" crossorigin src="/assets/app-B2-nW3po.js"></script>
+  <script type="module" crossorigin src="/assets/app-BdtrCz2V.js"></script>
   <link rel="modulepreload" crossorigin href="/assets/common-BOoGLwDJ.js">
 </head>
 <body>
@@ -403,6 +418,21 @@
                     <div class="pop-icon" style="background:#fff7ed; color:#c2410c;">📶</div>
                     <div class="pop-label">Интернет</div>
                     <div class="pop-sub">Оплата интернета</div>
+                 </div>
+                 <div class="pop-card">
+                    <div class="pop-icon" style="background:#ecfeff; color:#0f766e;">🏠</div>
+                    <div class="pop-label">Коммунальные услуги</div>
+                    <div class="pop-sub">Свет, вода и газ</div>
+                 </div>
+                 <div class="pop-card">
+                    <div class="pop-icon" style="background:#eef2ff; color:#4338ca;">🪪</div>
+                    <div class="pop-label">Госуслуги</div>
+                    <div class="pop-sub">Госплатежи и сервисы</div>
+                 </div>
+                 <div class="pop-card">
+                    <div class="pop-icon" style="background:#fef2f2; color:#b91c1c;">🧾</div>
+                    <div class="pop-label">Налоги</div>
+                    <div class="pop-sub">Оплата налогов</div>
                  </div>
               </div>
            </section>
