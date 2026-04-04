@@ -1,4 +1,4 @@
-import {
+﻿import {
   apiRequest,
   formatDate,
   formatMoney,
@@ -317,3 +317,4 @@ function capitalize(value) {
 }
 
 document.addEventListener("DOMContentLoaded", init);
+

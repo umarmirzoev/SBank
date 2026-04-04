@@ -1,4 +1,4 @@
-import {
+﻿import {
   apiRequest,
   formatMoney,
   formatDate,
@@ -445,3 +445,4 @@ function escapeHtml(value) {
 }
 
 document.addEventListener("DOMContentLoaded", init);
+

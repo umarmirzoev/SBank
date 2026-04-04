@@ -1,4 +1,4 @@
-import { apiRequest, getSession, showToast, formatMoney, formatDate, isAuthenticated } from "./common.js";
+﻿import { apiRequest, getSession, showToast, formatMoney, formatDate, isAuthenticated } from "./common.js";
 
 const userNameEl = document.querySelectorAll(".user-name")[0];
 const userAvatarEl = document.querySelector(".user-avatar");
@@ -235,3 +235,4 @@ function initDashboard() {
 
 document.addEventListener("DOMContentLoaded", initDashboard);
 initDashboard();
+

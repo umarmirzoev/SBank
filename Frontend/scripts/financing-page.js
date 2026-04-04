@@ -1,4 +1,4 @@
-import {
+﻿import {
   apiRequest,
   formatMoney,
   formatDate,
@@ -487,3 +487,4 @@ function renderLoadError(error) {
 }
 
 document.addEventListener("DOMContentLoaded", init);
+

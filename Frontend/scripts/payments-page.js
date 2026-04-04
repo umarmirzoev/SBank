@@ -1,4 +1,4 @@
-import { apiRequest, clearSession, formatMoney, getSession, showToast, unwrapResponse } from "./common.js";
+﻿import { apiRequest, clearSession, formatMoney, getSession, showToast, unwrapResponse } from "./common.js";
 
 const session = getSession();
 const redirectToLogin = () => {
@@ -318,3 +318,4 @@ async function loadProviders() {
 bindActions();
 void loadMetrics();
 void loadProviders();
+

@@ -1,4 +1,4 @@
-import { apiRequest, clearSession, getSession, showToast } from "./common.js";
+﻿import { apiRequest, clearSession, getSession, showToast } from "./common.js";
 
 const session = getSession();
 const redirectToLogin = () => {
@@ -267,3 +267,4 @@ async function loadRates(withToast = false) {
 
 bindActions();
 void loadRates();
+

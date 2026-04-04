@@ -1,4 +1,4 @@
-import { apiRequest, formatDate, formatMoney, requireAuth, showToast, unwrapResponse } from "./common.js";
+﻿import { apiRequest, formatDate, formatMoney, requireAuth, showToast, unwrapResponse } from "./common.js";
 
 const transferOptions = [
   {
@@ -431,3 +431,4 @@ function transferDescription() {
 
   return "Перевод на карту";
 }
+
