@@ -24,16 +24,20 @@
       --shadow:0 4px 20px rgba(0,0,0,.08);
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh;background:var(--bg);color:var(--text)}
+    html,body{font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,sans-serif;height:100%;min-height:100vh;background:var(--bg);color:var(--text)}
     button,input,a{font:inherit;text-decoration:none;color:inherit}
     
     @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
     
-    .app{display:flex;min-height:100vh}
+    .app{display:flex;height:100vh;min-height:100vh;overflow:hidden}
     
     .sidebar {
       width: 260px;
       height: 100vh;
+      position: sticky;
+      top: 0;
+      align-self: flex-start;
+      overflow: hidden;
       background: #ffffff;
       border-right: 1px solid #f1f5f9;
       padding: 32px 24px;
@@ -106,7 +110,7 @@
     .user-balance-label{font-size:11px;opacity:.7;margin-bottom:4px}
     .user-balance-value{font-size:18px;font-weight:700}
     
-    .main{flex:1;padding:24px;overflow-y:auto}
+    .main{flex:1;height:100vh;padding:24px;overflow-y:auto;overflow-x:hidden}
     .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
     .header-left h1{font-size:32px;font-weight:700;margin-bottom:4px}
     .header-left p{color:var(--text-muted);font-size:14px}
@@ -185,7 +189,7 @@
     
     @media(max-width:1200px){.quick-actions{grid-template-columns:repeat(3,1fr)}.services-grid{grid-template-columns:repeat(3,1fr)}.stats-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:1024px){.sidebar{width:80px}.logo-text,.logo-sub,.nav-item span,.nav-section,.user-card{display:none}.nav-item{padding:12px;justify-content:center}.nav-icon{width:44px;height:44px}.quick-actions{grid-template-columns:repeat(4,1fr)}.services-grid,.services-grid.three{grid-template-columns:repeat(2,1fr)}.recent-grid{grid-template-columns:1fr}}
-    @media(max-width:768px){.sidebar{display:none}.main{padding:16px}.quick-actions,.services-grid,.services-grid.three,.stats-grid{grid-template-columns:repeat(2,1fr)}.banner{flex-direction:column;text-align:center}.banner-content{max-width:100%}}
+    @media(max-width:768px){html,body{height:auto;overflow:auto}.app{height:auto;min-height:100vh;overflow:visible}.sidebar{display:none}.main{height:auto;padding:16px;overflow:visible}.quick-actions,.services-grid,.services-grid.three,.stats-grid{grid-template-columns:repeat(2,1fr)}.banner{flex-direction:column;text-align:center}.banner-content{max-width:100%}}
   </style>
 </head>
 <body>
