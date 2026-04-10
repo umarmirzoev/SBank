@@ -2,10 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using SomoniBank.Domain.Enums;
 using SomoniBank.Domain.Models;
 using SomoniBank.Infrastructure.Data;
@@ -18,6 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
+ConfigureDevelopmentUrls(builder);
 
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "App_Data", "DataProtectionKeys")));
@@ -235,6 +239,107 @@ static async Task EnsureDevelopmentFixturesAsync(
     }
 
     await dbContext.SaveChangesAsync();
+}
+
+static void ConfigureDevelopmentUrls(WebApplicationBuilder builder)
+{
+    if (!builder.Environment.IsDevelopment())
+    {
+        return;
+    }
+
+    var configuredUrls =
+        Environment.GetEnvironmentVariable("ASPNETCORE_URLS")
+        ?? builder.Configuration[WebHostDefaults.ServerUrlsKey];
+
+    if (string.IsNullOrWhiteSpace(configuredUrls))
+    {
+        return;
+    }
+
+    var requestedUrls = configuredUrls
+        .Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+    if (requestedUrls.Length == 0)
+    {
+        return;
+    }
+
+    var adjustedUrls = new List<string>(requestedUrls.Length);
+    var changed = false;
+
+    foreach (var requestedUrl in requestedUrls)
+    {
+        if (!Uri.TryCreate(requestedUrl, UriKind.Absolute, out var uri))
+        {
+            adjustedUrls.Add(requestedUrl);
+            continue;
+        }
+
+        if (!IsLocalAddress(uri.Host) || !IsPortBusy(uri.Port))
+        {
+            adjustedUrls.Add(requestedUrl);
+            continue;
+        }
+
+        var fallbackPort = FindAvailablePort(uri.Port + 1);
+        if (fallbackPort == null)
+        {
+            adjustedUrls.Add(requestedUrl);
+            continue;
+        }
+
+        var fallbackUri = new UriBuilder(uri) { Port = fallbackPort.Value }.Uri.ToString().TrimEnd('/');
+        adjustedUrls.Add(fallbackUri);
+        changed = true;
+
+        Console.WriteLine($"Port {uri.Port} is already in use. Falling back to {fallbackUri}.");
+    }
+
+    if (changed)
+    {
+        builder.WebHost.UseUrls(adjustedUrls.ToArray());
+    }
+}
+
+static bool IsLocalAddress(string host) =>
+    host.Equals("localhost", StringComparison.OrdinalIgnoreCase)
+    || host.Equals("127.0.0.1", StringComparison.OrdinalIgnoreCase)
+    || host.Equals("::1", StringComparison.OrdinalIgnoreCase);
+
+static bool IsPortBusy(int port)
+{
+    TcpListener? listener = null;
+
+    try
+    {
+        listener = new TcpListener(IPAddress.Loopback, port);
+        listener.Start();
+        return false;
+    }
+    catch (SocketException)
+    {
+        return true;
+    }
+    finally
+    {
+        listener?.Stop();
+    }
+}
+
+static int? FindAvailablePort(int startingPort)
+{
+    const int maxAttempts = 50;
+
+    for (var port = startingPort; port < startingPort + maxAttempts; port++)
+    {
+        if (!IsPortBusy(port))
+        {
+            return port;
+        }
+    }
+
+    return null;
 }
 
 static async Task<User> EnsureDevelopmentUserProfileAsync(

@@ -18,6 +18,9 @@ public sealed class NbtExchangeRateSource(HttpClient httpClient, ILogger<NbtExch
         new Regex(@"official\s+exchange\s+rates.*?(?<date>\d{2}[./]\d{2}[./]\d{4})", RegexOptions.IgnoreCase | RegexOptions.Compiled),
         new Regex(@"(?<date>\d{2}[./]\d{2}[./]\d{4})", RegexOptions.IgnoreCase | RegexOptions.Compiled)
     ];
+    private static readonly Regex StructuredTextRateRegex = new(
+        @"(?:^|\D)(?<numeric>\d{3})\s+(?<unit>\d+)\s+(?<name>[A-Za-z][A-Za-z\s-]{1,40}?)\s+(?<rate>\d+[.,]\d+)(?=\s+\d{1,3}\s+\d{3}\s+\d+|\s*$)",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
     private static readonly Regex RowRegex = new(@"<tr[^>]*>(?<content>.*?)</tr>", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
     private static readonly Regex CellRegex = new(@"<t[dh][^>]*>(?<content>.*?)</t[dh]>", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
     private static readonly Regex TagRegex = new(@"<.*?>", RegexOptions.Singleline | RegexOptions.Compiled);
@@ -188,9 +191,16 @@ public sealed class NbtExchangeRateSource(HttpClient httpClient, ILogger<NbtExch
             result[currencyCode] = decimal.Round(rate / unit, 6, MidpointRounding.AwayFromZero);
         }
 
-        if (result.Count == 0)
+        var normalizedText = CleanCellValue(html);
+
+        if (result.Count < SupportedCurrencies.Length)
         {
-            result = ParseRatesFromText(CleanCellValue(html));
+            MergeMissingRates(result, ParseRatesFromStructuredText(normalizedText));
+        }
+
+        if (result.Count < SupportedCurrencies.Length)
+        {
+            MergeMissingRates(result, ParseRatesFromText(normalizedText));
         }
 
         EnsureRequiredCurrencies(result, "NBT exchange rates page");
@@ -274,6 +284,34 @@ public sealed class NbtExchangeRateSource(HttpClient httpClient, ILogger<NbtExch
                 rate = fallbackRate;
             }
             else
+            {
+                continue;
+            }
+
+            result[currencyCode] = decimal.Round(rate / unit, 6, MidpointRounding.AwayFromZero);
+        }
+
+        return result;
+    }
+
+    private Dictionary<string, decimal> ParseRatesFromStructuredText(string text)
+    {
+        var result = new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (Match match in StructuredTextRateRegex.Matches(text))
+        {
+            var numericCode = CleanCellValue(match.Groups["numeric"].Value);
+            if (!NumericCodeMap.TryGetValue(numericCode, out var currencyCode))
+            {
+                continue;
+            }
+
+            if (!TryParseDecimal(match.Groups["unit"].Value, out var unit) || unit <= 0)
+            {
+                continue;
+            }
+
+            if (!TryParseDecimal(match.Groups["rate"].Value, out var rate))
             {
                 continue;
             }
@@ -394,6 +432,14 @@ public sealed class NbtExchangeRateSource(HttpClient httpClient, ILogger<NbtExch
 
         rate = 0;
         return false;
+    }
+
+    private static void MergeMissingRates(IDictionary<string, decimal> target, IReadOnlyDictionary<string, decimal> source)
+    {
+        foreach (var pair in source)
+        {
+            target.TryAdd(pair.Key, pair.Value);
+        }
     }
 
     private static void EnsureRequiredCurrencies(IReadOnlyDictionary<string, decimal> result, string sourceName)
