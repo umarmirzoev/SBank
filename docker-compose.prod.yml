@@ -1,0 +1,11 @@
+services:
+  backend:
+    image: sbank-backend:latest
+    container_name: sbank-backend-prod
+    restart: always
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.prod
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
